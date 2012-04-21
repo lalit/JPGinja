@@ -96,7 +96,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	mat4f_t cameraTransform;	
 	vec4f_t *placesOfInterestCoordinates;
 }
-
+@property(nonatomic,retain)CMMotionManager *motionManager;
 - (void)initialize;
 
 - (void)startCameraPreview;
@@ -126,7 +126,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 @implementation ARView
 @synthesize captureLayer;
 @dynamic placesOfInterest;
-
+@synthesize  motionManager;
 - (void)dealloc
 {
 	[self stop];
@@ -326,7 +326,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 {
 	[motionManager stopDeviceMotionUpdates];
 	
-	motionManager = nil;
+	//motionManager = nil;
 }
 
 - (void)startDisplayLink
