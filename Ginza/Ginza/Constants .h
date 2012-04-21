@@ -12,3 +12,4 @@
 #define dataURL  @"http://staging.citiworldprivileges.com/mobile/ginza-promotions"
 #define categoryImageURL @"http://staging.citiworldprivileges.com/data/images/jp_ginza_categories/iPhone"
 #endif
+//changes
