@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="872" systemVersion="10K549" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Categories" representedClassName="Categories" syncable="YES">
+        <attribute name="active" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="attribute" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="category_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="category_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="image_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parent" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="selected" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Offer" representedClassName="Offer" syncable="YES">
+        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="copy_text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="created_by" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="created_on" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="end_date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="free_text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="image_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="image_position" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isbookmark" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lead_text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="modified_by" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="modified_on" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="modified_ts" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="offer_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="offer_title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="offer_type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sinage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="start_date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="store_id" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ShopList" representedClassName="ShopList" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="area" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="created_on" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="holiday" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="is_child" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="is_lunch" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="is_private" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="store_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="store_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sub_category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Categories" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="Offer" positionX="160" positionY="192" width="128" height="360"/>
+        <element name="ShopList" positionX="160" positionY="192" width="128" height="285"/>
+    </elements>
+</model>
