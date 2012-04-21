@@ -416,7 +416,7 @@
     
    
      
-      [tblListView reloadData];
+      //[tblListView reloadData];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading 
@@ -433,7 +433,7 @@
     //imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
   
 
-   //  [tblListView reloadData];
+     [tblListView reloadData];
     
 }
 
