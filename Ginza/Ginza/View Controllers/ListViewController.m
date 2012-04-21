@@ -49,7 +49,7 @@
 @synthesize panGestureforSearch;
 @synthesize arrayOfImages,listDataArray,dataDict,lblFilterText,lblEventCount,currentPage;
 @synthesize ginzaDetailsView;
-
+@synthesize detailsView;
 
 //- (id)initWithStyle:(UITableViewStyle)style
 //{
@@ -87,16 +87,16 @@
     if ([appDeligate.ginzaEvents count]<=0) {
         self.lblEventCount.hidden =YES;
     }
-    self.dataDict =appDeligate.listViewDataArray;
-    self.tblListView.delegate = self;
-
-    self.tblListView.sectionIndexMinimumDisplayRowCount = 5;
+         dataDict =appDeligate.listViewDataArray;
+         tblListView.delegate = self;
+         tblListView.dataSource = self;
+         tblListView.sectionIndexMinimumDisplayRowCount = 5;
     
     
    // tblListView = [[UITableView alloc] initWithFrame:CGRectMake(0 ,55, 320, 480)];
     
-    tblListView.dataSource = self;
-    tblListView.delegate   = self;
+    
+   
     
     //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
   
@@ -138,7 +138,7 @@
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    [self.tblListView reloadData];
+    [tblListView reloadData];
     return YES;
 }
 
@@ -313,12 +313,7 @@
     
     [locationManager stopUpdatingLocation];
      [locationManager stopUpdatingHeading];
-    if (indexPath.row ==  currentPage+10+1) {
-        currentPage =currentPage+10;
-        [self.tblListView reloadData];
-    }else
-    {
-    
+       
     
     if(indexPath.row == 0)
     {
@@ -336,18 +331,17 @@
     {
       [locationManager stopUpdatingLocation];
          [locationManager stopUpdatingHeading];
-        OfferDetailsViewController *detail =[[OfferDetailsViewController alloc]init];
+        self.detailsView =[[OfferDetailsViewController alloc]init];
         Offer *offer =[dataArray objectAtIndex:indexPath.row-1];
         
-        detail.offerId = offer.offer_id;
+        detailsView.offerId = offer.offer_id;
         
         
-        [self presentModalViewController:detail animated:YES];
+        [self presentModalViewController:detailsView animated:YES];
         
     
         }
 
-    }
 }
 
 

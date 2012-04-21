@@ -10,14 +10,14 @@
 #import <MapKit/MapKit.h>
 //#import "GinzaDetailsViewController.m"
 
-@class OffersDetailsViewController;
+#import "OfferDetailsViewController.h"
 @class ListViewCell;
 @class GinzaDetailsViewController;
 @interface ListViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,CLLocationManagerDelegate>
 {
     UITableView *tblListView;
     BOOL validLocation;
-    OffersDetailsViewController *detailsView; 
+    OfferDetailsViewController *detailsView; 
     
     GinzaDetailsViewController *ginzaDetailsView;
     NSMutableArray *dataArray;
@@ -57,7 +57,7 @@ CLLocationManager *locationManager;
     
 }
 @property(nonatomic) int currentPage;
-@property(nonatomic,retain) OffersDetailsViewController *detailsView; 
+@property(nonatomic,retain)   OfferDetailsViewController *detailsView; 
 @property(nonatomic,retain) GinzaDetailsViewController *ginzaDetailsView;
 @property(nonatomic,retain)IBOutlet UILabel *lblEventCount;
 @property(nonatomic,retain)IBOutlet UILabel *lblFilterText;
