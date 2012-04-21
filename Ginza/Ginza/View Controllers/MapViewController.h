@@ -15,12 +15,16 @@
 @interface TransparentToolbar : UIToolbar
 @end
 
-@interface MapViewController : UIViewController<MKMapViewDelegate,UIGestureRecognizerDelegate>{
+@interface MapViewController : UIViewController<MKMapViewDelegate,UIGestureRecognizerDelegate,CLLocationManagerDelegate>{
 	
 	IBOutlet MKMapView *mapView;
     CLLocationCoordinate2D selectedCoordinate;
     BOOL showCallout;
     BOOL isFirstTime;
+    
+    CLLocationManager* locationManager;
+    CLLocation* location;
+
 }
  
 @property (nonatomic, retain) IBOutlet CustomCallOutView *popup;
@@ -30,10 +34,13 @@
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;
 @property (nonatomic, retain) IBOutlet UIView *annodationView;
 @property (nonatomic, retain) IBOutlet TransparentToolbar *mapToolbar;
-
+@property (nonatomic, retain) CLLocationManager* locationManager;
+@property (nonatomic, retain) CLLocation* location;
 @property (nonatomic, retain) IBOutlet UILabel *lblFilterText;
 @property (nonatomic, retain) IBOutlet UILabel *lblEventCount;
 @property (nonatomic)  CLLocationCoordinate2D zoomLocation;
+
+- (NSArray *)nearestGinzhaLocationsWithinOneKilometers;
 
 -(IBAction)btnModeChanged:(id)sender;
 -(IBAction)btnFindUserLocation:(id)sender;

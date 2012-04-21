@@ -11,7 +11,7 @@
 #import "GinaViewController.h"
 #import "CustomCallOutView.h"
 #import "AddressAnnotation.h"
-
+#import "Location.h"
 
 @implementation UIToolbar(Transparent) 
 -(void)drawRect:(CGRect)rect {
@@ -28,6 +28,9 @@
 @implementation MapViewController
 @synthesize mapView,annodationView,mapToolbar,lblFilterText,popup,offerCountLabel,mapDataDict,lblEventCount,zoomLocation;
 @synthesize deligate;
+@synthesize locationManager;
+@synthesize location;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -49,10 +52,8 @@
         self.lblEventCount.hidden =YES;
     }
 
-    
     self.navigationController.navigationBarHidden = YES;
-    
-    
+
     
     MKUserTrackingBarButtonItem *buttonItem = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapView];
     [self.mapToolbar setItems:[NSArray arrayWithObject:buttonItem] animated:YES];
@@ -71,20 +72,8 @@
     self.mapView.delegate= self;
    // [self.mapView addGestureRecognizer:recognizer];
     
-}
-
-- (void)addPin:(UITapGestureRecognizer*)recognizer
-{
-    [self.mapView removeGestureRecognizer:recognizer];
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-
-    [self plotOfferPositions:@"all"];
-}
-- (void)viewWillAppear:(BOOL)animated 
-{  
+    //=========
+    
     self.navigationController.navigationBarHidden = YES;
     if (!isFirstTime) {
         zoomLocation.latitude = 35.67163555;
@@ -105,6 +94,34 @@
     CLLocationCoordinate2D originalCenter = CLLocationCoordinate2DMake(zoomLocation.latitude, zoomLocation.longitude);
     // ... adjust region
     [mapView setCenterCoordinate:originalCenter animated:YES];
+    
+    //=======
+    [self plotOfferPositions:@"all"];
+    
+}
+
+
+
+- (void) initializeLocationManager {
+    self.locationManager = [[CLLocationManager alloc] init ];
+    self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+}
+                                    
+                                    
+- (void)addPin:(UITapGestureRecognizer*)recognizer
+{
+    [self.mapView removeGestureRecognizer:recognizer];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+
+
+}
+- (void)viewWillAppear:(BOOL)animated 
+{  
+   
 }
 
 - (void)viewDidUnload
@@ -158,27 +175,82 @@
     for (id<MKAnnotation> annotation in mapView.annotations) {
         [mapView removeAnnotation:annotation];
     }
+   
+    self.mapDataDict = self.deligate.poiDataDictionary;
     
-   self.mapDataDict = self.deligate.poiDataDictionary;
+    //=========Changed the logic by mobiquest . Checking offer having 1 km distance=======================
+    NSArray *nearestGinzaLocation=[self nearestGinzhaLocationsWithinOneKilometers];
+    if ([nearestGinzaLocation count]>0) {
+        for (CLLocation *loc in nearestGinzaLocation) {
+            AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
+            annotation.coordinate =loc.coordinate;
+            [mapView addAnnotation:annotation];
+        }
+    }
+    else {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@" There are no shops in 1KM radius" message:@"Do you want to continue?"  delegate:self cancelButtonTitle:@"Yes" otherButtonTitles: @"No", nil];
+		[alert show];
+    }
+    
+}
+    
+
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    // the user clicked one of the OK/Cancel buttons
+    if (buttonIndex == 0)
+    {
+        for (id key in mapDataDict)
+        {
+            
+            NSArray *latlong = [key componentsSeparatedByString:@"-"];
+            double latitude =[[latlong objectAtIndex:0] doubleValue];
+            double longitude = [[latlong objectAtIndex:1] doubleValue];
+            CLLocationCoordinate2D coordinate;
+            coordinate.latitude = latitude;
+            coordinate.longitude = longitude; 
+            AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
+            annotation.coordinate =coordinate;
+            [mapView addAnnotation:annotation];
+        }
+
+    }
+    else
+    {
+        
+       /* CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
+        MKCoordinateRegion region;
+        region.center = currentLocation.coordinate;  
+        
+        MKCoordinateSpan span; 
+        span.latitudeDelta  = 0.2; // Change these values to change the zoom
+        span.longitudeDelta = 0.2; 
+        
+        
+        [self.mapView setRegion:region animated:YES];*/
+        [self btnModeChanged:nil];
+    }
+}
+
+- (NSArray *)nearestGinzhaLocationsWithinOneKilometers {
+    CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
+    NSMutableArray *nearestLocations=[[NSMutableArray alloc]init];
     for (id key in mapDataDict)
     {
-        //NSMutableArray *offerdataArray  = [mapDataDict objectForKey:key];
-        
         NSArray *latlong = [key componentsSeparatedByString:@"-"];
         double latitude =[[latlong objectAtIndex:0] doubleValue];
         double longitude = [[latlong objectAtIndex:1] doubleValue];
         CLLocationCoordinate2D coordinate;
         coordinate.latitude = latitude;
-        coordinate.longitude = longitude;            
-        //CustomAnnodation *annotation = [[CustomAnnodation alloc] initWithName:crimeDescription address:address coordinate:coordinate] ;
-        
-        AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
-        annotation.coordinate =coordinate;
-        [mapView addAnnotation:annotation];
+        coordinate.longitude = longitude; 
+        CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: latitude longitude:-longitude];
+        double distance = [currentLocation distanceFromLocation: offerLoc];
+        if (distance<1000) {
+            [nearestLocations addObject:offerLoc];
+        }
     }
-    
+    return nearestLocations;
 }
-
 
 
 -(IBAction)btnFindUserLocation:(id)sender
@@ -198,6 +270,22 @@
     CLLocationCoordinate2D originalCenter = CLLocationCoordinate2DMake(zoomLocation.latitude, zoomLocation.longitude);
     // ... adjust region
     [mapView setCenterCoordinate:originalCenter animated:YES];
+    
+    for (id key in mapDataDict)
+    {
+        
+        NSArray *latlong = [key componentsSeparatedByString:@"-"];
+        double latitude =[[latlong objectAtIndex:0] doubleValue];
+        double longitude = [[latlong objectAtIndex:1] doubleValue];
+        CLLocationCoordinate2D coordinate;
+        coordinate.latitude = latitude;
+        coordinate.longitude = longitude; 
+        AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
+        annotation.coordinate =coordinate;
+        [mapView addAnnotation:annotation];
+    }
+    
+    
 }
 
 -(IBAction)btnModeChanged:(id)sender

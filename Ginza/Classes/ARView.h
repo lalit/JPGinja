@@ -49,6 +49,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import <CoreMotion/CoreMotion.h>
 #import <AVFoundation/AVFoundation.h>
+#import "Location.h"
 
 @interface ARView : UIView  <CLLocationManagerDelegate> {
 }

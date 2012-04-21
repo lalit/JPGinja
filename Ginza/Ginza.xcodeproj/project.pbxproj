@@ -299,6 +299,7 @@
 		0B9FAF15152B05CC00E44F64 /* RadarViewPortView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FAF13152B05CC00E44F64 /* RadarViewPortView.m */; };
 		0B9FAF1A152B05F400E44F64 /* PhysicalPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FAF17152B05F400E44F64 /* PhysicalPlace.m */; };
 		0B9FAF1B152B05F400E44F64 /* PoiItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FAF19152B05F400E44F64 /* PoiItem.m */; };
+		CEE2760E1542E9F100C667D9 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE2760D1542E9F100C667D9 /* Location.m */; };
 		F74371FB1524341E006C74DE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F74371FA1524341E006C74DE /* UIKit.framework */; };
 		F74371FD1524341E006C74DE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F74371FC1524341E006C74DE /* Foundation.framework */; };
 		F74371FF1524341E006C74DE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F74371FE1524341E006C74DE /* CoreGraphics.framework */; };
@@ -664,6 +665,8 @@
 		0B9FAF17152B05F400E44F64 /* PhysicalPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhysicalPlace.m; sourceTree = "<group>"; };
 		0B9FAF18152B05F400E44F64 /* PoiItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PoiItem.h; sourceTree = "<group>"; };
 		0B9FAF19152B05F400E44F64 /* PoiItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PoiItem.m; sourceTree = "<group>"; };
+		CEE2760C1542E9F100C667D9 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		CEE2760D1542E9F100C667D9 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		F74371F61524341E006C74DE /* Ginza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ginza.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F74371FA1524341E006C74DE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F74371FC1524341E006C74DE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1204,6 +1207,15 @@
 			name = radarView;
 			sourceTree = "<group>";
 		};
+		CEE2760B1542E9F100C667D9 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				CEE2760C1542E9F100C667D9 /* Location.h */,
+				CEE2760D1542E9F100C667D9 /* Location.m */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		F74371EB1524341D006C74DE = {
 			isa = PBXGroup;
 			children = (
@@ -1248,6 +1260,7 @@
 		F74372001524341E006C74DE /* Ginza */ = {
 			isa = PBXGroup;
 			children = (
+				CEE2760B1542E9F100C667D9 /* Shared */,
 				0B8FC47D1541C8D200528D9A /* Model */,
 				0B8FC22F1541C88200528D9A /* View Controllers */,
 				0B8FC26E1541C88200528D9A /* Views */,
@@ -1683,6 +1696,7 @@
 				0B8FC4861541C8D200528D9A /* Offer.m in Sources */,
 				0B8FC4871541C8D200528D9A /* ShopList.m in Sources */,
 				0B8FC56E1541CB1C00528D9A /* ShopList.xcdatamodeld in Sources */,
+				CEE2760E1542E9F100C667D9 /* Location.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

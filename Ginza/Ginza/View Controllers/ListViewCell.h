@@ -13,7 +13,7 @@
 
 
 
-@interface ListViewCell : UITableViewCell<CLLocationManagerDelegate>
+@interface ListViewCell : UITableViewCell
 {
     
     IBOutlet UILabel *lblTitle;
