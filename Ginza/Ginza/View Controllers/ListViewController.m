@@ -162,7 +162,8 @@
 {
     
     
-    return  currentPage+10+2;//[self.dataDict count]+1;
+    //NSLog(@"count %d",[self.dataDict count]);
+    return  [self.dataDict count];//currentPage+10+2;//[self.dataDict count]+1;
     
 }
 
