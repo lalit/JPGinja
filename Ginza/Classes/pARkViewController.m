@@ -59,7 +59,7 @@
 
 @implementation pARkViewController
 @synthesize rotateImg,compassImg,trueNorth;
-@synthesize compassDif,compassFault,calibrateBtn,lblFilterText,currentLocation,locationManager,slider,settingView,btnClose,lblDistance,btnSettings,orientation,lblEventCount,placesOfInterest,btnVMMode,btnBack,btnHelp,helpView,btnForward,btnReverse;
+@synthesize compassDif,compassFault,calibrateBtn,lblFilterText,currentLocation,locationManager,slider,settingView,btnClose,lblDistance,btnSettings,orientation,lblEventCount,placesOfInterest,btnVMMode,btnBack,btnHelp,helpView,btnForward,btnReverse,virtualwalkArrow;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -676,6 +676,7 @@
     self.btnBack.hidden =NO;
     self.btnForward.hidden =NO;
     self.btnReverse.hidden=NO;
+    self.virtualwalkArrow.hidden=NO;
     
 }
 -(IBAction)btnVMModeOff:(id)sender
@@ -684,6 +685,7 @@
     self.btnBack.hidden =YES;
     self.btnForward.hidden =YES;
     self.btnReverse.hidden=YES;
+    self.virtualwalkArrow.hidden=YES;
     
 }
 

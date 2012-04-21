@@ -110,6 +110,7 @@
 @property (nonatomic, retain)IBOutlet UIButton *btnForward;
 @property (nonatomic, retain)IBOutlet UIButton *btnReverse;
 @property (nonatomic, retain)IBOutlet UIView *helpView;
+@property (nonatomic, retain)IBOutlet UIImageView *virtualwalkArrow;
 
 - (IBAction)calibrate:(id)sender;
 
