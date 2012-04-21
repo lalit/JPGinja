@@ -1,7 +1,7 @@
 /*
-     File: pARkViewController.h
+ File: pARkViewController.h
  Abstract: Simple view controller for the pARk example. Provides a hard-coded list of places-of-interest to its associated ARView when loaded, starts the ARView when it appears, and stops it when it disappears.
-  Version: 1.0
+ Version: 1.0
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -54,7 +54,7 @@
 #define CC_RADIANS_TO_DEGREES(__ANGLE__) ((__ANGLE__) / (float)M_PI * 180.0f)
 #define radianConst M_PI/180.0
 
-@interface pARkViewController : UIViewController <CLLocationManagerDelegate>{	
+@interface pARkViewController : UIViewController <CLLocationManagerDelegate, UIAccelerometerDelegate>{	
     RadarViewPortView *radar;
     Radar *radarView;
     CLLocationManager *locationManager;
@@ -87,9 +87,9 @@
     int                 radiusChanged;
     
 }
-@property (nonatomic, retain)IBOutlet UIButton *btnSettings;
+@property (nonatomic, retain)NSMutableArray *placesOfInterest;
 @property (nonatomic)int  orientation;
-@property (nonatomic, retain)CMMotionManager     *motionManager;
+@property (nonatomic, retain)IBOutlet UIButton *btnSettings;
 @property (nonatomic, retain) IBOutlet UILabel *lblDistance;
 @property (nonatomic, retain)CLLocation *currentLocation;
 @property (nonatomic, retain) IBOutlet UIImageView *rotateImg;
@@ -104,6 +104,13 @@
 @property (nonatomic, retain)IBOutlet UIView *settingView;
 @property (nonatomic, retain)IBOutlet UIButton *btnClose;
 @property (nonatomic, retain)IBOutlet UILabel *lblEventCount;
+@property (nonatomic, retain)IBOutlet UIButton *btnHelp;
+@property (nonatomic, retain)IBOutlet UIButton *btnBack;
+@property (nonatomic, retain)IBOutlet UIButton *btnVMMode;
+@property (nonatomic, retain)IBOutlet UIButton *btnForward;
+@property (nonatomic, retain)IBOutlet UIButton *btnReverse;
+@property (nonatomic, retain)IBOutlet UIView *helpView;
+
 - (IBAction)calibrate:(id)sender;
 
 -(void)radarSpecificSettings;
@@ -114,5 +121,9 @@
 -(IBAction)sliderChanged:(id)sender;
 -(IBAction)btnClose:(id)sender;
 -(IBAction)btnARViewClicked:(id)sender;
+-(IBAction)btnVMModeOn:(id)sender;
+-(IBAction)btnVMModeOff:(id)sender;
+-(IBAction)btnHelp:(id)sender;
+-(IBAction)btnHelpClose:(id)sender;
 -(void)updateView;
 @end

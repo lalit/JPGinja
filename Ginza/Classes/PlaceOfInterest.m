@@ -67,12 +67,9 @@
 + (PlaceOfInterest *)placeOfInterestWithView:(UIView *)view at:(CLLocation *)location  offerdata:(Offer *)offer
 {
     PlaceOfInterest *poi = [[PlaceOfInterest alloc] init] ;
-    /*CustomMapPopup *customView =[[CustomMapPopup alloc]init];
-    customView.offer = offer;
 	poi.view = view;//customView.view;//view;
-    //[poi.view addSubview:customView.view];
-	poi.location = location;
-    poi.offer_id = offer.offer_id;*/
+    poi.location = location;
+    poi.offer_id = offer.offer_id;
 	return poi;
 }
 + (PlaceOfInterest *)placeOfInterestWithView:(UIView *)view at:(CLLocation *)location

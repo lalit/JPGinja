@@ -1,7 +1,7 @@
 /*
-     File: ARView.m
+ File: ARView.m
  Abstract: Augmented reality view. Displays a live camera feed with specified places-of-interest overlayed in the correct position based on the direction the user is looking. Uses Core Location to determine the user's location relative the places-of-interest and Core Motion to determine the direction the user is looking.
-  Version: 1.0
+ Version: 1.0
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -96,7 +96,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	mat4f_t cameraTransform;	
 	vec4f_t *placesOfInterestCoordinates;
 }
-@property(nonatomic,retain)CMMotionManager *motionManager;
+
 - (void)initialize;
 
 - (void)startCameraPreview;
@@ -126,7 +126,8 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 @implementation ARView
 @synthesize captureLayer;
 @dynamic placesOfInterest;
-@synthesize  motionManager;
+@synthesize  currentDistance,maxtDistance;
+
 - (void)dealloc
 {
 	[self stop];
@@ -174,7 +175,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 -(void)oriendationChangeLandscape:(CGRect )viewSize
 {
-   //self.frame= viewSize;
+    //self.frame= viewSize;
     CGRect r = captureView.frame;
     r.origin.x= 0;r.origin.y=0;
     NSLog(@"s =%f",viewSize.size.width);
@@ -182,16 +183,16 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     captureLayer.frame=r;
     captureView.frame=r;
     captureLayer.bounds =r;
-   captureView.bounds = r;
+    captureView.bounds = r;
     
-   // captureLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];
+    // captureLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];
 	//captureLayer.frame = captureView.bounds =r;
 	//[captureLayer setOrientation:AVCaptureVideoOrientationLandscapeLeft];
 	//[captureLayer setVideoGravity:AVLayerVideoGravityResize];
-   // [self stopCameraPreview];
-   // [self startCameraPreview:@"landscapeLeft"];
-
-
+    // [self stopCameraPreview];
+    // [self startCameraPreview:@"landscapeLeft"];
+    
+    
     
     
 }
@@ -205,23 +206,23 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     captureView.frame=r;
     captureLayer.bounds =r;
     captureView.bounds = r;
-  
+    
 }
 
 -(void)oriendationChange
 {
-   // captureView.bounds = self.bounds;
+    // captureView.bounds = self.bounds;
 }
 - (void)initialize
 {
     
-
+    
 	captureView = [[UIView alloc] initWithFrame:self.bounds];
 	captureView.bounds = self.bounds;
 	[self addSubview:captureView];
 	[self sendSubviewToBack:captureView];
 	
-        //[];
+    //[];
 	// Initialize projection matrix	
 	createProjectionMatrix(projectionTransform, 60.0f*DEGREES_TO_RADIANS, self.bounds.size.width*1.0f / self.bounds.size.height, 0.25f, 1000.0f);
 }
@@ -314,7 +315,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	
 	// Tell CoreMotion to show the compass calibration HUD when required to provide true north-referenced attitude
 	motionManager.showsDeviceMovementDisplay = YES;
-
+    
 	
 	motionManager.deviceMotionUpdateInterval = 1.0 / 60.0;
 	
@@ -326,7 +327,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 {
 	[motionManager stopDeviceMotionUpdates];
 	
-	//motionManager = nil;
+	motionManager = nil;
 }
 
 - (void)startDisplayLink
@@ -350,12 +351,12 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 		free(placesOfInterestCoordinates);
 	}
 	placesOfInterestCoordinates = (vec4f_t *)malloc(sizeof(vec4f_t)*placesOfInterest.count);
-			
+    
 	int i = 0;
 	
 	double myX, myY, myZ;
 	latLonToEcef(location.coordinate.latitude, location.coordinate.longitude, 0.0, &myX, &myY, &myZ);
-
+    
 	// Array of NSData instances, each of which contains a struct with the distance to a POI and the
 	// POI's index into placesOfInterest
 	// Will be used to ensure proper Z-ordering of UIViews
@@ -364,7 +365,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 		int index;
 	} DistanceAndIndex;
 	NSMutableArray *orderedDistances = [NSMutableArray arrayWithCapacity:placesOfInterest.count];
-
+    
 	// Compute the world coordinates of each place-of-interest
 	for (PlaceOfInterest *poi in [[self placesOfInterest] objectEnumerator]) {
 		double poiX, poiY, poiZ, e, n, u;
@@ -400,8 +401,11 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	// Add subviews in descending Z-order so they overlap properly
 	for (NSData *d in [orderedDistances reverseObjectEnumerator]) {
 		const DistanceAndIndex *distanceAndIndex = (const DistanceAndIndex *)d.bytes;
-		PlaceOfInterest *poi = (PlaceOfInterest *)[placesOfInterest objectAtIndex:distanceAndIndex->index];		
-		[self addSubview:poi.view];
+		PlaceOfInterest *poi = (PlaceOfInterest *)[placesOfInterest objectAtIndex:distanceAndIndex->index];	
+        if (distanceAndIndex->distance >= self.currentDistance && distanceAndIndex->distance<=self.maxtDistance) {
+            [self addSubview:poi.view];
+        }
+		
 	}	
 }
 
@@ -429,7 +433,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 		vec4f_t v;
 		multiplyMatrixAndVector(v, projectionCameraTransform, placesOfInterestCoordinates[i]);
 		createProjectionMatrix(projectionTransform, 60.0f*DEGREES_TO_RADIANS, self.bounds.size.width*1.0f / self.bounds.size.height, 0.25f, 1000.0f);
-
+        
 		float x = (v[0] / v[3] + 1.0f) * 0.5f;
 		float y = (v[1] / v[3] + 1.0f) * 0.5f;
 		if (v[2] < 0.0f) {
@@ -440,13 +444,12 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 		}
 		i++;
 	}
-
+    
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
 	
-    [[Location sharedInstance] setCurrentLocation:newLocation];
 	location = newLocation;
 	if (placesOfInterest != nil) {
 		[self updatePlacesOfInterestCoordinates];

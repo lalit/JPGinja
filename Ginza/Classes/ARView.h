@@ -1,7 +1,7 @@
 /*
-     File: ARView.h
+ File: ARView.h
  Abstract: Augmented reality view. Displays a live camera feed with specified places-of-interest overlayed in the correct position based on the direction the user is looking. Uses Core Location to determine the user's location relative the places-of-interest and Core Motion to determine the direction the user is looking.
-  Version: 1.0
+ Version: 1.0
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -49,12 +49,14 @@
 #import <CoreLocation/CoreLocation.h>
 #import <CoreMotion/CoreMotion.h>
 #import <AVFoundation/AVFoundation.h>
-#import "Location.h"
 
 @interface ARView : UIView  <CLLocationManagerDelegate> {
 }
 @property(nonatomic,retain)AVCaptureVideoPreviewLayer *captureLayer;
 @property (nonatomic, retain) NSArray *placesOfInterest;
+@property(nonatomic)float currentDistance;
+@property(nonatomic)float maxtDistance;
+
 
 - (void)start;
 - (void)stop;
