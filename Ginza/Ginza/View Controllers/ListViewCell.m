@@ -30,26 +30,29 @@
 @synthesize latitude;
 @synthesize longitude,imgBookmark,lblFreeText,offerType,offer;
 
+
+
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.userInteractionEnabled = YES;
         reuseIdentifier = @"Cell";
-     }
-    
-   
+        NSLog(@"MY NAME IS REUSE");
 
+    }
     return self;
 }
+
 -(void)initlocation
 {
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
-    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;; // 100 m
-    [locationManager startUpdatingLocation];
-    [locationManager startUpdatingHeading];
+//    locationManager = [[CLLocationManager alloc] init];
+//    locationManager.delegate = self;
+//    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
+//    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;; // 100 m
+//    [locationManager startUpdatingLocation];
+//    [locationManager startUpdatingHeading];
 }
 
 
@@ -119,61 +122,6 @@
 
 
 
--(void) calculateUserAngle:(CLLocationCoordinate2D)user 
-
-{
-    double Latitude2 = [strLatitude doubleValue];
-    double Longitude2 = [strLongitude doubleValue];
-    float pLat;
-    float pLon;
-    
-    
-    
-    if(Longitude2 > user.latitude && Longitude2 > user.longitude) {
-        // north east
-        
-        pLat = user.latitude;
-        pLon = Longitude2;
-        
-        degrees = 0;
-    }
-    else if(Longitude2 > user.latitude &&Longitude2 < user.longitude) {
-        // south east
-        
-        pLat = Latitude2;
-        pLon = user.longitude;
-        
-        degrees = 45;
-    }
-    else if(Longitude2 < user.latitude && Longitude2 < user.longitude) {
-        // south west
-        
-        pLat = Latitude2;
-        pLon = user.latitude;
-        
-        degrees = 180;
-    }
-    else if(Longitude2 < user.latitude && Longitude2 > user.longitude) {
-        // north west
-        
-        pLat = Latitude2;
-        pLon = user.longitude;
-        
-        degrees = 225;
-    }
-    
-    // Vector QP (from user to point)
-    float vQPlat = pLat - user.latitude;
-    float vQPlon = pLon - user.longitude;
-    
-    // Vector QL (from user to location)
-    float vQLlat = Latitude2 - user.latitude;
-    float vQLlon = Longitude2 - user.longitude;
-    
-    // degrees between QP and QL
-    float cosDegrees = (vQPlat * vQLlat + vQPlon * vQLlon) / sqrt((vQPlat*vQPlat + vQPlon*vQPlon) * (vQLlat*vQLlat + vQLlon*vQLlon));
-    degrees = degrees + acos(cosDegrees);
-}
 
 
 -(IBAction)btnBookmark:(id)sender

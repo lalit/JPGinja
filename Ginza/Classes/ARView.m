@@ -96,7 +96,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	mat4f_t cameraTransform;	
 	vec4f_t *placesOfInterestCoordinates;
 }
-
+@property(nonatomic,retain)CMMotionManager *motionManager;
 - (void)initialize;
 
 - (void)startCameraPreview;
@@ -126,7 +126,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 @implementation ARView
 @synthesize captureLayer;
 @dynamic placesOfInterest;
-
+@synthesize motionManager;
 - (void)dealloc
 {
 	[self stop];
@@ -310,23 +310,23 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 - (void)startDeviceMotion
 {	
-	motionManager = [[CMMotionManager alloc] init];
+	self.motionManager = [[CMMotionManager alloc] init];
 	
 	// Tell CoreMotion to show the compass calibration HUD when required to provide true north-referenced attitude
-	motionManager.showsDeviceMovementDisplay = YES;
+	self.motionManager.showsDeviceMovementDisplay = YES;
 
 	
-	motionManager.deviceMotionUpdateInterval = 1.0 / 60.0;
+	self.motionManager.deviceMotionUpdateInterval = 1.0 / 60.0;
 	
 	// New in iOS 5.0: Attitude that is referenced to true north
-	[motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
+	[self.motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
 }
 
 - (void)stopDeviceMotion
 {
-	[motionManager stopDeviceMotionUpdates];
+	[self.motionManager stopDeviceMotionUpdates];
 	
-	motionManager = nil;
+	//motionManager = nil;
 }
 
 - (void)startDisplayLink

@@ -59,6 +59,7 @@
 
 @implementation pARkViewController
 @synthesize rotateImg,compassImg,trueNorth;
+@synthesize motionManager;
 @synthesize compassDif,compassFault,calibrateBtn,lblFilterText,currentLocation,locationManager,slider,settingView,btnClose,lblDistance,btnSettings,orientation,lblEventCount;
 - (void)didReceiveMemoryWarning
 {
@@ -442,11 +443,11 @@
     //[locationManager stopUpdatingLocation];
     
     // Set up motionManager
-    motionManager = [[CMMotionManager alloc]  init];
+    self.motionManager = [[CMMotionManager alloc]  init];
     motionManager.deviceMotionUpdateInterval = 1.0/60.0;
     opQ = [NSOperationQueue currentQueue] ;
     
-    if(motionManager.isDeviceMotionAvailable) {
+    if(self.motionManager.isDeviceMotionAvailable) {
         
         // Listen to events from the motionManager
         motionHandler = ^ (CMDeviceMotion *motion, NSError *error) {
@@ -490,7 +491,7 @@
     }
     
     // Start listening to motionManager events
-    [motionManager startDeviceMotionUpdatesToQueue:opQ withHandler:motionHandler];
+    [self.motionManager startDeviceMotionUpdatesToQueue:opQ withHandler:motionHandler];
     
     // Start interval to run every other second
     updateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updater:) userInfo:nil repeats:YES];

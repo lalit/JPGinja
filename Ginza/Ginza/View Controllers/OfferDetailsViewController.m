@@ -59,7 +59,7 @@
     lblCategoryName.text = self.offer.category;
     lblOfferTitle.text=self.offer.offer_title;
     scroll.contentSize = CGSizeMake(320, 1000);
-    self.webFreeText.backgroundColor =[UIColor clearColor];
+    self.webFreeText.backgroundColor =[UIColor redColor];
     [self.webFreeText setOpaque:NO];
     NSString *weViewData =[NSString stringWithFormat:@"<HTML><body style=\"background-color:transparent\"><table><tr><td>%@<hr></td></tr><tr><td>%@</td></tr><tr><td>%@</td></tr></table></HTML>",offer.lead_text,offer.copy_text,offer.free_text];
     [self.webFreeText loadHTMLString:weViewData baseURL:nil];
@@ -396,6 +396,7 @@
 
 -(IBAction)btnClose:(id)sender
 {
+    [locationManager stopUpdatingHeading];
     [self dismissModalViewControllerAnimated:YES];
 }
 

@@ -87,8 +87,9 @@
     int                 radiusChanged;
     
 }
-@property (nonatomic)int  orientation;
 @property (nonatomic, retain)IBOutlet UIButton *btnSettings;
+@property (nonatomic)int  orientation;
+@property (nonatomic, retain)CMMotionManager     *motionManager;
 @property (nonatomic, retain) IBOutlet UILabel *lblDistance;
 @property (nonatomic, retain)CLLocation *currentLocation;
 @property (nonatomic, retain) IBOutlet UIImageView *rotateImg;

@@ -18,8 +18,7 @@
 #import "Offer.h"
 #import"Categories.h"
 #import "Constants .h"
-
-
+#import <QuartzCore/QuartzCore.h>
 
 @implementation AppDelegate
 
@@ -123,7 +122,11 @@
     UINavigationController *navigation1 = [[UINavigationController alloc]initWithRootViewController:arviewController];
     
     
-    UIViewController *listviewController = [[ListViewController alloc] initWithNibName:@"ListViewController" bundle:nil];
+   // UIViewController *listviewController = [[ListViewController alloc] initWithNibName:@"ListViewController" bundle:nil];
+    
+    UIViewController* listviewController = [[ListViewController alloc] 
+                                      initWithNibName:@"ListViewController" bundle:nil];
+
     
     UINavigationController *navigation2 = [[UINavigationController alloc]initWithRootViewController:listviewController];
     
@@ -1236,6 +1239,8 @@
                 NSURL *url = [NSURL URLWithString:imgurl];
                 NSData *data1 = [NSData dataWithContentsOfURL:url];
                 
+              
+                
                 NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
                 path = [path stringByAppendingString:@"/"];
                 path = [path stringByAppendingString:[data objectForKey:@"image_name" ]];
@@ -1252,8 +1257,8 @@
                 {
                     [data1 writeToFile:path atomically:NO];
                 }
-                [self resizeTableViewImages:[data objectForKey:@"image_name" ]];
-                
+                //[self resizeTableViewImages:[data objectForKey:@"image_name" ]];
+                [self performSelectorInBackground:@selector(resizeTableViewImages:) withObject:[data objectForKey:@"image_name" ]];
                 
                 if (![managedObjectContext save:&error]) {
                     NSLog(@"%@",error);
@@ -1274,38 +1279,17 @@
     path = [path stringByAppendingString:@"/"];
     path = [path stringByAppendingString:category_image_name];
     
-    UIImage *image = [UIImage imageWithContentsOfFile:path];
-    
-    
-    float actualHeight = 60;//image.size.height;
-    float actualWidth = 80;//image.size.width;
-    float imgRatio = actualWidth/actualHeight;
-    float maxRatio = 320.0/480.0;
-    
-    if(imgRatio!=maxRatio){
-        if(imgRatio < maxRatio){
-            imgRatio = 480.0 / actualHeight;
-            actualWidth = imgRatio * actualWidth;
-            actualHeight = 480.0;
-        }
-        else{
-            imgRatio = 320.0 / actualWidth;
-            actualHeight = imgRatio * actualHeight;
-            actualWidth = 320.0;
-        }
-    }
-    CGRect rect = CGRectMake(0.0, 0.0, actualWidth, actualHeight);
-    UIGraphicsBeginImageContext(rect.size);
-    [image drawInRect:rect];
-    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+
+  //  dataPath = [path stringByAppendingString:category_image_name];
     
     NSString *writePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     writePath = [writePath stringByAppendingString:@"/80x60_"];
     writePath = [writePath stringByAppendingString:category_image_name];
-
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [UIImagePNGRepresentation(image) writeToFile:writePath atomically:YES];
+    
+    
+    NSData*imageData =  UIImagePNGRepresentation([self imageWithImage:[UIImage imageWithContentsOfFile:path] scaledToSize:CGSizeMake(80, 60)]);
+    
+        [imageData writeToFile:writePath atomically:YES];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -1499,4 +1483,25 @@
     listViewDataArray = dataDict;
     return dataDict;
 }
+
+-(UIImage*)imageWithImage:(UIImage*)sourceImage scaledToSize:(CGSize)newSize
+{
+    // Create a graphics image context
+    UIGraphicsBeginImageContext(newSize);
+    
+    // Tell the old image to draw in this new context, with the desired
+    // new size
+    [sourceImage drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    
+    // Get the new image from the context
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // End the context
+    UIGraphicsEndImageContext();
+    
+    // Return the new image.
+    return newImage;
+}
+
+
 @end

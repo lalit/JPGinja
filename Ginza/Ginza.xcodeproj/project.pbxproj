@@ -672,8 +672,8 @@
 		F74372041524341E006C74DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F74372061524341E006C74DE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F74372081524341E006C74DE /* Ginza-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Ginza-Prefix.pch"; sourceTree = "<group>"; };
-		F74372091524341E006C74DE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		F743720A1524341E006C74DE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F74372091524341E006C74DE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Ginza/AppDelegate.h; sourceTree = "<group>"; };
+		F743720A1524341E006C74DE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Ginza/AppDelegate.m; sourceTree = "<group>"; };
 		F74372251524341E006C74DE /* GinzaTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinzaTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F74372261524341E006C74DE /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		F743722E1524341E006C74DE /* GinzaTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GinzaTests-Info.plist"; sourceTree = "<group>"; };
@@ -1208,6 +1208,8 @@
 			isa = PBXGroup;
 			children = (
 				0B8FC6421541CBC700528D9A /* Constants .h */,
+				F74372091524341E006C74DE /* AppDelegate.h */,
+				F743720A1524341E006C74DE /* AppDelegate.m */,
 				0B2710FF1525D07B003BF4F2 /* AR */,
 				F74372001524341E006C74DE /* Ginza */,
 				F743722C1524341E006C74DE /* GinzaTests */,
@@ -1249,8 +1251,6 @@
 				0B8FC47D1541C8D200528D9A /* Model */,
 				0B8FC22F1541C88200528D9A /* View Controllers */,
 				0B8FC26E1541C88200528D9A /* Views */,
-				F74372091524341E006C74DE /* AppDelegate.h */,
-				F743720A1524341E006C74DE /* AppDelegate.m */,
 				F74372011524341E006C74DE /* Supporting Files */,
 			);
 			path = Ginza;

@@ -263,7 +263,7 @@ return  4;
 
 -(IBAction)btnClose:(id)sender
 {
-    
+      [locationManager stopUpdatingLocation];
 
     [self dismissModalViewControllerAnimated:YES];
 

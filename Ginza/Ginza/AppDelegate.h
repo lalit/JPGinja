@@ -53,7 +53,7 @@
 -(NSMutableDictionary *) getPointOfInterestItems;
 -(NSMutableArray *)getListViewData;
 -(void)updateBookMarkCount:(Offer *)offer;
-
+- (UIImage*)imageWithImage:(UIImage*)sourceImage scaledToSize:(CGSize)newSize;
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) UITabBarController *tabBarController;

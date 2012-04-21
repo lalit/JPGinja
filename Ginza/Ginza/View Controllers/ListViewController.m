@@ -31,7 +31,7 @@
 
 @implementation ListViewController
 @synthesize tblListView;
-@synthesize detailsViewController;
+
 @synthesize arryListDetails;
 @synthesize arrayOfDistance;
 @synthesize arrayOfLatitude;
@@ -43,13 +43,23 @@
 @synthesize locationManager;
 @synthesize lblnewDistance;
 @synthesize strDistance;
-@synthesize imgViewditection,dataArray,currentLocation;
+@synthesize imgViewditection,dataArray;
 @synthesize swipeGestureDown;
 @synthesize panGestureforFiter;
 @synthesize panGestureforSearch;
 @synthesize arrayOfImages,listDataArray,dataDict,lblFilterText,lblEventCount,currentPage;
+@synthesize ginzaDetailsView;
 
 
+//- (id)initWithStyle:(UITableViewStyle)style
+//{
+//    self = [super initWithStyle:style];
+//    if (self) {
+//        // Custom initialization
+//        NSLog(@"initWithStyle");
+//    }
+//    return self;
+//}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -65,7 +75,7 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+    //[super viewDidLoad];
     currentPage=1;
     self.navigationController.navigationBar.hidden = YES;
     
@@ -88,6 +98,12 @@
     tblListView.dataSource = self;
     tblListView.delegate   = self;
     
+    //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+  
+    [super viewDidLoad];
+
+    
+    
 }
 
 
@@ -103,8 +119,18 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     
-    return;
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.distanceFilter =10; // whenever we move
+    locationManager.headingFilter = 5;
+    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;; // 100 m
+    [locationManager startUpdatingLocation];
+    [locationManager startUpdatingHeading];
     self.navigationController.navigationBarHidden = YES;
+    
+    
+    
+    
    }
 -(void)viewDidDisappear:(BOOL)animated
 {
@@ -155,40 +181,26 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    @try {
         
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell ;
-    
-    if (indexPath.row ==  currentPage+10+1) {
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
+        static NSString *CellIdentifier = @"Cell";
+        
+        ListViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        }
-        cell.textLabel.textAlignment = UITextAlignmentCenter;
-        cell.textLabel.text = @"次の10件を表示する";
-        return cell;
-    }else
-    {
-    static NSString *CellIdentifier = @"Cell1";
-    ListViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        
-        
-        NSArray* views = [[NSBundle mainBundle] loadNibNamed:@"ListViewCell" owner:nil options:nil];
-        
-        for (UIView *view in views) {
-            if([view isKindOfClass:[UITableViewCell class]])
-            {
-                cell = (ListViewCell*)view;
-                
-                NSLog(@"cells");
-                break;
+            
+            NSArray* views = [[NSBundle mainBundle] loadNibNamed:@"ListViewCell" owner:nil options:nil];
+            
+            for (UIView *view in views) {
+                if([view isKindOfClass:[UITableViewCell class]])
+                {
+                    cell = (ListViewCell*)view;
+                }
             }
         }
         
-    }
+//        return cell;
+
+
     cell.btnBookMark.tag =indexPath.row-1;
     if (indexPath.row>=1) {
        
@@ -200,40 +212,15 @@
     
        NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
         path = [path stringByAppendingString:@"/"];
-        path = [path stringByAppendingString:categoryData.image_name];
+        path = [path stringByAppendingString:[NSString stringWithFormat:@"80x60_%@",categoryData.image_name]];
         
         UIImage *image = [UIImage imageWithContentsOfFile:path];
         
-        
-        /*float actualHeight = 60;//image.size.height;
-        float actualWidth = 80;//image.size.width;
-        float imgRatio = actualWidth/actualHeight;
-        float maxRatio = 320.0/480.0;
-        
-        if(imgRatio!=maxRatio){
-            if(imgRatio < maxRatio){
-                imgRatio = 480.0 / actualHeight;
-                actualWidth = imgRatio * actualWidth;
-                actualHeight = 480.0;
-            }
-            else{
-                imgRatio = 320.0 / actualWidth;
-                actualHeight = imgRatio * actualHeight;
-                actualWidth = 320.0;
-            }
-        }
-        CGRect rect = CGRectMake(0.0, 0.0, actualWidth, actualHeight);
-        UIGraphicsBeginImageContext(rect.size);
-        [image drawInRect:rect];
-        UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-        
-        [cell.imgDeatils setImage:img];*/
+
         [cell.imgDeatils setImage:image];
         cell.lblTitle.text = categoryData.category_name;
         cell.lblTitle.textColor =[UIColor grayColor];
-
+        
 
         cell.lblDescription.text = shopData.store_name;
         cell.lblDescription.font = [UIFont systemFontOfSize:12];
@@ -267,6 +254,29 @@
         cell.strLongitude = shopData.longitude;
         cell.imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
         
+        double Latitude = [shopData.latitude doubleValue];
+        
+        
+        double Longitude = [shopData.longitude doubleValue];
+        // Latitude= 13.060422;
+        // Longitude=80.249583;
+        CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
+        
+        //NSLog(@"locaion update %f",newLocation.coordinate.latitude);
+        
+        CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
+        //4000 mtr = 15 min
+        //NSLog(@"meters %d",meters);
+        double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
+        int time = (me/4000)*15;
+         cell.lblDistance.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
+        
+       //  cell.imgDirection.image= [UIImage imageNamed:@"Arrow.png"]; 
+        [cell.imgDirection setImage:[UIImage imageNamed:@"Arrow.png"]];
+        cell.imgDirection.transform = CGAffineTransformMakeRotation((degrees - newHeadingObject.magneticHeading) * M_PI / 180);
+         
+     //  cell.imgDirection.transform = CGAffineTransformMakeRotation( [self calculateUserAngle:currentLocation.coordinate lat:Latitude lon:Longitude]);
+       // cell.lblDistance.text = @"dddddd";
         
     }
         
@@ -285,18 +295,12 @@
         cell.strLongitude = @"139.71179";
 
   }
-    [cell initlocation];
+    //[cell initlocation];
     cell.offerType = @"list";
         return cell;
-    }
+    
      
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Table error");
-    }
-    @finally {
-         
-    }
+  
 
 }
 
@@ -307,6 +311,7 @@
 {
     
     [locationManager stopUpdatingLocation];
+     [locationManager stopUpdatingHeading];
     if (indexPath.row ==  currentPage+10+1) {
         currentPage =currentPage+10;
         [self.tblListView reloadData];
@@ -316,16 +321,20 @@
     
     if(indexPath.row == 0)
     {
+          [locationManager stopUpdatingLocation];
+        [locationManager stopUpdatingHeading];
+       self.ginzaDetailsView =[[GinzaDetailsViewController alloc]init];
         
-        GinzaDetailsViewController *ginzadetail =[[GinzaDetailsViewController alloc]init];
+      [self presentModalViewController:ginzaDetailsView animated:YES];
         
-        [self presentModalViewController:ginzadetail animated:YES];
+        
         
     }
     
     else
     {
-    
+      [locationManager stopUpdatingLocation];
+         [locationManager stopUpdatingHeading];
         OfferDetailsViewController *detail =[[OfferDetailsViewController alloc]init];
         Offer *offer =[dataArray objectAtIndex:indexPath.row-1];
         
@@ -399,6 +408,103 @@
 
     [UIView commitAnimations];
 }
+
+#pragma mark CLLocation Delegates methods
+-(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+   
+    currentLocation = [[CLLocation alloc]init];
+    currentLocation =  newLocation;   
+    
+    
+    NSLog(@"didUpdateToLocation");
+    
+   
+     
+      [tblListView reloadData];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading 
+{
+    // UITableViewCell *cell =  (UITableViewCell *)[tblListView cellForRowAtIndexPath:[NSIndexPath indexPathWithIndex:2]];
+    
+  
+    NSLog(@"update heading....");
+    
+    newHeadingObject = [[CLHeading alloc]init];
+    newHeadingObject = newHeading;
+
+    
+    //imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
+  
+
+   //  [tblListView reloadData];
+    
+}
+
+
+
+-(float) calculateUserAngle:(CLLocationCoordinate2D)user lat:(float)lat lon:(float)lang {
+  float   locLat = lat;
+   float  locLon = lang;
+    
+    NSLog(@"%f ; %f", locLat, locLon);
+    
+    float pLat;
+    float pLon;
+    
+    if(locLat > user.latitude && locLon > user.longitude) {
+        // north east
+        
+        pLat = user.latitude;
+        pLon = locLon;
+        
+        degrees = 0;
+    }
+    else if(locLat > user.latitude && locLon < user.longitude) {
+        // south east
+        
+        pLat = locLat;
+        pLon = user.longitude;
+        
+        degrees = 45;
+    }
+    else if(locLat < user.latitude && locLon < user.longitude) {
+        // south west
+        
+        pLat = locLat;
+        pLon = user.latitude;
+        
+        degrees = 180;
+    }
+    else if(locLat < user.latitude && locLon > user.longitude) {
+        // north west
+        
+        pLat = locLat;
+        pLon = user.longitude;
+        
+        degrees = 225;
+    }
+    
+    // Vector QP (from user to point)
+    float vQPlat = pLat - user.latitude;
+    float vQPlon = pLon - user.longitude;
+    
+    // Vector QL (from user to location)
+    float vQLlat = locLat - user.latitude;
+    float vQLlon = locLon - user.longitude;
+    
+    // degrees between QP and QL
+    float cosDegrees = (vQPlat * vQLlat + vQPlon * vQLlon) / sqrt((vQPlat*vQPlat + vQPlon*vQPlon) * (vQLlat*vQLlat + vQLlon*vQLlon));
+   return degrees = degrees + acos(cosDegrees);
+    
+    NSLog(@"Rotate:%f",degrees);
+}
+
+
+
+
+
 
 
 @end

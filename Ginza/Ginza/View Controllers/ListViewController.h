@@ -8,18 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
-
+//#import "GinzaDetailsViewController.m"
 
 @class OffersDetailsViewController;
 @class ListViewCell;
-
-@interface ListViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
+@class GinzaDetailsViewController;
+@interface ListViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,CLLocationManagerDelegate>
 {
     UITableView *tblListView;
     BOOL validLocation;
-    OffersDetailsViewController *detailsViewController; 
+    OffersDetailsViewController *detailsView; 
     
-    
+    GinzaDetailsViewController *ginzaDetailsView;
     NSMutableArray *dataArray;
     
     
@@ -51,22 +51,25 @@
     BOOL oneCheckboxSelected ; 
     
     CLLocation *currentLocation ;
+    CLHeading  *newHeadingObject;
     //ListViewCell *cell;
-
+CLLocationManager *locationManager;
     
 }
 @property(nonatomic) int currentPage;
+@property(nonatomic,retain) OffersDetailsViewController *detailsView; 
+@property(nonatomic,retain) GinzaDetailsViewController *ginzaDetailsView;
 @property(nonatomic,retain)IBOutlet UILabel *lblEventCount;
 @property(nonatomic,retain)IBOutlet UILabel *lblFilterText;
 @property(nonatomic,retain) NSMutableDictionary *dataDict;
 @property(nonatomic,retain) NSMutableArray *listDataArray;
-@property(nonatomic,retain)CLLocation *currentLocation ;
+//@property(nonatomic,retain)CLLocation *currentLocation ;
 @property(nonatomic,retain)NSMutableArray *dataArray;
 @property(nonatomic,retain)IBOutlet   UITableView *tblListView;
-@property(nonatomic,retain) OffersDetailsViewController *detailsViewController; 
+//@property(nonatomic,retain) OffersDetailsViewController *detailsViewController; 
 @property(nonatomic,retain) NSMutableArray *arryListDetails;
 @property(nonatomic,retain) NSMutableArray *arrayOfTitles;
-
+//@property(nonatomic,retain) CLHeading  *newHeadingObject;
 @property(nonatomic,retain) NSMutableArray *arrayOfImages;
 
 
