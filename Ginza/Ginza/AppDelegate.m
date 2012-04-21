@@ -22,11 +22,12 @@
 
 @implementation AppDelegate
 
+
 @synthesize window = _window;
 @synthesize tabBarController = _tabBarController;
 @synthesize managedObjectModel,managedObjectContext,persistentStoreCoordinator,filterString,arraySelectedCategories,arraySelectedSubCategories,splashView,isFilterOn,arrayStoreIds,bookmarkviewController,lastmerchantsynceddate,offerDataArray,poiDataDictionary,offerType,listViewDataArray,ginzaEvents;
 
-
+//test
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
