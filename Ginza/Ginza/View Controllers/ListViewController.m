@@ -27,8 +27,9 @@
 
 
 #import "GinzaDetailsViewController.h"
-
-
+#define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
+double DegreesToRadians(double degrees) {return degrees * M_PI / 180.0;};
+double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 @implementation ListViewController
 @synthesize tblListView;
 
@@ -60,7 +61,25 @@
 //    }
 //    return self;
 //}
-
+-(double) bearingToLocation:(CLLocation *) destinationLocation {
+    
+    double lat1 = DegreesToRadians(currentLocation.coordinate.latitude);
+    double lon1 = DegreesToRadians(currentLocation.coordinate.longitude);
+    
+    double lat2 = DegreesToRadians(destinationLocation.coordinate.latitude);
+    double lon2 = DegreesToRadians(destinationLocation.coordinate.longitude);
+    
+    double dLon = lon2 - lon1;
+    
+    double y = sin(dLon) * cos(lat2);
+    double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
+    double radiansBearing = atan2(y, x);
+    if(radiansBearing < 0.0)
+        radiansBearing += 2*M_PI;
+    
+    
+    return DegreesToRadians(radiansBearing);
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -121,8 +140,8 @@
     
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-    locationManager.distanceFilter =3; // whenever we move
-    locationManager.headingFilter = 5;
+    locationManager.distanceFilter =kCLDistanceFilterNone; // whenever we move
+  //  locationManager.headingFilter = 5;
     locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;; // 100 m
     [locationManager startUpdatingLocation];
     [locationManager startUpdatingHeading];
@@ -283,8 +302,14 @@
        //  cell.imgDirection.image= [UIImage imageNamed:@"Arrow.png"]; 
         [cell.imgDirection setImage:[UIImage imageNamed:@"Arrow.png"]];
       //  cell.imgDirection.transform = CGAffineTransformMakeRotation((degrees - newHeadingObject.magneticHeading) * M_PI / 180);
-         cell.imgDirection.transform = CGAffineTransformMakeRotation(( [self calculateUserAngle:currentLocation.coordinate lat:Latitude lon:Longitude]-newHeadingObject.magneticHeading)*M_PI / 180);
+      //   cell.imgDirection.transform = CGAffineTransformMakeRotation(( [self calculateUserAngle:currentLocation.coordinate lat:Latitude lon:Longitude]-newHeadingObject.magneticHeading)*M_PI / 180);
        // cell.lblDistance.text = @"dddddd";
+        
+//         cell.imgDirection.transform = CGAffineTransformMakeRotation( [self bearingBetweenStartLocation:currentLocation andEndLocation:storeLocation]-newHeadingObject.magneticHeading);
+        
+        cell.imgDirection.transform = CGAffineTransformMakeRotation( (([self bearingToLocation:storeLocation]- newHeadingObject.magneticHeading)*M_PI/180));
+       // NSLog(@"DDDDDDD:%f",[self bearingToLocation:storeLocation]);
+       
         
     }
         
@@ -419,9 +444,9 @@
     currentLocation =  newLocation;   
     
     
-    NSLog(@"didUpdateToLocation");
+NSLog(@"didUpdateToLocation");
     
-    [tblListView reloadData];
+   // [tblListView reloadData];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading 
@@ -438,7 +463,7 @@
     //imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
   
 
-    // [tblListView reloadData];
+   [tblListView reloadData];
     
 }
 
@@ -496,12 +521,26 @@
     
     // degrees between QP and QL
     float cosDegrees = (vQPlat * vQLlat + vQPlon * vQLlon) / sqrt((vQPlat*vQPlat + vQPlon*vQPlon) * (vQLlat*vQLlat + vQLlon*vQLlon));
-   return degrees = degrees + acos(cosDegrees);
+   // NSLog(@"Rotate:%f",degrees);
+
     
-    NSLog(@"Rotate:%f",degrees);
+    return degrees = degrees + acos(cosDegrees);
+    
+    }
+
+
+-(float) bearingBetweenStartLocation:(CLLocation *)startLocation andEndLocation:(CLLocation *)endLocation{
+    
+    CLLocation *northPoint = [[CLLocation alloc] initWithLatitude:(startLocation.coordinate.latitude)+.01 longitude:endLocation.coordinate.longitude] ;
+    float magA = [northPoint distanceFromLocation:startLocation];
+    float magB = [endLocation distanceFromLocation:startLocation];
+    CLLocation *startLat = [[CLLocation alloc] initWithLatitude:startLocation.coordinate.latitude longitude:0] ;
+    CLLocation *endLat = [[CLLocation alloc] initWithLatitude:endLocation.coordinate.latitude longitude:0] ;
+    float aDotB = magA*[endLat distanceFromLocation:startLat];
+    
+    //NSLog(@"RADIANS_TO_DEGREES:%f",RADIANS_TO_DEGREES(acosf(aDotB/(magA*magB))));
+    return RADIANS_TO_DEGREES(acosf(aDotB/(magA*magB)));
 }
-
-
 
 
 

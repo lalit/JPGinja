@@ -92,6 +92,7 @@ CLLocationManager *locationManager;
 @property(nonatomic,retain)IBOutlet     UIPanGestureRecognizer *swipeGestureDown;
 @property(nonatomic,retain)IBOutlet     UIPanGestureRecognizer *panGestureforFiter;
 @property(nonatomic,retain)IBOutlet     UIPanGestureRecognizer *panGestureforSearch;
-
+-(double) bearingToLocation:(CLLocation *) destinationLocation;
+-(NSString *) compassOrdinalToLocation:(CLLocation *) nwEndPoint;
 -(IBAction)btnGinzaMenu:(id)sender;
 @end
