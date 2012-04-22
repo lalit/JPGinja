@@ -121,12 +121,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/View Controllers/ListViewController.m"
-         timestampString = "356776002.295491"
+         timestampString = "356780602.359567"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "411"
-         endingLineNumber = "411"
-         landmarkName = "-locationManager:didUpdateToLocation:fromLocation:"
+         startingLineNumber = "412"
+         endingLineNumber = "412"
+         landmarkName = "-btnGinzaMenu:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

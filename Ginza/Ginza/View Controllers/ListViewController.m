@@ -121,11 +121,19 @@
     
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-    locationManager.distanceFilter =10; // whenever we move
+    locationManager.distanceFilter =3; // whenever we move
     locationManager.headingFilter = 5;
     locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;; // 100 m
     [locationManager startUpdatingLocation];
     [locationManager startUpdatingHeading];
+    
+//    
+//    locationManager = [[CLLocationManager alloc] init];
+//    locationManager.delegate = self;
+//    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
+//    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;; // 100 m
+//    [locationManager startUpdatingLocation];
+//    [locationManager startUpdatingHeading];
     self.navigationController.navigationBarHidden = YES;
     
     
@@ -274,10 +282,10 @@
         
        //  cell.imgDirection.image= [UIImage imageNamed:@"Arrow.png"]; 
         [cell.imgDirection setImage:[UIImage imageNamed:@"Arrow.png"]];
-        cell.imgDirection.transform = CGAffineTransformMakeRotation((degrees - newHeadingObject.magneticHeading) * M_PI / 180);
-         
-     //  cell.imgDirection.transform = CGAffineTransformMakeRotation( [self calculateUserAngle:currentLocation.coordinate lat:Latitude lon:Longitude]);
+      //  cell.imgDirection.transform = CGAffineTransformMakeRotation((degrees - newHeadingObject.magneticHeading) * M_PI / 180);
+//         cell.imgDirection.transform = CGAffineTransformMakeRotation(( [self calculateUserAngle:currentLocation.coordinate lat:Latitude lon:Longitude]-newHeadingObject.magneticHeading)*M_PI / 180);
        // cell.lblDistance.text = @"dddddd";
+        cell.imgDirection.transform = CGAffineTransformMakeRotation(( [self calculateUserAngle:currentLocation.coordinate lat:Latitude lon:Longitude]-newHeadingObject.magneticHeading)*M_PI / 180);
         
     }
         
@@ -296,7 +304,7 @@
         cell.strLongitude = @"139.71179";
 
   }
-    //[cell initlocation];
+    
     cell.offerType = @"list";
         return cell;
     
@@ -344,7 +352,14 @@
 
 }
 
+//Please delete this function after our conversation stops this to show just show you 
 
+-(IBAction)getUserDetails:(id)sender
+{
+
+    NSLog(@"helllow ");
+
+}
 
 -(IBAction)GinzaswipeDown:(id)sender
 {
@@ -408,17 +423,20 @@
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
    
-    currentLocation = [[CLLocation alloc]init];
-    //currentLocation =  newLocation;
+
+    currentLocation =  newLocation;   
+
     
     
    currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
     
     NSLog(@"didUpdateToLocation");
     
+
    
      
       [tblListView reloadData];
+
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading 
@@ -428,14 +446,14 @@
   
     NSLog(@"update heading....");
     
-    newHeadingObject = [[CLHeading alloc]init];
+  //  newHeadingObject = [[CLHeading alloc]init];
     newHeadingObject = newHeading;
 
     
     //imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
   
 
-     [tblListView reloadData];
+    // [tblListView reloadData];
     
 }
 
