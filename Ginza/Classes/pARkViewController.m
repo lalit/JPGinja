@@ -116,6 +116,8 @@
     ARView *arView = (ARView *)self.view;
     arView.currentDistance =5393913;
     arView.maxtDistance=5393913+50;
+    arView.currentDistance =0;
+    arView.maxtDistance=50;
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
     if (placesOfInterest==nil) {

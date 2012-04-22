@@ -65,7 +65,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "381"
          endingLineNumber = "381"
-         landmarkName = "-GinzaswipeDown:"
+         landmarkName = "-tableView:didSelectRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -78,7 +78,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "399"
          endingLineNumber = "399"
-         landmarkName = "-GinzafilterViewDown:"
+         landmarkName = "-GinzaswipeDown:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -91,7 +91,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "447"
          endingLineNumber = "447"
-         landmarkName = "-locationManager:didUpdateToLocation:fromLocation:"
+         landmarkName = "-btnGinzaMenu:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -130,7 +130,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "343"
          endingLineNumber = "343"
-         landmarkName = "-tableView:didSelectRowAtIndexPath:"
+         landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -221,7 +221,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "440"
          endingLineNumber = "440"
-         landmarkName = "-locationManager:didUpdateToLocation:fromLocation:"
+         landmarkName = "-btnGinzaMenu:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

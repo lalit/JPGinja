@@ -302,8 +302,8 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
        //  cell.imgDirection.image= [UIImage imageNamed:@"Arrow.png"]; 
         [cell.imgDirection setImage:[UIImage imageNamed:@"Arrow.png"]];
       //  cell.imgDirection.transform = CGAffineTransformMakeRotation((degrees - newHeadingObject.magneticHeading) * M_PI / 180);
-      //   cell.imgDirection.transform = CGAffineTransformMakeRotation(( [self calculateUserAngle:currentLocation.coordinate lat:Latitude lon:Longitude]-newHeadingObject.magneticHeading)*M_PI / 180);
        // cell.lblDistance.text = @"dddddd";
+       // cell.imgDirection.transform = CGAffineTransformMakeRotation(( [self calculateUserAngle:currentLocation.coordinate lat:Latitude lon:Longitude]-newHeadingObject.magneticHeading)*M_PI / 180);
         
 //         cell.imgDirection.transform = CGAffineTransformMakeRotation( [self bearingBetweenStartLocation:currentLocation andEndLocation:storeLocation]-newHeadingObject.magneticHeading);
         
@@ -376,7 +376,14 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 
 }
 
+//Please delete this function after our conversation stops this to show just show you 
 
+-(IBAction)getUserDetails:(id)sender
+{
+
+    NSLog(@"helllow ");
+
+}
 
 -(IBAction)GinzaswipeDown:(id)sender
 {
@@ -440,13 +447,21 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
    
-   // currentLocation = [[CLLocation alloc]init];
+
     currentLocation =  newLocation;   
+
     
     
-//NSLog(@"didUpdateToLocation");
+
+   currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
     
-   // [tblListView reloadData];
+    NSLog(@"didUpdateToLocation");
+    
+
+   
+     
+      [tblListView reloadData];
+
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading 

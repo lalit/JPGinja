@@ -107,12 +107,26 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/pARkViewController.m"
-         timestampString = "356710326.307316"
+         timestampString = "356767943.512219"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "120"
-         endingLineNumber = "120"
+         startingLineNumber = "122"
+         endingLineNumber = "122"
          landmarkName = "-updateView"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "Ginza/View Controllers/ListViewController.m"
+         timestampString = "356780602.359567"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "412"
+         endingLineNumber = "412"
+         landmarkName = "-btnGinzaMenu:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

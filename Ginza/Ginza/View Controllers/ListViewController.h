@@ -86,7 +86,7 @@ CLLocationManager *locationManager;
 @property(nonatomic,retain)IBOutlet     UILabel *lblnewDistance;
 @property(nonatomic,retain)    NSString *strDistance;
 @property(nonatomic,retain)    UIImageView *imgViewditection;
-
+-(float) calculateUserAngle:(CLLocationCoordinate2D)user lat:(float)lat lon:(float)lang;
 -(void)NextViewAction:(id)sender;
 -(void)btnbookmarkAction :(id)sender :(NSIndexPath *)path;
 @property(nonatomic,retain)IBOutlet     UIPanGestureRecognizer *swipeGestureDown;
