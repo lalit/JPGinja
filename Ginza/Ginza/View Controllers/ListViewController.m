@@ -444,7 +444,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     currentLocation =  newLocation;   
     
     
-NSLog(@"didUpdateToLocation");
+//NSLog(@"didUpdateToLocation");
     
    // [tblListView reloadData];
 }
@@ -454,7 +454,7 @@ NSLog(@"didUpdateToLocation");
     // UITableViewCell *cell =  (UITableViewCell *)[tblListView cellForRowAtIndexPath:[NSIndexPath indexPathWithIndex:2]];
     
   
-    NSLog(@"update heading....");
+  //  NSLog(@"update heading....");
     
   //  newHeadingObject = [[CLHeading alloc]init];
     newHeadingObject = newHeading;
