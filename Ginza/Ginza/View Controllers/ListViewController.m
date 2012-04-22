@@ -296,7 +296,7 @@
         cell.strLongitude = @"139.71179";
 
   }
-    //[cell initlocation];
+    
     cell.offerType = @"list";
         return cell;
     
