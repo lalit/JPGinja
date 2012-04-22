@@ -31,4 +31,6 @@
 @property (nonatomic) float newAngle;
 @property (nonatomic) float referenceAngle;
 @property (nonatomic) float RADIUS;
+-(void) addTargetIndicatorWithHeading:(float)heading andDistance:(float)distance;
+-(float) getHeadingFromCoordinate:(CLLocation*)fromLocation toCoordinate:(CLLocation*)toLocation;
 @end

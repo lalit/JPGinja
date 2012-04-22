@@ -45,6 +45,7 @@
 -(IBAction)btnModeChanged:(id)sender;
 -(IBAction)btnFindUserLocation:(id)sender;
 - (void)plotOfferPositions:(NSString *)responseString;
+-(IBAction)btnGinzaMenu:(id)sender;
 @end
 
 

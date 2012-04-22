@@ -112,6 +112,9 @@
 @property (nonatomic, retain)IBOutlet UIView *helpView;
 @property (nonatomic, retain)IBOutlet UIImageView *virtualwalkArrow;
 
+
+-(float) getHeadingFromCoordinate:(CLLocation*)fromLocation toCoordinate:(CLLocation*)toLocation;
+-(void) addTargetIndicatorWithHeading:(float)heading andDistance:(float)distance;
 - (IBAction)calibrate:(id)sender;
 
 -(void)radarSpecificSettings;

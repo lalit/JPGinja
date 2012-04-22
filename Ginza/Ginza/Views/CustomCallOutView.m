@@ -18,6 +18,7 @@
 @synthesize locationManager,currentLocation,offerDataArray,offerTitleLabel;
 @synthesize popupThumb,distanceLabel,timeLabel,btnBookmark,popupbg,currentOffer;
 @synthesize desLabel,popupButton,parentViewController,distanceLabel1,distanceLabel2,distanceLabel3,distanceLabel4,btnNext,btnPrevious;
+@synthesize txtcp;
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -88,17 +89,20 @@
     
     [popup addSubview:popupThumb];
     
-    offerTitleLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 11, 150, 21)];
+    offerTitleLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 5, 150, 21)];
     offerTitleLabel.backgroundColor =[UIColor clearColor];
-    offerTitleLabel.text = offer.offer_title;
+    offerTitleLabel.text = categoryData.category_name;
     offerTitleLabel.textColor =[UIColor grayColor];
     [popup addSubview:offerTitleLabel];
     
-    desLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 30, 150, 21)];
+    desLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 20, 150, 21)];
     desLabel.backgroundColor =[UIColor clearColor];
-    desLabel.text = offer.lead_text;
+    desLabel.text = merchant.store_name;
     [popup addSubview:desLabel];
-    
+    txtcp = [[UILabel alloc]initWithFrame:CGRectMake(8, 35, 150, 21)];
+    txtcp.backgroundColor =[UIColor clearColor];
+    txtcp.text = offer.copy_text;
+    [popup addSubview:txtcp];
     double Latitude = [merchant.latitude doubleValue];
     double Longitude = [merchant.longitude doubleValue];
     
@@ -262,10 +266,10 @@
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     [popupThumb setImage:img];
-    
-    offerTitleLabel.text = offer.offer_title;
+     txtcp.text = offer.copy_text;
+    offerTitleLabel.text = categoryData.category_name;
 
-    desLabel.text = offer.lead_text;
+    desLabel.text = merchant.store_name;
  
     
     double Latitude = [merchant.latitude doubleValue];
@@ -313,6 +317,9 @@
         
     }
    
+    if (currentPos==[offerDataArray count]-1) {
+        btn.hidden=YES;
+    }
     if (currentPos > 0) {
         self.btnPrevious.hidden = NO;
     }
@@ -334,6 +341,9 @@
     }else
     {
         currentPos =0;
+        btn.hidden= YES;
+    }
+    if (currentPos==0) {
         btn.hidden= YES;
     }
    

@@ -21,6 +21,7 @@
 @property(nonatomic,retain)UILabel *distanceLabel2;
 @property(nonatomic,retain)UILabel *distanceLabel3;
 @property(nonatomic,retain)UILabel *distanceLabel4;
+@property(nonatomic,retain)UILabel *txtcp;
 
 @property(nonatomic,retain)UIViewController *parentViewController;
 @property(nonatomic,retain)NSMutableArray *offerDataArray;

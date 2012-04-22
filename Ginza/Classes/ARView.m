@@ -402,6 +402,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	for (NSData *d in [orderedDistances reverseObjectEnumerator]) {
 		const DistanceAndIndex *distanceAndIndex = (const DistanceAndIndex *)d.bytes;
 		PlaceOfInterest *poi = (PlaceOfInterest *)[placesOfInterest objectAtIndex:distanceAndIndex->index];	
+        NSLog(@"%f,%f,%f,%f",distanceAndIndex->distance , self.currentDistance , distanceAndIndex->distance,self.maxtDistance);
         if (distanceAndIndex->distance >= self.currentDistance && distanceAndIndex->distance<=self.maxtDistance) {
             [self addSubview:poi.view];
         }
