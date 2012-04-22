@@ -426,14 +426,14 @@
   
     NSLog(@"update heading....");
     
-    newHeadingObject = [[CLHeading alloc]init];
+  //  newHeadingObject = [[CLHeading alloc]init];
     newHeadingObject = newHeading;
 
     
     //imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
   
 
-     [tblListView reloadData];
+    // [tblListView reloadData];
     
 }
 
