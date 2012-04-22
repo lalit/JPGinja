@@ -409,14 +409,16 @@
 {
    
     currentLocation = [[CLLocation alloc]init];
-    currentLocation =  newLocation;   
+    //currentLocation =  newLocation;
     
+    
+   currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
     
     NSLog(@"didUpdateToLocation");
     
    
      
-      //[tblListView reloadData];
+      [tblListView reloadData];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading 

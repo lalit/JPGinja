@@ -234,6 +234,8 @@
 
 - (NSArray *)nearestGinzhaLocationsWithinOneKilometers {
     CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
+    currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+    int k=0;
     NSMutableArray *nearestLocations=[[NSMutableArray alloc]init];
     for (id key in mapDataDict)
     {
@@ -243,8 +245,9 @@
         CLLocationCoordinate2D coordinate;
         coordinate.latitude = latitude;
         coordinate.longitude = longitude; 
-        CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: latitude longitude:-longitude];
+        CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: latitude longitude:longitude];
         double distance = [currentLocation distanceFromLocation: offerLoc];
+        NSLog(@"distance = %d,%f,%f,%f",k++,distance,latitude,longitude);
         if (distance<1000) {
             [nearestLocations addObject:offerLoc];
         }
