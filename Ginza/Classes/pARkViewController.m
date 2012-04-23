@@ -122,8 +122,8 @@
     ARView *arView = (ARView *)self.view;
     arView.currentDistance =5393913;
     arView.maxtDistance=5393913+50;
-    //arView.currentDistance =0;
-    //arView.maxtDistance=50;
+    arView.currentDistance =0;
+    arView.maxtDistance=50;
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
     if (placesOfInterest==nil) {
@@ -166,9 +166,25 @@
 
 -(IBAction)sliderChanged:(id)sender
 {
-    NSLog(@"slider changed");
-    radius = self.slider.value;
-    self.lblDistance.text =[NSString stringWithFormat:@"%d",radius];
+    NSLog(@"slider changed %d",(int)slider.value);
+    if ((int)slider.value==4) {
+        radius=0;
+    }
+    if ((int)slider.value==3) {
+        radius=50;
+    }
+    if ((int)slider.value==2) {
+        radius=200;
+    }
+    if ((int)slider.value==1) {
+        radius=500;
+    }
+    if ((int)slider.value==0) {
+        radius=1000;
+    }
+    NSLog(@"radius = %f",radius);
+    self.lblDistance.text =[NSString stringWithFormat:@"%.f",radius];
+    [self.lblDistance sizeToFit];
     //[self updateView];
 }
 
@@ -240,8 +256,8 @@
     self.slider.transform = CGAffineTransformRotate(self.slider.transform, 90 * M_PI /180);
 	self.slider.backgroundColor = [UIColor clearColor];
 	self.slider.value = 0;
-    
-	[self.slider setMaximumValue:1000];
+	[self.slider setMaximumValue:4];
+    [self.slider setValue:4];
     self.settingView = [[UIView alloc]initWithFrame:self.view.frame];
     self.settingView.backgroundColor =[UIColor blackColor];
     // self.settingView.alpha = 0.8;
@@ -259,9 +275,9 @@
     
     
     [self radarSpecificSettings];
-    self.slider.value = 30;
-    radius=30;
-    self.lblDistance.text = [NSString stringWithFormat:@"%d m",30];
+    self.slider.value = 3;
+    radius=50;
+    //self.lblDistance.text = [NSString stringWithFormat:@"%d m",30];
     self.orientation = UIInterfaceOrientationPortrait;
     
 }
