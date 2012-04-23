@@ -92,9 +92,13 @@
         //[self performSelectorOnMainThread:@selector(fetchedData:) 
         //                 withObject:data waitUntilDone:NO];
         [self getOfferData];
+        //[self performSelectorInBackground:@selector(getOfferData) withObject:nil];
+        
         self.poiDataDictionary = [self getPointOfInterestItems];
-        [self getListViewData];
-        [self getGinzaEvents];
+   //     [self getListViewData];
+         [self performSelectorInBackground:@selector(getListViewData) withObject:nil];
+    //    [self getGinzaEvents];
+         [self performSelectorInBackground:@selector(getGinzaEvents) withObject:nil];
 
         dispatch_async(dispatch_get_main_queue(), ^{
         @try {
