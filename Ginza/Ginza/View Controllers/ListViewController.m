@@ -292,6 +292,14 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         
         cell.strLatitude = @"35.665756";
         cell.strLongitude = @"139.71179";
+        double Latitude = 35.665756;
+        double Longitude = 139.71179;
+        CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
+        CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
+        double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
+        int time = (me/4000)*15;
+        cell.lblDistance.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
+        cell.imgDirection.image=[self rotate: cell.imgDirection.image radians:((([self bearingToLocation:storeLocation])- newHeadingObject.magneticHeading)*M_PI)/360];
         
     }
     
