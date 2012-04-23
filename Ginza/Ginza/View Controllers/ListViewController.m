@@ -5,8 +5,8 @@
 //  Created by Arul Karthik on 07/03/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
-
-
+#import <QuartzCore/QuartzCore.h>
+//#import <Quartz/Quartz.h>
 #import <CoreLocation/CoreLocation.h>
 #import "ListViewController.h"
 #import "MapViewController.h"
@@ -301,14 +301,14 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         
        //  cell.imgDirection.image= [UIImage imageNamed:@"Arrow.png"]; 
         [cell.imgDirection setImage:[UIImage imageNamed:@"Arrow.png"]];
-      //  cell.imgDirection.transform = CGAffineTransformMakeRotation((degrees - newHeadingObject.magneticHeading) * M_PI / 180);
-       // cell.lblDistance.text = @"dddddd";
-       // cell.imgDirection.transform = CGAffineTransformMakeRotation(( [self calculateUserAngle:currentLocation.coordinate lat:Latitude lon:Longitude]-newHeadingObject.magneticHeading)*M_PI / 180);
-        
-//         cell.imgDirection.transform = CGAffineTransformMakeRotation( [self bearingBetweenStartLocation:currentLocation andEndLocation:storeLocation]-newHeadingObject.magneticHeading);
+        cell.imgDirection.transform = CGAffineTransformIdentity;
+      //  cell.imgDirection.layer.anchorPoint = CGPointMake(.5,.5);
+        // cell.imgDirection.layer.anchorPoint = CGPointMake(0,0);
         
         cell.imgDirection.transform = CGAffineTransformMakeRotation( (([self bearingToLocation:storeLocation]- newHeadingObject.magneticHeading)*M_PI/180));
-       // NSLog(@"DDDDDDD:%f",[self bearingToLocation:storeLocation]);
+        
+        
+       // NSLog(@"Angel:%f",[self bearingToLocation:storeLocation]);
        
         
     }
