@@ -49,7 +49,8 @@
     UIImageView *imgcompass;
     
     BOOL oneCheckboxSelected ; 
-    
+    NSString *currenDirection;
+    NSString *previousDirection;
     CLLocation *currentLocation ;
     CLHeading  *newHeadingObject;
     //ListViewCell *cell;

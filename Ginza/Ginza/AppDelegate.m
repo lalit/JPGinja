@@ -92,6 +92,8 @@
         //[self performSelectorOnMainThread:@selector(fetchedData:) 
         //                 withObject:data waitUntilDone:NO];
         [self getOfferData];
+       
+        
         self.poiDataDictionary = [self getPointOfInterestItems];
         [self getListViewData];
         [self getGinzaEvents];
