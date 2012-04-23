@@ -111,7 +111,8 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
          tblListView.dataSource = self;
          tblListView.sectionIndexMinimumDisplayRowCount = 5;
     
-    
+    UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer record in list view" message:[NSString stringWithFormat:@"%d",[self.dataArray count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+    [alert1 show];
    // tblListView = [[UITableView alloc] initWithFrame:CGRectMake(0 ,55, 320, 480)];
     
     
@@ -446,21 +447,12 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 #pragma mark CLLocation Delegates methods
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-   
-
     currentLocation =  newLocation;   
+    //currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
 
-    
-    
-
-   currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
     
     NSLog(@"didUpdateToLocation");
-    
-
-   
-     
-      [tblListView reloadData];
+    [tblListView reloadData];
 
 }
 

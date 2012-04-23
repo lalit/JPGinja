@@ -12,6 +12,7 @@
 #import "CustomCallOutView.h"
 #import "AddressAnnotation.h"
 #import "Location.h"
+#import "GinzaSubViewController.h"
 
 @implementation UIToolbar(Transparent) 
 -(void)drawRect:(CGRect)rect {
@@ -158,8 +159,13 @@
         lbl.font = [UIFont boldSystemFontOfSize:10.0];
         CLLocationCoordinate2D cor = [annotation coordinate];
         NSString *key =[NSString stringWithFormat:@"%f-%f",cor.latitude,cor.longitude];
+
+        if ([[NSString stringWithFormat:@"35.671635-139.763952"] isEqualToString:key]) {
+            lbl.text = @"G";
+        }else
+        {
         lbl.text = [NSString stringWithFormat:@"%d",[[self.mapDataDict objectForKey:key] count]];
-        
+        }
         [pinView addSubview:lbl];
         
     } 
@@ -177,9 +183,11 @@
     }
    
     self.mapDataDict = self.deligate.poiDataDictionary;
-    
+    UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer record in list view" message:[NSString stringWithFormat:@"%d",[self.mapDataDict count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+    [alert1 show];
     //=========Changed the logic by mobiquest . Checking offer having 1 km distance=======================
     NSArray *nearestGinzaLocation=[self nearestGinzhaLocationsWithinOneKilometers];
+    
     if ([nearestGinzaLocation count]>0) {
         for (CLLocation *loc in nearestGinzaLocation) {
             AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
@@ -234,9 +242,12 @@
 
 - (NSArray *)nearestGinzhaLocationsWithinOneKilometers {
     CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
-    currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+    //currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
     int k=0;
     NSMutableArray *nearestLocations=[[NSMutableArray alloc]init];
+    CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: 35.671635 longitude:139.763952];
+        [nearestLocations addObject:offerLoc];
+
     for (id key in mapDataDict)
     {
         NSArray *latlong = [key componentsSeparatedByString:@"-"];
@@ -370,6 +381,25 @@
           
         
         }
+}
+
+-(IBAction)btnGinzaMenu:(id)sender
+{
+    GinzaSubViewController  *infoViewController = [[GinzaSubViewController alloc]init];
+    self.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:infoViewController animated:NO];
+    CGRect rect = infoViewController.view.frame;
+    rect.origin.y = -1*rect.size.height;
+    infoViewController.view.frame =rect;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:1.0];
+    [UIView setAnimationDuration:0.75];
+    CGRect rect1 = infoViewController.view.frame;
+    rect1.origin.y = 0;
+    infoViewController.view.frame =rect1;
+    
+    [UIView commitAnimations];
 }
 
 @end

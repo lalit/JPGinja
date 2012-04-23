@@ -253,7 +253,7 @@
         cell.strLongitude = shopData.longitude;
     }
     
-    [cell initlocation];
+     //[cell initlocation];
      return cell;
 
     

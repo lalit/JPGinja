@@ -56,6 +56,7 @@
     if (lastSyncedDate ==nil) {
         lastSyncedDate = @"";
     }
+    
     if (self.lastmerchantsynceddate ==nil) {
         self.lastmerchantsynceddate = @"";
     }
@@ -90,11 +91,19 @@
         // NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://staging.citiworldprivileges.com/mobile/ginza-promotions/shop-list/?created_on=2012-03-02"]];
         //[self performSelectorOnMainThread:@selector(fetchedData:) 
         //                 withObject:data waitUntilDone:NO];
+        [self getOfferData];
+        self.poiDataDictionary = [self getPointOfInterestItems];
+        [self getListViewData];
+        [self getGinzaEvents];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
         @try {
             [self fetchOfferData:lastSyncedDate];
         }
         @catch (NSException *exception) {
-            NSLog(@"Offer data fetch %@",exception);
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Execute fetch offer %@",exception ] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+            [alert show];
+            
         }
         @finally {
             //NSLog(@" ");
@@ -110,13 +119,15 @@
         @finally {
             NSLog(@"error1");
         }
-        
+            
+            [self getOfferData];
+            self.poiDataDictionary = [self getPointOfInterestItems];
+            [self getListViewData];
+            [self getGinzaEvents];
+        });
     }
     
-    [self getOfferData];
-    self.poiDataDictionary = [self getPointOfInterestItems];
-    [self getListViewData];
-    [self getGinzaEvents];
+   
     
     pARkViewController *arviewController = [[pARkViewController alloc] initWithNibName:@"pARkViewController_iPhone" bundle:nil]; 
     
@@ -372,14 +383,14 @@
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Offer" inManagedObjectContext:context];
     [request setEntity:entity];
        NSPredicate *predicate =
-    [NSPredicate predicateWithFormat:@"store_id > 1"];
+    [NSPredicate predicateWithFormat:@"store_id > 0"];
     
     [request setPredicate:predicate];
     
     NSMutableArray *array = (NSMutableArray *)[managedObjectContext executeFetchRequest:request error:&error];
     self.offerDataArray = array;
-    
-    
+     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Total No of offer taken from DB" message:[NSString stringWithFormat:@"%d",[array count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+    [alert show];
     return array;
     
 }
@@ -493,7 +504,7 @@
 }
 
 -(void)fetchOfferData:(NSString *)lastSyncedDate{
-    
+    int c=0;
     NSLog(@"fetch offer data");
     NSString *urlString = @"";
     if ([lastSyncedDate length]==0) {
@@ -502,9 +513,15 @@
     {
         urlString = [NSString stringWithFormat:@"%@/offers/?created_on=%@",dataURL,lastSyncedDate];
     }
+    
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Execute fetch offer %@",urlString ] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+    [alert show];
+
+    
         
     NSData* responseData = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
     
+   
     NSError *error;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context =[appDeligate managedObjectContext];
@@ -523,6 +540,8 @@
     
     NSArray *dataArray = json;
     
+     UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer fetched" message:[NSString stringWithFormat:@"%d",[dataArray count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+    [alert1 show];
     NSLog(@" offer data count = %d",[dataArray count]);
     
     int g=0;
@@ -534,7 +553,7 @@
             int count =0;
             if (count==0) {
                 g++;
-               
+                c++;
                 NSManagedObject *datas;
                 
                 NSLog(@"Offer data %d",i);
@@ -590,7 +609,8 @@
             
         }
     }
-    
+    UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:@"Total No of offer taken from DB" message:[NSString stringWithFormat:@"%d",c] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+    [alert2 show];
     
 
 }
@@ -1304,7 +1324,7 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
      NSLog(@"applicationDidEnterBackground");
-    exit(0);
+    //exit(0);
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
@@ -1323,7 +1343,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    exit(0);
+    //exit(0);
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
@@ -1407,7 +1427,7 @@
                 [offerdataArray addObject:offer];
                 [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
             }
-            NSLog(@"load = %@",[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]);
+            //NSLog(@"load = %@",[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]);
         }
     }
     self.poiDataDictionary = mapDataDict;
@@ -1475,7 +1495,6 @@
         [tmpDict setValue:offer forKey:@"offer"];
         [tmpDict setValue:shopData forKey:@"shop"];
         [tmpDict setValue:categoryData forKey:@"cat"];
-        NSLog(@"offer = %@",offer);
         [dataDict setValue:tmpDict forKey:[NSString stringWithFormat:@"%d", index]];
        
         

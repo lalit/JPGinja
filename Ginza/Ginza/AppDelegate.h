@@ -62,4 +62,5 @@
 -(void)fetchOfferData:(NSString *)lastSyncedDate;
 -(void)fetchMerchantData:(NSData *)data;
 -(NSMutableArray *)getBookmarkOfferData;
+-(NSMutableDictionary *) getPointOfInterestItems;
 @end

@@ -56,6 +56,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "Categories.h"
 #import "CustomCallOutView.h"
+#import "Location.h"
 
 @implementation pARkViewController
 @synthesize rotateImg,compassImg,trueNorth;
@@ -86,6 +87,8 @@
 {
     NSLog(@"AR update location");
     currentLocation = newLocation;
+    Location *loc = [[Location sharedInstance]init];
+    loc.currentLocation=currentLocation;
     //if (radiusChanged == 1) {
     //[self updateView];
     radiusChanged=0;
@@ -111,13 +114,16 @@
         //self.tabBarController.selectedIndex =1;
     }
 }
+
+
+
 -(void)updateView
 {
     ARView *arView = (ARView *)self.view;
     arView.currentDistance =5393913;
     arView.maxtDistance=5393913+50;
-    arView.currentDistance =0;
-    arView.maxtDistance=50;
+    //arView.currentDistance =0;
+    //arView.maxtDistance=50;
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
     if (placesOfInterest==nil) {
@@ -131,6 +137,9 @@
             double latitude =[merchant.latitude doubleValue];
             double longitude = [merchant.longitude doubleValue];
             
+
+            CLLocation *storelocation =[[CLLocation alloc] initWithLatitude: latitude longitude:longitude];;
+            
             CustomCallOutView *popup =[[CustomCallOutView alloc]init];
             [popup prepareCallOutView:offer offerArray:offerdataArray];
             
@@ -139,13 +148,13 @@
             
             
             CLLocation *pointALocation = currentLocation;  
-            NSLog(@"%f",currentLocation.coordinate.latitude);
+            //NSLog(@"%f",currentLocation.coordinate.latitude);
             
             CLLocation *pointBLocation = [[CLLocation alloc] initWithLatitude:[merchant.latitude doubleValue] longitude:[merchant.longitude doubleValue]];  
             
             float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
             //float distanceMiles = (distanceMeters / 1609.344); 
-            NSLog(@"No of poi's1 %f",distanceMeters);
+           // NSLog(@"No of poi's1 %f",distanceMeters);
             // if (distanceMeters<radius) {
             [placesOfInterest insertObject:poi1 atIndex:i++];
             //} 
@@ -166,11 +175,11 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-    //locationManager = [[CLLocationManager alloc] init];
-    //locationManager.delegate = self;
-    //locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
-    //locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
-    //[locationManager startUpdatingLocation];
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
+    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
+    [locationManager startUpdatingLocation];
     [[UIAccelerometer sharedAccelerometer] setDelegate: self ];
     [[UIAccelerometer sharedAccelerometer] setUpdateInterval:2.0f];
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -222,7 +231,7 @@
         
     }
     radarView.pois = radarPointValues;
-    radarView.radius = 5.0;
+    radarView.radius = 30.0;
     [arView addSubview:radar];
     [arView addSubview:radarView];
     [arView bringSubviewToFront:btnSettings];
