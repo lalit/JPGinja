@@ -298,6 +298,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
         double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
         int time = (me/4000)*15;
+       
         cell.lblDistance.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
         cell.imgDirection.image=[self rotate: cell.imgDirection.image radians:((([self bearingToLocation:storeLocation])- newHeadingObject.magneticHeading)*M_PI)/360];
         
@@ -434,7 +435,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     
     
     NSLog(@"didUpdateToLocation");
-    // [tblListView reloadData];
+     [tblListView reloadData];
     
 }
 
@@ -447,12 +448,49 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     
     //  newHeadingObject = [[CLHeading alloc]init];
     newHeadingObject = newHeading;
-    
+    float mHeading = newHeadingObject.trueHeading;
     
     //imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
     
+   
     
-    [tblListView reloadData];
+    if ((mHeading >= 339) || (mHeading <= 22)) {
+        NSLog(@"User Heading ......->N");
+        currenDirection = @"N";
+       
+    }else if ((mHeading > 23) && (mHeading <= 68)) {
+        currenDirection = @"NE";
+         NSLog(@"User Heading ......->NE");
+    }else if ((mHeading > 69) && (mHeading <= 113)) {
+         currenDirection = @"E";
+         NSLog(@"User Heading ......->E");
+    }else if ((mHeading > 114) && (mHeading <= 158)) {
+          currenDirection = @"SE";
+         NSLog(@"User Heading ......->SE");
+    }else if ((mHeading > 159) && (mHeading <= 203)) {
+          currenDirection = @"S";
+         NSLog(@"User Heading ......->S");
+    }else if ((mHeading > 204) && (mHeading <= 248)) {
+       currenDirection = @"SW";
+         NSLog(@"User Heading ......->SW");
+    }else if ((mHeading > 249) && (mHeading <= 293)) {
+        currenDirection = @"W";
+         NSLog(@"User Heading ......->W");
+    }else if ((mHeading > 294) && (mHeading <= 338)) {
+       
+         NSLog(@"User Heading ......->NW");
+     currenDirection = @"NW";
+    }
+    
+    
+    if ([currenDirection isEqualToString:previousDirection ]){
+        
+    }
+    else {
+        NSLog(@"Table Reload Called");
+        [tblListView reloadData];
+        previousDirection = currenDirection;
+    }
     
 }
 
