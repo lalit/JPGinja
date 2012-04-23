@@ -299,6 +299,7 @@
 		0B9FAF15152B05CC00E44F64 /* RadarViewPortView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FAF13152B05CC00E44F64 /* RadarViewPortView.m */; };
 		0B9FAF1A152B05F400E44F64 /* PhysicalPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FAF17152B05F400E44F64 /* PhysicalPlace.m */; };
 		0B9FAF1B152B05F400E44F64 /* PoiItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FAF19152B05F400E44F64 /* PoiItem.m */; };
+		0BBB0A1B15459582008997CC /* settingback.png in Resources */ = {isa = PBXBuildFile; fileRef = 0BBB0A1A15459582008997CC /* settingback.png */; };
 		CEE2760E1542E9F100C667D9 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE2760D1542E9F100C667D9 /* Location.m */; };
 		F74371FB1524341E006C74DE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F74371FA1524341E006C74DE /* UIKit.framework */; };
 		F74371FD1524341E006C74DE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F74371FC1524341E006C74DE /* Foundation.framework */; };
@@ -665,6 +666,7 @@
 		0B9FAF17152B05F400E44F64 /* PhysicalPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhysicalPlace.m; sourceTree = "<group>"; };
 		0B9FAF18152B05F400E44F64 /* PoiItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PoiItem.h; sourceTree = "<group>"; };
 		0B9FAF19152B05F400E44F64 /* PoiItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PoiItem.m; sourceTree = "<group>"; };
+		0BBB0A1A15459582008997CC /* settingback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settingback.png; sourceTree = "<group>"; };
 		CEE2760C1542E9F100C667D9 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		CEE2760D1542E9F100C667D9 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		F74371F61524341E006C74DE /* Ginza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ginza.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1081,6 +1083,7 @@
 		0B8FC50D1541CB1C00528D9A /* others */ = {
 			isa = PBXGroup;
 			children = (
+				0BBB0A1A15459582008997CC /* settingback.png */,
 				0B8FC50E1541CB1C00528D9A /* arrow_cell_img.png */,
 				0B8FC50F1541CB1C00528D9A /* bg.png */,
 				0B8FC5101541CB1C00528D9A /* bgimg.png */,
@@ -1615,6 +1618,7 @@
 				0B8FC63F1541CB1C00528D9A /* TopFiltercellselectedoff@2x.png in Resources */,
 				0B8FC6401541CB1C00528D9A /* Upbuttom.png in Resources */,
 				0B8FC6411541CB1C00528D9A /* Upbuttom@2x.png in Resources */,
+				0BBB0A1B15459582008997CC /* settingback.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

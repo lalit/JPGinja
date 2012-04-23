@@ -61,6 +61,7 @@
 @implementation pARkViewController
 @synthesize rotateImg,compassImg,trueNorth;
 @synthesize compassDif,compassFault,calibrateBtn,lblFilterText,currentLocation,locationManager,slider,settingView,btnClose,lblDistance,btnSettings,orientation,lblEventCount,placesOfInterest,btnVMMode,btnBack,btnHelp,helpView,btnForward,btnReverse,virtualwalkArrow;
+@synthesize lblRadius,viewSetting,sdrRadius,settingRadar,settingRadarViewPort,viewScale;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -106,13 +107,16 @@
     float x = acceleration.x;
     float y = acceleration.y;
     float z = acceleration.z;
-    //NSLog(@"%f,%f,%f",x,y,z);
-    if (z>-.7 && z<.7) {
-        //NSLog(@"normal");
-    }else
-    {
-        //self.tabBarController.selectedIndex =1;
+    NSLog(@"%f,%f,%f",x,y,z);
+    if (self.tabBarController.selectedIndex==0) {
+        if (z>=-0.9) {
+            self.tabBarController.selectedIndex =0;
+        }else
+        {
+            self.tabBarController.selectedIndex =1;
+        }
     }
+    
 }
 
 
@@ -167,19 +171,19 @@
 -(IBAction)sliderChanged:(id)sender
 {
     NSLog(@"slider changed %d",(int)slider.value);
-    if ((int)slider.value==4) {
+    if ((int)self.sdrRadius.value==4) {
         radius=0;
     }
-    if ((int)slider.value==3) {
+    if ((int)self.sdrRadius.value==3) {
         radius=50;
     }
-    if ((int)slider.value==2) {
+    if ((int)self.sdrRadius.value==2) {
         radius=200;
     }
-    if ((int)slider.value==1) {
+    if ((int)self.sdrRadius.value==1) {
         radius=500;
     }
-    if ((int)slider.value==0) {
+    if ((int)self.sdrRadius.value==0) {
         radius=1000;
     }
     NSLog(@"radius = %f",radius);
@@ -190,6 +194,10 @@
 
 - (void)viewDidLoad
 {
+     
+    
+    self.sdrRadius.transform= CGAffineTransformRotate(self.slider.transform, 90 * M_PI /180);
+    
 	[super viewDidLoad];
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
@@ -254,10 +262,12 @@
     self.slider = [[UISlider alloc] initWithFrame:CGRectMake(self.view.frame.size.width-100, 200, 120, 25)];
 	[self.slider addTarget:self action:@selector(sliderChanged:)     forControlEvents:UIControlEventValueChanged];
     self.slider.transform = CGAffineTransformRotate(self.slider.transform, 90 * M_PI /180);
-	self.slider.backgroundColor = [UIColor clearColor];
-	self.slider.value = 0;
-	[self.slider setMaximumValue:4];
-    [self.slider setValue:4];
+    
+
+	//self.slider.backgroundColor = [UIColor clearColor];
+	//self.slider.value = 0;
+	//[self.slider setMaximumValue:4];
+    //[self.slider setValue:4];
     self.settingView = [[UIView alloc]initWithFrame:self.view.frame];
     self.settingView.backgroundColor =[UIColor blackColor];
     // self.settingView.alpha = 0.8;
@@ -266,7 +276,7 @@
     [btnClose addTarget:self action:@selector(btnClose:) forControlEvents:UIControlEventTouchUpInside];
     [self.settingView addSubview:btnClose];
     
-    [self.settingView addSubview:self.slider];
+    //[self.settingView addSubview:self.slider];
     [arView addSubview:self.settingView];
     self.settingView.hidden=YES;
     
@@ -279,6 +289,16 @@
     radius=50;
     //self.lblDistance.text = [NSString stringWithFormat:@"%d m",30];
     self.orientation = UIInterfaceOrientationPortrait;
+    
+    
+    //radar setting
+    int radarRadius = 75;
+    self.settingRadar = [[Radar alloc]initWithFrame:CGRectMake(50,150, radarRadius*2, radarRadius*2)];	
+    self.settingRadar.RADIUS = radarRadius;
+    self.settingRadarViewPort = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50,150, radarRadius*2, radarRadius*2)];
+    self.settingRadarViewPort.RADIUS =radarRadius;
+    [self.viewSetting addSubview:self.settingRadar];
+    [self.viewSetting addSubview:self.settingRadarViewPort];
     
 }
 -(IBAction)btnMoveForward:(id)sender
@@ -323,6 +343,11 @@
 
 -(IBAction)btnARViewClicked:(id)sender
 {
+    
+    viewSetting.frame = self.view.frame;
+    
+    [self.view addSubview:self.viewSetting];
+    return;
     NSLog(@"AR Clicked");
     btnSettings.enabled = NO;
     [self.settingView setHidden:NO];
@@ -524,7 +549,10 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	[super viewWillAppear:animated];
+    [super viewWillAppear:animated];
+   
+    
+	
 	ARView *arView = (ARView *)self.view;
 	[arView start];
     [locationManager startUpdatingHeading];
@@ -533,7 +561,14 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    
+    CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: 35.671635 longitude:139.763952];
+    double distance = [currentLocation distanceFromLocation: offerLoc];
+    //distance =500;
+    if (distance>1000) {
+        self.tabBarController.selectedIndex =2;
+        return;
+    }
+
 	[super viewDidAppear:animated];
     [locationManager startUpdatingHeading];
     [locationManager startUpdatingLocation];
@@ -566,8 +601,24 @@
     rect.origin = CGPointMake(self.view.frame.size.width-100, 50);
     btnClose.frame = rect;
     
-    if (interfaceOrientation == UIInterfaceOrientationPortrait) {
+    if (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
         self.orientation = UIInterfaceOrientationPortrait;
+               [self.settingRadar removeFromSuperview];
+        [self.settingRadarViewPort removeFromSuperview];
+        int radarRadius = 75;
+        self.settingRadar = [[Radar alloc]initWithFrame:CGRectMake(50,150, radarRadius*2, radarRadius*2)];	
+        self.settingRadar.RADIUS = radarRadius;
+        self.settingRadarViewPort = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50,150, radarRadius*2, radarRadius*2)];
+        self.settingRadarViewPort.RADIUS =radarRadius;
+        
+        
+        [self.viewSetting addSubview:self.settingRadar];
+        [self.viewSetting addSubview:self.settingRadarViewPort];
+        
+        
+        
+        
+        
         if (self.settingView.hidden == NO) {
             [radar removeFromSuperview];
             [radarView removeFromSuperview];
@@ -579,6 +630,8 @@
         }else
         {
             self.orientation = UIInterfaceOrientationLandscapeLeft;
+            
+                        
             [radar removeFromSuperview];
             [radarView removeFromSuperview];
             [arView.captureLayer setOrientation:AVCaptureVideoOrientationPortrait];
@@ -598,6 +651,20 @@
         
     }else
     {
+        
+        
+        [self.settingRadar removeFromSuperview];
+        [self.settingRadarViewPort removeFromSuperview];
+        
+        int radarRadius = 75;
+        self.settingRadar = [[Radar alloc]initWithFrame:CGRectMake(50,50, radarRadius*2, radarRadius*2)];	
+        self.settingRadar.RADIUS = radarRadius;
+        self.settingRadarViewPort = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50,50, radarRadius*2, radarRadius*2)];
+        self.settingRadarViewPort.RADIUS =radarRadius;
+        [self.viewSetting addSubview:self.settingRadar];
+        [self.viewSetting addSubview:self.settingRadarViewPort];
+
+        
         
         if (self.settingView.hidden == NO) {
             [radar removeFromSuperview];
@@ -632,7 +699,16 @@
         
     }
 	
-	
+	CGRect rect1 =  self.sdrRadius.frame;
+    rect1.origin.x = self.settingRadar.frame.origin.x+self.settingRadar.frame.size.width+50;
+    rect1.origin.y = self.settingRadar.frame.origin.y;
+    self.sdrRadius.frame = rect1;
+    
+    
+    CGRect rect2 =  self.viewScale.frame;
+    rect2.origin.x = self.sdrRadius.frame.origin.x-50;
+    rect2.origin.y = self.sdrRadius.frame.origin.y;
+    self.viewScale.frame = rect2;
 	return YES;//interfaceOrientation == UIInterfaceOrientationPortrait;
 }
 
@@ -734,5 +810,10 @@
 -(IBAction)btnNext:(id)sender
 {
     NSLog(@"next");
+}
+
+-(IBAction)btnSettingClose:(id)sender
+{
+    [self.viewSetting removeFromSuperview];
 }
 @end

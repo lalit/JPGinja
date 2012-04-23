@@ -19,6 +19,7 @@
 
 #import "RadarViewPortView.h"
 #import "AppDelegate.h"
+#import "Location.h"
 #define radians(x) (M_PI * (x) / 180.0)
 
 @implementation RadarViewPortView
@@ -40,18 +41,7 @@
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
-    CGContextRef contextRef = UIGraphicsGetCurrentContext();
-    CGContextSetRGBFillColor(contextRef, 0, 255, 115, 0.3);
-    
-    // view port 
-    //    if(isFirstAccess){
-    CGContextMoveToPoint(contextRef, self.RADIUS, self.RADIUS);
-    CGContextAddArc(contextRef, self.RADIUS, self.RADIUS, self.RADIUS,  radians(referenceAngle), radians(referenceAngle+newAngle),0); 
-    CGContextClosePath(contextRef); 
-    CGContextFillPath(contextRef);
-    //    }
-    isFirstAccess = NO;    
-    
+       CGContextRef contextRef = UIGraphicsGetCurrentContext();
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
     for (id key in mapDataDict)
@@ -62,12 +52,13 @@
         double latitude =[merchant.latitude doubleValue];
         double longitude = [merchant.longitude doubleValue];
         
-        CLLocation *currentLocation1 =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;
+        //CLLocation *currentLocation1 =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;
         CLLocation *storelocation =[[CLLocation alloc] initWithLatitude: latitude longitude:longitude];;
-        float heading = [self getHeadingFromCoordinate:currentLocation1 toCoordinate:storelocation];
+        CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
+        float heading = [self getHeadingFromCoordinate:currentLocation toCoordinate:storelocation];
         NSLog(@"heading = %f",heading);
         
-        float radius = 30;
+        float radius = self.RADIUS;
         float x0 = 0.0; 
         float y0 = 0.0;
         

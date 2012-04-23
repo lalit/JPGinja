@@ -111,8 +111,12 @@
 @property (nonatomic, retain)IBOutlet UIButton *btnReverse;
 @property (nonatomic, retain)IBOutlet UIView *helpView;
 @property (nonatomic, retain)IBOutlet UIImageView *virtualwalkArrow;
-
-
+@property (nonatomic, retain)IBOutlet UILabel *lblRadius;
+@property (nonatomic, retain)IBOutlet UIView *viewSetting;
+@property (nonatomic, retain)IBOutlet UISlider *sdrRadius;
+@property (nonatomic, retain)Radar *settingRadar ;
+@property (nonatomic, retain)RadarViewPortView *settingRadarViewPort;
+@property (nonatomic, retain)IBOutlet UIView *viewScale;
 -(float) getHeadingFromCoordinate:(CLLocation*)fromLocation toCoordinate:(CLLocation*)toLocation;
 -(void) addTargetIndicatorWithHeading:(float)heading andDistance:(float)distance;
 - (IBAction)calibrate:(id)sender;
@@ -129,5 +133,6 @@
 -(IBAction)btnVMModeOff:(id)sender;
 -(IBAction)btnHelp:(id)sender;
 -(IBAction)btnHelpClose:(id)sender;
+-(IBAction)btnSettingClose:(id)sender;
 -(void)updateView;
 @end
