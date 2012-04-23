@@ -141,7 +141,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-    locationManager.distanceFilter =2; // whenever we move
+    locationManager.distanceFilter =1; // whenever we move
     locationManager.headingFilter = 5;
     locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;; // 100 m
     [locationManager startUpdatingLocation];
