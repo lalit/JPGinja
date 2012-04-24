@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0B27111D1525F05F003BF4F2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B27111C1525F05F003BF4F2 /* AVFoundation.framework */; };
 		0B27111F1525F078003BF4F2 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B27111E1525F078003BF4F2 /* CoreMotion.framework */; };
+		0B6027ED15468D19002BD21F /* CustomTopNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6027EC15468D19002BD21F /* CustomTopNavigationBar.m */; };
+		0B6027F015468D53002BD21F /* CustomTopNavigationBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B6027EF15468D53002BD21F /* CustomTopNavigationBar.xib */; };
 		0B8AC9521535131D00317F83 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8AC9511535131D00317F83 /* SystemConfiguration.framework */; };
 		0B8AC95415354E4700317F83 /* filtersetting.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B8AC95315354E4700317F83 /* filtersetting.plist */; };
 		0B8B57F7153D22370080063A /* btnVirtualWalk.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B8B57F6153D22360080063A /* btnVirtualWalk.png */; };
@@ -330,6 +332,9 @@
 /* Begin PBXFileReference section */
 		0B27111C1525F05F003BF4F2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0B27111E1525F078003BF4F2 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		0B6027EB15468D19002BD21F /* CustomTopNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTopNavigationBar.h; sourceTree = "<group>"; };
+		0B6027EC15468D19002BD21F /* CustomTopNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTopNavigationBar.m; sourceTree = "<group>"; };
+		0B6027EF15468D53002BD21F /* CustomTopNavigationBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTopNavigationBar.xib; sourceTree = "<group>"; };
 		0B8AC9511535131D00317F83 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0B8AC95315354E4700317F83 /* filtersetting.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = filtersetting.plist; sourceTree = "<group>"; };
 		0B8B57F6153D22360080063A /* btnVirtualWalk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnVirtualWalk.png; sourceTree = "<group>"; };
@@ -844,6 +849,9 @@
 				0B8FC28B1541C88200528D9A /* SearchViewController.xib */,
 				0B8FC28C1541C88200528D9A /* SubMenuHomeController.xib */,
 				0B8FC28D1541C88200528D9A /* SubMenuSearchViewController.xib */,
+				0B6027EB15468D19002BD21F /* CustomTopNavigationBar.h */,
+				0B6027EC15468D19002BD21F /* CustomTopNavigationBar.m */,
+				0B6027EF15468D53002BD21F /* CustomTopNavigationBar.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1619,6 +1627,7 @@
 				0B8FC6401541CB1C00528D9A /* Upbuttom.png in Resources */,
 				0B8FC6411541CB1C00528D9A /* Upbuttom@2x.png in Resources */,
 				0BBB0A1B15459582008997CC /* settingback.png in Resources */,
+				0B6027F015468D53002BD21F /* CustomTopNavigationBar.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1701,6 +1710,7 @@
 				0B8FC4871541C8D200528D9A /* ShopList.m in Sources */,
 				0B8FC56E1541CB1C00528D9A /* ShopList.xcdatamodeld in Sources */,
 				CEE2760E1542E9F100C667D9 /* Location.m in Sources */,
+				0B6027ED15468D19002BD21F /* CustomTopNavigationBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1797,7 +1807,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -1809,7 +1819,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1818,7 +1828,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -1830,7 +1840,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

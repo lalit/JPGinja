@@ -26,11 +26,11 @@
         // Initialization code
     }
     
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
-    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;; // 100 m
-    [locationManager startUpdatingLocation];
+    //locationManager = [[CLLocationManager alloc] init];
+    //locationManager.delegate = self;
+    //locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
+    //locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;; // 100 m
+    //[locationManager startUpdatingLocation];
     currentPos=0;
     return self;
 

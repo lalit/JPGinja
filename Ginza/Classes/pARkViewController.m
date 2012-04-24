@@ -57,11 +57,12 @@
 #import "Categories.h"
 #import "CustomCallOutView.h"
 #import "Location.h"
+#import "CustomTopNavigationBar.h"
 
 @implementation pARkViewController
 @synthesize rotateImg,compassImg,trueNorth;
 @synthesize compassDif,compassFault,calibrateBtn,lblFilterText,currentLocation,locationManager,slider,settingView,btnClose,lblDistance,btnSettings,orientation,lblEventCount,placesOfInterest,btnVMMode,btnBack,btnHelp,helpView,btnForward,btnReverse,virtualwalkArrow;
-@synthesize lblRadius,viewSetting,sdrRadius,settingRadar,settingRadarViewPort,viewScale;
+@synthesize lblRadius,viewSetting,sdrRadius,settingRadar,settingRadarViewPort,viewScale,isFirstTime;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -86,16 +87,24 @@
     didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation
 {
+    
+    
+    
     NSLog(@"AR update location");
     currentLocation = newLocation;
     Location *loc = [[Location sharedInstance]init];
     loc.currentLocation=currentLocation;
     //if (radiusChanged == 1) {
-    //[self updateView];
+    //
     radiusChanged=0;
     //}
     
     //
+    
+    if (isFirstTime) {
+        //[self updateView];
+        self.isFirstTime=NO;
+    }
     
     
 }
@@ -123,11 +132,14 @@
 
 -(void)updateView
 {
-    ARView *arView = (ARView *)self.view;
-    arView.currentDistance =5393913;
-    arView.maxtDistance=5393913+50;
-    arView.currentDistance =0;
-    arView.maxtDistance=50;
+    
+    //arView.currentDistance =5393913;
+    //arView.maxtDistance=5393913+50;
+    
+    UIAlertView *alert =[[UIAlertView alloc]initWithTitle:@"Your current location" message:[NSString stringWithFormat:@"Lati = %f, Long = %f",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    //[alert show];
+    
+   
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
     if (placesOfInterest==nil) {
@@ -142,9 +154,11 @@
             double longitude = [merchant.longitude doubleValue];
             
 
-            CLLocation *storelocation =[[CLLocation alloc] initWithLatitude: latitude longitude:longitude];;
+           // CLLocation *storelocation =[[CLLocation alloc] initWithLatitude: latitude longitude:longitude];;
             
             CustomCallOutView *popup =[[CustomCallOutView alloc]init];
+            popup.currentLocation = currentLocation;
+            popup.parentViewController = self;
             [popup prepareCallOutView:offer offerArray:offerdataArray];
             
             PlaceOfInterest *poi1 =[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer];
@@ -165,6 +179,10 @@
         }
         
     }
+    ARView *arView = (ARView *)self.view;
+    [arView start];
+    arView.currentDistance =0;
+    arView.maxtDistance=1050;
    	[arView setPlacesOfInterest:placesOfInterest];	
 }
 
@@ -196,6 +214,12 @@
 {
      
     
+    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]init ];//]WithFrame:CGRectMake(0, 0, 300, 300)];
+    cbar.viewController = self;
+    [self.view addSubview:cbar];
+    
+    
+     [self updateView];
     self.sdrRadius.transform= CGAffineTransformRotate(self.slider.transform, 90 * M_PI /180);
     
 	[super viewDidLoad];
@@ -207,6 +231,9 @@
     [[UIAccelerometer sharedAccelerometer] setDelegate: self ];
     [[UIAccelerometer sharedAccelerometer] setUpdateInterval:2.0f];
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    
+   
     
     self.lblEventCount.text =[NSString stringWithFormat:@"%d",[deligate.ginzaEvents count]];
     if ([deligate.ginzaEvents count]<=0) {
@@ -242,7 +269,7 @@
         Offer *offer =[dataArray objectAtIndex:index];
         ShopList *merchant = [deligate getStoreDataById:offer.store_id];
         
-        PoiItem *item =[[PoiItem alloc]init];
+        //PoiItem *item =[[PoiItem alloc]init];
         CGFloat alt = 0.0;
         float lat = [merchant.latitude floatValue];
         float lon = [merchant.longitude floatValue];
@@ -281,8 +308,8 @@
     self.settingView.hidden=YES;
     
     
-    [self updateView];
     
+    self.isFirstTime = YES;
     
     [self radarSpecificSettings];
     self.slider.value = 3;
@@ -300,6 +327,8 @@
     [self.viewSetting addSubview:self.settingRadar];
     [self.viewSetting addSubview:self.settingRadarViewPort];
     
+    
+    
 }
 -(IBAction)btnMoveForward:(id)sender
 {
@@ -308,6 +337,7 @@
     arView.currentDistance =arView.currentDistance+1;
     //NSLog(@"Move forward = %f",arView.currentDistance);
     [arView setPlacesOfInterest:placesOfInterest];
+    [self updateView];
 }
 
 -(IBAction)btnMoveReverse:(id)sender
@@ -337,7 +367,7 @@
     [arView addSubview:radar];
     [arView bringSubviewToFront:btnSettings];
     btnSettings.enabled = YES;
-    [self updateView];
+    //[self updateView];
     //[btnSettings sendActionsForControlEvents:<#(UIControlEvents)#>];
 }
 
@@ -563,11 +593,12 @@
 {
     CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: 35.671635 longitude:139.763952];
     double distance = [currentLocation distanceFromLocation: offerLoc];
+    
     //distance =500;
-    if (distance>1000) {
+    /*if (distance>1000) {
         self.tabBarController.selectedIndex =2;
         return;
-    }
+    }*/
 
 	[super viewDidAppear:animated];
     [locationManager startUpdatingHeading];
@@ -748,7 +779,7 @@
     rect.origin.y = -1*rect.size.height;
     filterViewController.view.frame =rect;
     
-    filterViewController.currtentViewController = self;
+    //filterViewController.currtentViewController = self;
     self.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:filterViewController animated:NO];
     

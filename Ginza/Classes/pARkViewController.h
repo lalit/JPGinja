@@ -87,6 +87,7 @@
     int                 radiusChanged;
     
 }
+@property (nonatomic)BOOL isFirstTime;
 @property (nonatomic, retain)NSMutableArray *placesOfInterest;
 @property (nonatomic)int  orientation;
 @property (nonatomic, retain)IBOutlet UIButton *btnSettings;

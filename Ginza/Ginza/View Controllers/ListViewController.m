@@ -92,8 +92,12 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     return self;
 }
 
+#import "CustomTopNavigationBar.h"
 - (void)viewDidLoad
 {
+    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
+    cbar.viewController = self;
+    [self.view addSubview:cbar];
     //[super viewDidLoad];
     currentPage=1;
     self.navigationController.navigationBar.hidden = YES;
@@ -389,11 +393,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 
 -(IBAction)GinzafilterViewDown:(id)sender
 {
-    GinzaFilterViewController  *filterViewController = [[GinzaFilterViewController alloc]init];
-    filterViewController.view.alpha = 0.0;
-    [self.view.window.rootViewController presentModalViewController:filterViewController animated:NO];
-    [UIView animateWithDuration:0.0
-                     animations:^{filterViewController.view.alpha = 1.0;}];
+    
     
 }
 
@@ -410,22 +410,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 
 -(IBAction)btnGinzaMenu:(id)sender
 {
-    GinzaSubViewController  *infoViewController = [[GinzaSubViewController alloc]init];
-    self.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:infoViewController animated:NO];
-    CGRect rect = infoViewController.view.frame;
-    rect.origin.y = -1*rect.size.height;
-    infoViewController.view.frame =rect;
-    
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:1.0];
-    [UIView setAnimationDuration:0.75];
-    CGRect rect1 = infoViewController.view.frame;
-    rect1.origin.y = 0;
-    infoViewController.view.frame =rect1;
-    
-    [UIView commitAnimations];
-}
+    }
 
 #pragma mark CLLocation Delegates methods
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation

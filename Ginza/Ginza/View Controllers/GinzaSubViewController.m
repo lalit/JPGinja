@@ -22,7 +22,7 @@
 @synthesize viewList;
 @synthesize listViewController;
 
-@synthesize tapGesture,currtentViewController;
+@synthesize tapGesture,currtentViewController,fromViewController;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -172,7 +172,7 @@
                              self.view.frame =rect1;
                            
                          } completion:^(BOOL finished) {
-                             currtentViewController.hidesBottomBarWhenPushed =NO;
+                             self.fromViewController.hidesBottomBarWhenPushed =NO;
                              [self.navigationController popViewControllerAnimated:NO];
                              //[self.view removeFromSuperview];
                          }];

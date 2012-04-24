@@ -28,7 +28,8 @@
 
     
 }
-@property(nonatomic,retain) UIViewController *currtentViewController;
+
+@property(nonatomic,retain) UIViewController *fromViewController;
 @property(nonatomic,retain)    NSMutableArray *selectedCategorieList;
 
 @property(nonatomic,retain)IBOutlet     UITableView *tblFilterView;
@@ -39,5 +40,6 @@
 @property(nonatomic,retain)    FilterGroupmetViewController *listViewController;
 @property(nonatomic,retain)IBOutlet     UISwitch *btnswitch;
 -(IBAction)btnSwitchChanged:(id)sender;
+-(IBAction)btnSubMenuClose:(id)sender;
 
 @end
