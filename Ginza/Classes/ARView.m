@@ -48,7 +48,7 @@
 #import "ARView.h"
 #import "PlaceOfInterest.h"
 #import <AVFoundation/AVFoundation.h>
-
+#import "Location.h"
 #pragma mark -
 #pragma mark Math utilities declaration
 
@@ -457,7 +457,8 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-	
+    // for shairing current location added by mobiquest
+	[Location sharedInstance].currentLocation=newLocation;
 	location = newLocation;
     
     //for testing

@@ -11,11 +11,11 @@
 #import "ShopList.h"
 #import "Offer.h"
 #import "Categories.h"
-
-
+#import "ShareViewController.h"
+#import "DirectionViewController.h"
 @implementation OfferDetailsViewController
 @synthesize lblIsChild,lblIsLunch,lblIsPrivate,lblOfferTitle,lblCategoryName,lblDistanceLabel,imgIsChild,imgIsLunch,imgCategory,imgIsPrivate,imgOfferImage,offerId,scroll,webFreeText,storeLocation,offer;
-@synthesize viewOfferDetails,tableView,locationManager,imgDirection,arrowImage;
+@synthesize viewOfferDetails,tableView,locationManager,imgDirection,arrowImage,shareVC;
 
 @synthesize btnSepecialOffers;
 @synthesize imgOfferdetailsView,bottomView,currentLocation,btnBookMark;
@@ -55,7 +55,7 @@
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     self.offer =  [appDeligate getOfferDataById:self.offerId];
-
+    NSLog(@"DetailView Offer:%@",self.offerId);
     lblCategoryName.text = self.offer.category;
     lblOfferTitle.text=self.offer.offer_title;
     scroll.contentSize = CGSizeMake(320, 1000);
@@ -66,17 +66,9 @@
     
     
     ShopList *merchant = [appDeligate getStoreDataById:offer.store_id];
-     Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:merchant.sub_category];
-   /* NSString *imgurl =[NSString stringWithFormat:@"http://staging.citiworldprivileges.com/data/images/jp_ginza_categories/iPhone/%@",categoryData.image_name];
-    NSLog(@"image`1 = %@",imgurl);
+    Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:merchant.sub_category];
     
-    NSURL *url = [NSURL URLWithString:imgurl];
-    NSData *imageData = [NSData dataWithContentsOfURL:url];
-    UIImage *image = [UIImage imageWithData:imageData];*/
-    
-    
-    
-    
+    //Get Shop Location
     
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     path = [path stringByAppendingString:@"/"];
@@ -143,10 +135,7 @@
     img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    
-    
 
-    
     
     [self.imgCategory setImage:img];
     
@@ -432,9 +421,67 @@
     }
     return;
 }
+//=======================================================================================================================
+//Added by Mobiquest team
 
+- (IBAction)getDirectionButtonPressed:(id)sender {
+    DirectionViewController *directionVC=[[DirectionViewController alloc] initWithNibName:@"DirectionViewController" bundle:nil];
+    NSString *lat=[NSString stringWithFormat:@"%lf",self.storeLocation.coordinate.latitude];
+    NSString *lon=[NSString stringWithFormat:@"%lf",self.storeLocation.coordinate.longitude];
+    [directionVC setLat:lat setLong:lon];
+    [self presentModalViewController:directionVC animated:YES];
+}
 
+- (IBAction)sharedButtonPressed:(id)sender {
+    UIActionSheet * selectionSheet = [[UIActionSheet alloc] initWithTitle: @"Share" delegate: self cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil otherButtonTitles: @"Facebook", @"Twitter", @"Email",nil]; 
+    [selectionSheet showInView:self.view]; 
+}
 
+- (void) actionSheet: (UIActionSheet *) actionSheet didDismissWithButtonIndex: (NSInteger) buttonIndex { 
+    if (buttonIndex == 0) { 
+        NSLog (@"buttonIndex:% i", buttonIndex); 
+        [self postFacebook];
+    } 
+    else if (buttonIndex == 1) { 
+        NSLog (@"buttonIndex:% i", buttonIndex);
+        [self postTwitter];
+    } 
+    else if (buttonIndex == 2) { 
+        [self sendEmail];
+    }
+    else 
+        NSLog (@"buttonIndex:% i", buttonIndex); 
+} 
 
+- (void) postFacebook
+{
+	if (self.shareVC == nil) {
+		
+		self.shareVC = [[ShareViewController alloc] init];
+	}
+    NSLog(@"Message:%@",[self shareKitMessage]);
+    [self.shareVC launchFacebookWithStr:[self shareKitMessage] WithImage:nil withParentVC:self withImagePath:nil];
+}
+
+- (void) postTwitter
+{
+	if (self.shareVC == nil) {
+		self.shareVC = [[ShareViewController alloc] init];
+	}
+
+	[self.shareVC launchTwitter:self withString:[self shareKitMessage]];
+}
+- (void) sendEmail
+{
+	if (self.shareVC == nil) {
+		self.shareVC = [[ShareViewController alloc] init];
+	}
+	[self.shareVC launchMail:self withString:[self shareKitMessage]];	
+}
+
+-(NSString *)shareKitMessage {
+        NSString *strMessage=[NSString stringWithFormat:@"Offer Title: %@,Location:%lf,%lf",self.offer.offer_title, self.storeLocation.coordinate.latitude,self.storeLocation.coordinate.longitude];
+    return strMessage;
+}
 
 @end
