@@ -430,7 +430,6 @@
     NSString *lon=[NSString stringWithFormat:@"%lf",self.storeLocation.coordinate.longitude];
     [directionVC setLat:lat setLong:lon];
     [self presentModalViewController:directionVC animated:YES];
-    [directionVC release];
 }
 
 - (IBAction)sharedButtonPressed:(id)sender {
@@ -447,7 +446,7 @@
         NSLog (@"buttonIndex:% i", buttonIndex);
         [self postTwitter];
     } 
-    else if (buttonIndex == 1) { 
+    else if (buttonIndex == 2) { 
         [self sendEmail];
     }
     else 

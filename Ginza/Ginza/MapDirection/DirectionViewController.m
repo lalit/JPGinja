@@ -210,11 +210,11 @@ AdvanceDetailBean *objDetailBean;
 
 - (CLLocationCoordinate2D) currentLocation {
 	CLLocationCoordinate2D location;
-    location.latitude = -33.8589009;
-	location.longitude  = 151.2070914;
+    //location.latitude = -33.8589009;
+	//location.longitude  = 151.2070914;
     
-	//location.latitude = [[Location sharedInstance] currentLocation].coordinate.latitude;
-	//location.longitude = [[Location sharedInstance] currentLocation].coordinate.longitude;;
+	location.latitude = [[Location sharedInstance] currentLocation].coordinate.latitude;
+	location.longitude = [[Location sharedInstance] currentLocation].coordinate.longitude;;
 	
 	return location;
 }
@@ -231,8 +231,9 @@ AdvanceDetailBean *objDetailBean;
 	strMode = @"driving";
 	NSString *lat=[NSString stringWithFormat:@"%lf",[[Location sharedInstance] currentLocation].coordinate.latitude];
     NSString *lon=[NSString stringWithFormat:@"%lf",[[Location sharedInstance] currentLocation].coordinate.longitude];
-	//NSString *strUrl = [NSString stringWithFormat:googleMapApi,lat,lon,restLat,restLong,strMode];
-	NSString *strUrl = @"http://maps.googleapis.com/maps/api/directions/xml?origin=-33.868900,151.207092&destination=-33.868904,151.206238&waypoints=&sensor=false&mode=driving";
+    
+	NSString *strUrl = [NSString stringWithFormat:googleMapApi,lat,lon,restLat,restLong,strMode];
+	//NSString *strUrl = @"http://maps.googleapis.com/maps/api/directions/xml?origin=-33.868900,151.207092&destination=-33.868904,151.206238&waypoints=&sensor=false&mode=driving";
 	
 	NSURL *url = [NSURL URLWithString:strUrl];
 	NSLog(@"\n URL >> %@",url);
@@ -726,7 +727,11 @@ AdvanceDetailBean *objDetailBean;
 	routeView.hidden = NO;
 	[routeView setNeedsDisplay];
 }
-
+- (IBAction)cancel:(id)sender {
+    [self dismissModalViewControllerAnimated:NO];
+}
+                               
+                               
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations.
     return (interfaceOrientation == UIInterfaceOrientationPortrait);

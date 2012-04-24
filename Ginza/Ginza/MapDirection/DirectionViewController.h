@@ -67,4 +67,5 @@
 - (void) centerMap;
 - (void) showRoute;
 
+- (IBAction)cancel:(id)sender;
 @end
