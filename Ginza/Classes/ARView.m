@@ -91,7 +91,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	CMMotionManager *motionManager;
 	CLLocationManager *locationManager;
 	CLLocation *location;
-	NSArray *placesOfInterest;
+	//NSArray *placesOfInterest;
 	mat4f_t projectionTransform;
 	mat4f_t cameraTransform;	
 	vec4f_t *placesOfInterestCoordinates;
@@ -125,7 +125,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 @implementation ARView
 @synthesize captureLayer;
-@dynamic placesOfInterest;
+@synthesize placesOfInterest;
 @synthesize  currentDistance,maxtDistance;
 
 - (void)dealloc
@@ -161,8 +161,8 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 		[poi.view removeFromSuperview];
 	}	
 	
-	
-	placesOfInterest = pois;	
+	placesOfInterest = [[NSArray alloc]initWithArray:pois];
+	//placesOfInterest = pois;	
 	if (location != nil) {
 		[self updatePlacesOfInterestCoordinates];
 	}
@@ -350,7 +350,9 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	if (placesOfInterestCoordinates != NULL) {
 		free(placesOfInterestCoordinates);
 	}
-	placesOfInterestCoordinates = (vec4f_t *)malloc(sizeof(vec4f_t)*placesOfInterest.count);
+   // NSLog(@"placesOfInterest = %d",[placesOfInterest count]);
+    
+   	placesOfInterestCoordinates = (vec4f_t *)malloc(sizeof(vec4f_t)*placesOfInterest.count);
     
 	int i = 0;
 	
