@@ -2101,9 +2101,9 @@
 				0B8FC6401541CB1C00528D9A /* Upbuttom.png in Resources */,
 				0B8FC6411541CB1C00528D9A /* Upbuttom@2x.png in Resources */,
 				0BBB0A1B15459582008997CC /* settingback.png in Resources */,
-<<<<<<< HEAD
+
 				0B6027F015468D53002BD21F /* CustomTopNavigationBar.xib in Resources */,
-=======
+
 				296E70C11546BA9400E88AAA /* FBConnect.bundle in Resources */,
 				296E70C21546BA9400E88AAA /* FBDialog.bundle in Resources */,
 				296E70CD1546BA9400E88AAA /* jQueryInject.txt in Resources */,
@@ -2111,7 +2111,7 @@
 				296E70E01546BA9400E88AAA /* twitter_load.png in Resources */,
 				296E70E11546BA9400E88AAA /* TwitterLandscp.png in Resources */,
 				296E71051546C41000E88AAA /* DirectionViewController.xib in Resources */,
->>>>>>> 145bf701054aadb6bdaa6095c87fb9efd19f9599
+
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2194,9 +2194,9 @@
 				0B8FC4871541C8D200528D9A /* ShopList.m in Sources */,
 				0B8FC56E1541CB1C00528D9A /* ShopList.xcdatamodeld in Sources */,
 				CEE2760E1542E9F100C667D9 /* Location.m in Sources */,
-<<<<<<< HEAD
+
 				0B6027ED15468D19002BD21F /* CustomTopNavigationBar.m in Sources */,
-=======
+
 				296E70B81546BA9400E88AAA /* ASIAuthenticationDialog.m in Sources */,
 				296E70B91546BA9400E88AAA /* ASIDownloadCache.m in Sources */,
 				296E70BA1546BA9400E88AAA /* ASIFormDataRequest.m in Sources */,
@@ -2250,7 +2250,6 @@
 				296E71341546C6E600E88AAA /* CXMLNode_PrivateExtensions.m in Sources */,
 				296E71351546C6E600E88AAA /* CXMLNode_XPathExtensions.m in Sources */,
 				296E71361546C6E600E88AAA /* CTidy.m in Sources */,
->>>>>>> 145bf701054aadb6bdaa6095c87fb9efd19f9599
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
