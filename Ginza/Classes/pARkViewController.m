@@ -180,7 +180,7 @@
         
     }
     ARView *arView = (ARView *)self.view;
-    [arView start];
+    //[arView start];
     arView.currentDistance =0;
     arView.maxtDistance=1050;
    	[arView setPlacesOfInterest:placesOfInterest];	
@@ -336,7 +336,7 @@
     ARView *arView = (ARView *)self.view;
     arView.currentDistance =arView.currentDistance+1;
     //NSLog(@"Move forward = %f",arView.currentDistance);
-    [arView setPlacesOfInterest:placesOfInterest];
+    //[arView setPlacesOfInterest:placesOfInterest];
     [self updateView];
 }
 

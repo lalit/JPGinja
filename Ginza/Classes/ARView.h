@@ -56,11 +56,13 @@
 @property (nonatomic, retain) NSArray *placesOfInterest;
 @property(nonatomic)float currentDistance;
 @property(nonatomic)float maxtDistance;
+//@property(nonatomic,retain)NSArray *placesOfInterest;;
 
 
 - (void)start;
 - (void)stop;
 -(void)oriendationChangeLandscape:(CGRect )viewSize;
 -(void)oriendationChangePortirt:(CGRect )viewSize;
+- (void)updatePlacesOfInterestCoordinates;
 
 @end
