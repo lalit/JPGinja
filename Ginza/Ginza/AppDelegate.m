@@ -104,7 +104,7 @@
         }
         @catch (NSException *exception) {
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Execute fetch offer %@",exception ] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-            [alert show];
+            //[alert show];
             
         }
         @finally {
@@ -392,7 +392,7 @@
     NSMutableArray *array = (NSMutableArray *)[managedObjectContext executeFetchRequest:request error:&error];
     self.offerDataArray = array;
      UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Total No of offer taken from DB" message:[NSString stringWithFormat:@"%d",[array count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    [alert show];
+    //[alert show];
     return array;
     
 }
@@ -517,7 +517,7 @@
     }
     
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Execute fetch offer %@",urlString ] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    [alert show];
+    //[alert show];
 
     
         
@@ -543,7 +543,7 @@
     NSArray *dataArray = json;
     
      UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer fetched" message:[NSString stringWithFormat:@"%d",[dataArray count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    [alert1 show];
+    //[alert1 show];
     NSLog(@" offer data count = %d",[dataArray count]);
     
     int g=0;
@@ -612,7 +612,7 @@
         }
     }
     UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:@"Total No of offer taken from DB" message:[NSString stringWithFormat:@"%d",c] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    [alert2 show];
+    //[alert2 show];
     
 
 }
@@ -1326,7 +1326,7 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
      NSLog(@"applicationDidEnterBackground");
-    //exit(0);
+    exit(0);
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }

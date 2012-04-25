@@ -13,6 +13,7 @@
 #import "AddressAnnotation.h"
 #import "Location.h"
 #import "GinzaSubViewController.h"
+#import "CustomTopNavigationBar.h"
 
 @implementation UIToolbar(Transparent) 
 -(void)drawRect:(CGRect)rect {
@@ -47,6 +48,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
+    cbar.viewController = self;
+    [self.view addSubview:cbar];
+    
+    
     self.deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
     self.lblEventCount.text =[NSString stringWithFormat:@"%d",[self.deligate.ginzaEvents count]];
     if ([self.deligate.ginzaEvents count]<=0) {
@@ -183,8 +190,8 @@
     }
    
     self.mapDataDict = self.deligate.poiDataDictionary;
-    UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer record in list view" message:[NSString stringWithFormat:@"%d",[self.mapDataDict count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    [alert1 show];
+   // UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer record in list view" message:[NSString stringWithFormat:@"%d",[self.mapDataDict count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+    //[alert1 show];
     //=========Changed the logic by mobiquest . Checking offer having 1 km distance=======================
     NSArray *nearestGinzaLocation=[self nearestGinzhaLocationsWithinOneKilometers];
     

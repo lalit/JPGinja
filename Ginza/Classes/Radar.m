@@ -43,13 +43,26 @@
 - (void)drawRect:(CGRect)rect {
    
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
-    CGContextSetRGBFillColor(contextRef, 0, 0, 115, 0.3);
-    CGContextSetRGBStrokeColor(contextRef, 0, 0, 125, 0.1);
+    CGContextSetRGBFillColor(contextRef, 0, 0, 0, 0.3);
+    CGContextSetRGBStrokeColor(contextRef, 0, 0, 0, 0.1);
     
     // Draw a radar and the view port 
+    CGContextSetLineWidth(contextRef, 5);
     CGContextFillEllipseInRect(contextRef, CGRectMake(0.5, 0.5, self.RADIUS*2, self.RADIUS*2)); 
-    CGContextSetRGBStrokeColor(contextRef, 0, 255, 0, 0.5);
+    CGContextSetRGBStrokeColor(contextRef, 255, 255, 255, 0.5);
 
+    
+    //
+    CGContextSetRGBFillColor(contextRef, 255, 255, 255, 0.3);
+
+    float referenceAngle = 247.5,newAngle = 45.0;;
+    CGContextMoveToPoint(contextRef, self.RADIUS, self.RADIUS);
+    CGContextAddArc(contextRef, self.RADIUS, self.RADIUS, self.RADIUS,  radians(referenceAngle), radians(referenceAngle+newAngle),0); 
+    CGContextClosePath(contextRef); 
+    CGContextFillPath(contextRef);
+  
+
+    
     //add a line from 0,0 to the point 100,100
     CGContextAddLineToPoint( contextRef, 0.5,self.RADIUS);
     //"stroke" the path

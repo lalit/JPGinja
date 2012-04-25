@@ -32,6 +32,7 @@
 @property (nonatomic, copy) NSString *savedSearchTerm;
 @property(nonatomic,retain)DetailViewController *detailsViewlist;
 @property(nonatomic,retain)    UISearchDisplayController *searchDisplayController;
+@property(nonatomic,retain)UIViewController *fromViewController;
 
 
 @property(nonatomic,retain)IBOutlet     UISearchBar *searchBar;

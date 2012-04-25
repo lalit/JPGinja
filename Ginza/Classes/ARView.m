@@ -48,7 +48,7 @@
 #import "ARView.h"
 #import "PlaceOfInterest.h"
 #import <AVFoundation/AVFoundation.h>
-
+#import "Location.h"
 #pragma mark -
 #pragma mark Math utilities declaration
 
@@ -222,7 +222,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	[self addSubview:captureView];
 	[self sendSubviewToBack:captureView];
 	
-    //[];
+    
 	// Initialize projection matrix	
 	createProjectionMatrix(projectionTransform, 60.0f*DEGREES_TO_RADIANS, self.bounds.size.width*1.0f / self.bounds.size.height, 0.25f, 1000.0f);
 }
@@ -320,7 +320,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	motionManager.deviceMotionUpdateInterval = 1.0 / 60.0;
 	
 	// New in iOS 5.0: Attitude that is referenced to true north
-	//[motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
+	[motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
 }
 
 - (void)stopDeviceMotion
@@ -381,6 +381,8 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 		// Add struct containing distance and index to orderedDistances
 		DistanceAndIndex distanceAndIndex;
 		distanceAndIndex.distance = sqrtf(n*n + e*e);
+        
+        NSLog(@"distance index = %f",distanceAndIndex.distance);
 		distanceAndIndex.index = i;
 		[orderedDistances insertObject:[NSData dataWithBytes:&distanceAndIndex length:sizeof(distanceAndIndex)] atIndex:i++];
 	}
@@ -402,8 +404,13 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	for (NSData *d in [orderedDistances reverseObjectEnumerator]) {
 		const DistanceAndIndex *distanceAndIndex = (const DistanceAndIndex *)d.bytes;
 		PlaceOfInterest *poi = (PlaceOfInterest *)[placesOfInterest objectAtIndex:distanceAndIndex->index];	
+        
+        //UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"distance" message:[NSString stringWithFormat: @"offer distance = %f,current distance =%f, max distance = %f",distanceAndIndex->distance , self.currentDistance , self.maxtDistance] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        
+        //[alert show];
+        
         NSLog(@"%f,%f,%f,%f",distanceAndIndex->distance , self.currentDistance , distanceAndIndex->distance,self.maxtDistance);
-        if (distanceAndIndex->distance >= self.currentDistance && distanceAndIndex->distance<=self.maxtDistance) {
+        if (distanceAndIndex->distance >= self.currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
             [self addSubview:poi.view];
         }
 		
@@ -450,8 +457,12 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-	
+    // for shairing current location added by mobiquest
+	[Location sharedInstance].currentLocation=newLocation;
 	location = newLocation;
+    
+    //for testing
+    //location = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
 	if (placesOfInterest != nil) {
 		[self updatePlacesOfInterestCoordinates];
 	}	

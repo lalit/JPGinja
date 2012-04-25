@@ -26,7 +26,7 @@
 @synthesize listViewController;
 @synthesize selectedCategorieList;
 
-@synthesize currtentViewController;
+@synthesize fromViewController;
 @synthesize btnswitch;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -281,10 +281,9 @@
 
 
 
--(IBAction)swipeUPAction:(id)sender
+-(IBAction)btnSubMenuClose:(id)sender
 {
     
-    NSLog(@"swipe Up");
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationCurveEaseOut animations:^(void) {
         //CGRect frame = self.view.frame;
@@ -296,14 +295,25 @@
                              self.view.frame =rect1;
                              
                          } completion:^(BOOL finished) {
-                             currtentViewController.hidesBottomBarWhenPushed =NO;
+                             self.fromViewController.hidesBottomBarWhenPushed =NO;
                              [self.navigationController popViewControllerAnimated:NO];
                              //[self.view removeFromSuperview];
                          }];
                          
                      }];
+    return;
     
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:1.0];
+    [UIView setAnimationDuration:0.75];
+    [UIView setAnimationDidStopSelector:@selector(pulseAnimationDidStop:finished:context:)];
+    CGRect rect1 = self.view.frame;
+    rect1.origin.y = -1*rect1.size.height;
+    self.view.frame =rect1;
+    
+    [UIView commitAnimations];
 }
+
 
 -(void)fireMethod
 {

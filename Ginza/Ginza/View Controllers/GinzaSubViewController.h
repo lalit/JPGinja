@@ -30,6 +30,7 @@
 @property(nonatomic,retain)    NSMutableArray *arrayOflist;
 @property(nonatomic,retain)IBOutlet UIView *viewGinza;
 @property(nonatomic,retain)IBOutlet UIView *viewList;
+@property(nonatomic,retain)IBOutlet UIViewController *fromViewController;
 @property(nonatomic,retain)    GinzaSubMenuListViewController *listViewController;
 
 @property(nonatomic,retain)IBOutlet    UITapGestureRecognizer *tapGesture;

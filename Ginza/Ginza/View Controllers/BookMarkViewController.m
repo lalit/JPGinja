@@ -22,6 +22,7 @@
 #import"Categories.h"
 #import "Offer.h"
 #import "GinzaDetailsViewController.h"
+#import "CustomTopNavigationBar.h"
 
 
 
@@ -62,6 +63,11 @@
 
 - (void)viewDidLoad
 {
+    
+    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
+    cbar.viewController = self;
+    [self.view addSubview:cbar];
+
     [super viewDidLoad];
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     self.dataArray = [appDeligate getBookmarkOfferData];
@@ -391,7 +397,7 @@
     rect.origin.y = -1*rect.size.height;
     filterViewController.view.frame =rect;
     
-    filterViewController.currtentViewController = self;
+    //filterViewController.currtentViewController = self;
     self.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:filterViewController animated:NO];
     

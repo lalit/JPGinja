@@ -21,7 +21,7 @@
 @synthesize savedSearchTerm;
 @synthesize detailsViewlist;
 @synthesize searchDisplayController;
-@synthesize searchBar;
+@synthesize searchBar,fromViewController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -370,10 +370,33 @@ shouldReloadTableForSearchString:(NSString *)searchString
 -(IBAction)backAction:(id)sender
 {
     
-    //[self.navigationController popViewControllerAnimated:YES];
-    [self dismissModalViewControllerAnimated:YES];
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationCurveEaseOut animations:^(void) {
+        //CGRect frame = self.view.frame;
+    }
+                     completion:^(BOOL finished) {                         
+                         [UIView animateWithDuration:0.2 delay:0 options:0 animations:^(void) {
+                             CGRect rect1 = self.view.frame;
+                             rect1.origin.y = -1*rect1.size.height-20;
+                             self.view.frame =rect1;
+                             
+                         } completion:^(BOOL finished) {
+                             self.fromViewController.hidesBottomBarWhenPushed =NO;
+                             [self.navigationController popViewControllerAnimated:NO];
+                             //[self.view removeFromSuperview];
+                         }];
+                         
+                     }];
+    return;
     
-     
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:1.0];
+    [UIView setAnimationDuration:0.75];
+    [UIView setAnimationDidStopSelector:@selector(pulseAnimationDidStop:finished:context:)];
+    CGRect rect1 = self.view.frame;
+    rect1.origin.y = -1*rect1.size.height;
+    self.view.frame =rect1;
+    
+    [UIView commitAnimations];
 }
 
 

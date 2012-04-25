@@ -9,12 +9,19 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "Offer.h"
+@class ShareViewController;
 @interface OfferDetailsViewController : UIViewController<UITableViewDelegate,CLLocationManagerDelegate>
 {
     
     float degrees;
 
+    //Added by MobiQuest team
+    ShareViewController *shareVC;
+    
+
 }
+@property (nonatomic, retain) ShareViewController *shareVC;
+
 @property(nonatomic, retain)Offer *offer;
 @property(nonatomic, retain)IBOutlet UIButton *btnBookMark;
 @property(nonatomic, retain)IBOutlet UIImageView *arrowImage;
@@ -53,4 +60,11 @@
 
 -(IBAction)btnOfferDetailsOpenClose:(id)sender;
 -(IBAction)btnClose:(id)sender;
+
+- (IBAction)getDirectionButtonPressed:(id)sender;
+- (IBAction)sharedButtonPressed:(id)sender;
+- (void) postFacebook;
+- (void) postTwitter;
+- (void) sendEmail;
+-(NSString *) shareKitMessage;
 @end
