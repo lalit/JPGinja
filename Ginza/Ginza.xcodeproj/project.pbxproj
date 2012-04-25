@@ -2194,7 +2194,11 @@
 				0B8FC4871541C8D200528D9A /* ShopList.m in Sources */,
 				0B8FC56E1541CB1C00528D9A /* ShopList.xcdatamodeld in Sources */,
 				CEE2760E1542E9F100C667D9 /* Location.m in Sources */,
+
+
 				0B6027ED15468D19002BD21F /* CustomTopNavigationBar.m in Sources */,
+
+
 				296E70B81546BA9400E88AAA /* ASIAuthenticationDialog.m in Sources */,
 				296E70B91546BA9400E88AAA /* ASIDownloadCache.m in Sources */,
 				296E70BA1546BA9400E88AAA /* ASIFormDataRequest.m in Sources */,
