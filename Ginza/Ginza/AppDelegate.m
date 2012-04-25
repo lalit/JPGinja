@@ -49,7 +49,6 @@
     
     NSMutableDictionary *savedStock = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
     
-    
     isFilterOn = [savedStock objectForKey:@"filterall"];
     NSString *lastSyncedDate = [savedStock objectForKey:@"lastsynceddate"];
     self.lastmerchantsynceddate =[savedStock objectForKey:@"lastmerchantsynceddate"];
