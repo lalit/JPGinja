@@ -21,7 +21,7 @@
 #import "GinzaSubViewController.h"
 #import"Categories.h"
 #import "Offer.h"
-#import "NSObject+NYXImagesHelper.h"
+
 #import "AppDelegate.h"
 
 
@@ -326,42 +326,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     UIGraphicsEndImageContext();
     return i;
 }
--(UIImage*)rotateInRadians:(UIImage *)image radians:(CGFloat)radians
-{
-    CGImageRef cgImage = image.CGImage;
-    const CGFloat originalWidth = CGImageGetWidth(cgImage);
-    const CGFloat originalHeight = CGImageGetHeight(cgImage);
-    
-    const CGRect imgRect = (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = originalWidth, .size.height = originalHeight};
-    const CGRect rotatedRect = CGRectApplyAffineTransform(imgRect, CGAffineTransformMakeRotation(radians));
-    
-    /// Create an ARGB bitmap context
-    CGContextRef bmContext = NYXImageCreateARGBBitmapContext(rotatedRect.size.width, rotatedRect.size.height, 0);
-    if (!bmContext)
-        return nil;
-    
-    /// Image quality
-    CGContextSetShouldAntialias(bmContext, true);
-    CGContextSetAllowsAntialiasing(bmContext, true);
-    CGContextSetInterpolationQuality(bmContext, kCGInterpolationHigh);
-    
-    /// Rotation happen here
-    CGContextTranslateCTM(bmContext, +(rotatedRect.size.width * 0.5f), +(rotatedRect.size.height * 0.5f));
-    CGContextRotateCTM(bmContext, radians);
-    
-    /// Draw the image in the bitmap context
-    CGContextDrawImage(bmContext, (CGRect){.origin.x = -originalWidth * 0.5f, .origin.y = -originalHeight * 0.5f, .size.width = originalWidth, .size.height = originalHeight}, cgImage);
-    
-    /// Create an image object from the context
-    CGImageRef rotatedImageRef = CGBitmapContextCreateImage(bmContext);
-    UIImage* rotated = [UIImage imageWithCGImage:rotatedImageRef];
-    
-    /// Cleanup
-    CGImageRelease(rotatedImageRef);
-    CGContextRelease(bmContext);
-    
-    return rotated;
-}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     

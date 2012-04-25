@@ -354,7 +354,6 @@
 		296E70F71546BD6A00E88AAA /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 296E70F51546BD6A00E88AAA /* MobileCoreServices.framework */; };
 		296E70F91546BD8B00E88AAA /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 296E70F81546BD8B00E88AAA /* libz.dylib */; };
 		296E71051546C41000E88AAA /* DirectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 296E71041546C41000E88AAA /* DirectionViewController.xib */; };
-
 		CEE2760E1542E9F100C667D9 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE2760D1542E9F100C667D9 /* Location.m */; };
 		F74371FB1524341E006C74DE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F74371FA1524341E006C74DE /* UIKit.framework */; };
 		F74371FD1524341E006C74DE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F74371FC1524341E006C74DE /* Foundation.framework */; };
@@ -842,42 +841,7 @@
 		296E70F51546BD6A00E88AAA /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		296E70F81546BD8B00E88AAA /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		296E71041546C41000E88AAA /* DirectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DirectionViewController.xib; sourceTree = "<group>"; };
-
-		296E71061546C5C900E88AAA /* FontLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontLabel.h; sourceTree = "<group>"; };
-		296E71071546C5C900E88AAA /* FontLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontLabel.m; sourceTree = "<group>"; };
-		296E71081546C5C900E88AAA /* FontLabelStringDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontLabelStringDrawing.h; sourceTree = "<group>"; };
-		296E71091546C5C900E88AAA /* FontLabelStringDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontLabelStringDrawing.m; sourceTree = "<group>"; };
-		296E710A1546C5C900E88AAA /* FontManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontManager.h; sourceTree = "<group>"; };
-		296E710B1546C5C900E88AAA /* FontManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontManager.m; sourceTree = "<group>"; };
-		296E710F1546C5D200E88AAA /* MyFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyFont.h; sourceTree = "<group>"; };
-		296E71101546C5D200E88AAA /* MyFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyFont.m; sourceTree = "<group>"; };
-		296E71141546C6E600E88AAA /* CXMLDocument_CreationExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLDocument_CreationExtensions.h; sourceTree = "<group>"; };
-		296E71151546C6E600E88AAA /* CXMLDocument_CreationExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLDocument_CreationExtensions.m; sourceTree = "<group>"; };
-		296E71161546C6E600E88AAA /* CXMLNode_CreationExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLNode_CreationExtensions.h; sourceTree = "<group>"; };
-		296E71171546C6E600E88AAA /* CXMLNode_CreationExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLNode_CreationExtensions.m; sourceTree = "<group>"; };
-		296E71181546C6E600E88AAA /* CXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLDocument.h; sourceTree = "<group>"; };
-		296E71191546C6E600E88AAA /* CXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLDocument.m; sourceTree = "<group>"; };
-		296E711A1546C6E600E88AAA /* CXMLDocument_PrivateExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLDocument_PrivateExtensions.h; sourceTree = "<group>"; };
-		296E711B1546C6E600E88AAA /* CXMLDocument_PrivateExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLDocument_PrivateExtensions.m; sourceTree = "<group>"; };
-		296E711C1546C6E600E88AAA /* CXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLElement.h; sourceTree = "<group>"; };
-		296E711D1546C6E600E88AAA /* CXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLElement.m; sourceTree = "<group>"; };
-		296E711E1546C6E600E88AAA /* CXMLElement_CreationExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLElement_CreationExtensions.h; sourceTree = "<group>"; };
-		296E711F1546C6E600E88AAA /* CXMLElement_CreationExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLElement_CreationExtensions.m; sourceTree = "<group>"; };
-		296E71201546C6E600E88AAA /* CXMLElement_ElementTreeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLElement_ElementTreeExtensions.h; sourceTree = "<group>"; };
-		296E71211546C6E600E88AAA /* CXMLElement_ElementTreeExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLElement_ElementTreeExtensions.m; sourceTree = "<group>"; };
-		296E71221546C6E600E88AAA /* CXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLNode.h; sourceTree = "<group>"; };
-		296E71231546C6E600E88AAA /* CXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLNode.m; sourceTree = "<group>"; };
-		296E71241546C6E600E88AAA /* CXMLNode_PrivateExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLNode_PrivateExtensions.h; sourceTree = "<group>"; };
-		296E71251546C6E600E88AAA /* CXMLNode_PrivateExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLNode_PrivateExtensions.m; sourceTree = "<group>"; };
-		296E71261546C6E600E88AAA /* CXMLNode_XPathExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLNode_XPathExtensions.h; sourceTree = "<group>"; };
-		296E71271546C6E600E88AAA /* CXMLNode_XPathExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLNode_XPathExtensions.m; sourceTree = "<group>"; };
-		296E71291546C6E600E88AAA /* CTidy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTidy.h; sourceTree = "<group>"; };
-		296E712A1546C6E600E88AAA /* CTidy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTidy.m; sourceTree = "<group>"; };
-		296E712B1546C6E600E88AAA /* TouchXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchXML.h; sourceTree = "<group>"; };
-		CE0CD4EB1547FB93006D593E /* NSObject+NYXImagesHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+NYXImagesHelper.h"; sourceTree = "<group>"; };
-		CE0CD4EC1547FB93006D593E /* NSObject+NYXImagesHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+NYXImagesHelper.m"; sourceTree = "<group>"; };
 		CE0CD4EE1547FD21006D593E /* ListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListViewController.xib; sourceTree = "<group>"; };
-
 		CEE2760C1542E9F100C667D9 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		CEE2760D1542E9F100C667D9 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		F74371F61524341E006C74DE /* Ginza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ginza.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1649,8 +1613,6 @@
 		F74371EB1524341D006C74DE = {
 			isa = PBXGroup;
 			children = (
-				CE0CD4EB1547FB93006D593E /* NSObject+NYXImagesHelper.h */,
-				CE0CD4EC1547FB93006D593E /* NSObject+NYXImagesHelper.m */,
 				0B8FC6421541CBC700528D9A /* Constants .h */,
 				F74372091524341E006C74DE /* AppDelegate.h */,
 				F743720A1524341E006C74DE /* AppDelegate.m */,
@@ -2061,11 +2023,7 @@
 				296E70E01546BA9400E88AAA /* twitter_load.png in Resources */,
 				296E70E11546BA9400E88AAA /* TwitterLandscp.png in Resources */,
 				296E71051546C41000E88AAA /* DirectionViewController.xib in Resources */,
-
-				CE0CD4EF1547FD21006D593E /* ListViewController.xib in Resources */,
-
 				293B6E771547C93D001D90E2 /* MapWithRoutesViewController.xib in Resources */,
-
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2184,12 +2142,11 @@
 				296E70DD1546BA9400E88AAA /* NSString+UUID.m in Sources */,
 				296E70DE1546BA9400E88AAA /* SA_OAuthTwitterController.m in Sources */,
 				296E70DF1546BA9400E88AAA /* SA_OAuthTwitterEngine.m in Sources */,
-			293B6E751547C93D001D90E2 /* MapView.m in Sources */,
+				293B6E751547C93D001D90E2 /* MapView.m in Sources */,
 				293B6E761547C93D001D90E2 /* MapWithRoutesViewController.m in Sources */,
 				293B6E781547C93D001D90E2 /* Place.m in Sources */,
 				293B6E791547C93D001D90E2 /* PlaceMark.m in Sources */,
 				293B6E7F1547C9BA001D90E2 /* RegexKitLite.m in Sources */,
-
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2237,10 +2194,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
-
-				CODE_SIGN_IDENTITY = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
-
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: ICSP Solutions Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ICSP Solutions Pte Ltd";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2258,10 +2213,8 @@
 				INCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = /Users/RAGE/Desktop/Ginza;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
-
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
-
+				PROVISIONING_PROFILE = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2273,8 +2226,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: ICSP Solutions Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ICSP Solutions Pte Ltd";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
@@ -2286,8 +2239,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-ObjC";
-				PROVISIONING_PROFILE = "3ACD5DA9-7602-490A-A841-05971E35DF3E";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3ACD5DA9-7602-490A-A841-05971E35DF3E";
+				PROVISIONING_PROFILE = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = NO;
 			};
@@ -2297,8 +2250,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: ICSP Solutions Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ICSP Solutions Pte Ltd";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/include/libxml2",
@@ -2320,9 +2273,8 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-			PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
-
+				PROVISIONING_PROFILE = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2331,7 +2283,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: ICSP Solutions Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ICSP Solutions Pte Ltd";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/include/libxml2",
@@ -2353,7 +2306,8 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3ACD5DA9-7602-490A-A841-05971E35DF3E";
+				PROVISIONING_PROFILE = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
