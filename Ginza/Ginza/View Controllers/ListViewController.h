@@ -55,8 +55,10 @@
     CLHeading  *newHeadingObject;
     //ListViewCell *cell;
 CLLocationManager *locationManager;
+    float mHeading;
     
 }
+
 @property(nonatomic) int currentPage;
 @property(nonatomic,retain)   OfferDetailsViewController *detailsView; 
 @property(nonatomic,retain) GinzaDetailsViewController *ginzaDetailsView;

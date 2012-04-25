@@ -21,7 +21,7 @@
 #import "GinzaSubViewController.h"
 #import"Categories.h"
 #import "Offer.h"
-
+#import "NSObject+NYXImagesHelper.h"
 #import "AppDelegate.h"
 
 
@@ -95,9 +95,10 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 #import "CustomTopNavigationBar.h"
 - (void)viewDidLoad
 {
-    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
-    cbar.viewController = self;
-    [self.view addSubview:cbar];
+//    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
+//    cbar.viewController = self;
+//    cbar.backgroundColor = [UIColor redColor];
+//    [self.view addSubview:cbar];
     //[super viewDidLoad];
     currentPage=1;
     self.navigationController.navigationBar.hidden = YES;
@@ -153,10 +154,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     self.navigationController.navigationBarHidden = YES;
 }
 
--(void)viewDidDisappear:(BOOL)animated
-{
-    
-}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     [tblListView reloadData];
@@ -280,7 +278,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
         int time = (me/4000)*15;
         cell.lblDistance.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
-        cell.imgDirection.image=[self rotate: cell.imgDirection.image radians:((([self bearingToLocation:storeLocation])- newHeadingObject.magneticHeading)*M_PI)/360];
+        cell.imgDirection.image=[self rotate: cell.imgDirection.image radians:((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360];
     }
     
     if (indexPath.row==0) {
@@ -304,7 +302,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         int time = (me/4000)*15;
        
         cell.lblDistance.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
-        cell.imgDirection.image=[self rotate: cell.imgDirection.image radians:((([self bearingToLocation:storeLocation])- newHeadingObject.magneticHeading)*M_PI)/360];
+        cell.imgDirection.image=[self rotate: cell.imgDirection.image radians:((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360];
         
     }
     
@@ -328,7 +326,42 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     UIGraphicsEndImageContext();
     return i;
 }
-
+-(UIImage*)rotateInRadians:(UIImage *)image radians:(CGFloat)radians
+{
+    CGImageRef cgImage = image.CGImage;
+    const CGFloat originalWidth = CGImageGetWidth(cgImage);
+    const CGFloat originalHeight = CGImageGetHeight(cgImage);
+    
+    const CGRect imgRect = (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = originalWidth, .size.height = originalHeight};
+    const CGRect rotatedRect = CGRectApplyAffineTransform(imgRect, CGAffineTransformMakeRotation(radians));
+    
+    /// Create an ARGB bitmap context
+    CGContextRef bmContext = NYXImageCreateARGBBitmapContext(rotatedRect.size.width, rotatedRect.size.height, 0);
+    if (!bmContext)
+        return nil;
+    
+    /// Image quality
+    CGContextSetShouldAntialias(bmContext, true);
+    CGContextSetAllowsAntialiasing(bmContext, true);
+    CGContextSetInterpolationQuality(bmContext, kCGInterpolationHigh);
+    
+    /// Rotation happen here
+    CGContextTranslateCTM(bmContext, +(rotatedRect.size.width * 0.5f), +(rotatedRect.size.height * 0.5f));
+    CGContextRotateCTM(bmContext, radians);
+    
+    /// Draw the image in the bitmap context
+    CGContextDrawImage(bmContext, (CGRect){.origin.x = -originalWidth * 0.5f, .origin.y = -originalHeight * 0.5f, .size.width = originalWidth, .size.height = originalHeight}, cgImage);
+    
+    /// Create an image object from the context
+    CGImageRef rotatedImageRef = CGBitmapContextCreateImage(bmContext);
+    UIImage* rotated = [UIImage imageWithCGImage:rotatedImageRef];
+    
+    /// Cleanup
+    CGImageRelease(rotatedImageRef);
+    CGContextRelease(bmContext);
+    
+    return rotated;
+}
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -415,11 +448,11 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 #pragma mark CLLocation Delegates methods
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    currentLocation =  newLocation;   
+    currentLocation =  [newLocation retain];   
     //currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
     
     
-    NSLog(@"didUpdateToLocation");
+    //NSLog(@"didUpdateToLocation");
      [tblListView reloadData];
     
 }
@@ -433,37 +466,37 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     
     //  newHeadingObject = [[CLHeading alloc]init];
     newHeadingObject = newHeading;
-    float mHeading = newHeadingObject.trueHeading;
+    mHeading = newHeadingObject.magneticHeading;
     
     //imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
     
    
     
     if ((mHeading >= 339) || (mHeading <= 22)) {
-        NSLog(@"User Heading ......->N");
+      //  NSLog(@"User Headingaa ......->N");
         currenDirection = @"N";
        
     }else if ((mHeading > 23) && (mHeading <= 68)) {
         currenDirection = @"NE";
-         NSLog(@"User Heading ......->NE");
+        // NSLog(@"User Heading ......->NE");
     }else if ((mHeading > 69) && (mHeading <= 113)) {
          currenDirection = @"E";
-         NSLog(@"User Heading ......->E");
+        // NSLog(@"User Heading ......->E");
     }else if ((mHeading > 114) && (mHeading <= 158)) {
           currenDirection = @"SE";
-         NSLog(@"User Heading ......->SE");
+        // NSLog(@"User Heading ......->SE");
     }else if ((mHeading > 159) && (mHeading <= 203)) {
           currenDirection = @"S";
-         NSLog(@"User Heading ......->S");
+       //  NSLog(@"User Heading ......->S");
     }else if ((mHeading > 204) && (mHeading <= 248)) {
        currenDirection = @"SW";
-         NSLog(@"User Heading ......->SW");
+       //  NSLog(@"User Heading ......->SW");
     }else if ((mHeading > 249) && (mHeading <= 293)) {
         currenDirection = @"W";
-         NSLog(@"User Heading ......->W");
+       ///  NSLog(@"User Heading ......->W");
     }else if ((mHeading > 294) && (mHeading <= 338)) {
        
-         NSLog(@"User Heading ......->NW");
+         //NSLog(@"User Heading ......->NW");
      currenDirection = @"NW";
     }
     
@@ -473,7 +506,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     }
     else {
         NSLog(@"Table Reload Called");
-        [tblListView reloadData];
+       [tblListView reloadData];
         previousDirection = currenDirection;
     }
     
@@ -555,7 +588,15 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 }
 
 
-
+- (void)viewDidDisappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+    [locationManager stopUpdatingHeading];
+    [locationManager stopUpdatingLocation];
+    
+	;
+    
+}
 
 
 @end
