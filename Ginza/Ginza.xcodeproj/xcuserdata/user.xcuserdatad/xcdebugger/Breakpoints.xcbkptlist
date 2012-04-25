@@ -13,7 +13,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "397"
          endingLineNumber = "397"
-         landmarkName = "-btnClose:"
+         landmarkName = "-locationManager:didUpdateToLocation:fromLocation:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -21,64 +21,25 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Ginza/View Controllers/ListViewController.m"
-         timestampString = "356870346.938624"
+         timestampString = "357042706.536709"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "362"
-         endingLineNumber = "362"
-         landmarkName = "@implementation ListViewController"
-         landmarkType = "3">
+         startingLineNumber = "395"
+         endingLineNumber = "395"
+         landmarkName = "-tableView:didSelectRowAtIndexPath:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Ginza/View Controllers/ListViewController.m"
-         timestampString = "356870346.938624"
+         timestampString = "357042706.536709"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "380"
-         endingLineNumber = "380"
+         startingLineNumber = "413"
+         endingLineNumber = "413"
          landmarkName = "-GinzaswipeDown:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Ginza/View Controllers/ListViewController.m"
-         timestampString = "356870346.938624"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "428"
-         endingLineNumber = "428"
-         landmarkName = "-btnGinzaMenu:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Ginza/View Controllers/OfferDetailsViewController.m"
-         timestampString = "356703297.592807"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "42"
-         endingLineNumber = "42"
-         landmarkName = "-viewDidLoad"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Ginza/View Controllers/OfferDetailsViewController.m"
-         timestampString = "356703307.328732"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "245"
-         endingLineNumber = "245"
-         landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -91,7 +52,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "121"
          endingLineNumber = "121"
-         landmarkName = "-viewDidAppear:"
+         landmarkName = "-addPin:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -118,19 +79,6 @@
          startingLineNumber = "190"
          endingLineNumber = "190"
          landmarkName = "-plotOfferPositions:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Ginza/View Controllers/ListViewController.m"
-         timestampString = "356870346.938624"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "421"
-         endingLineNumber = "421"
-         landmarkName = "-btnGinzaMenu:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint

@@ -384,7 +384,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 		DistanceAndIndex distanceAndIndex;
 		distanceAndIndex.distance = sqrtf(n*n + e*e);
         
-        NSLog(@"distance index = %f",distanceAndIndex.distance);
+       // NSLog(@"distance index = %f",distanceAndIndex.distance);
 		distanceAndIndex.index = i;
 		[orderedDistances insertObject:[NSData dataWithBytes:&distanceAndIndex length:sizeof(distanceAndIndex)] atIndex:i++];
 	}
@@ -411,7 +411,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         
         //[alert show];
         
-        NSLog(@"%f,%f,%f,%f",distanceAndIndex->distance , self.currentDistance , distanceAndIndex->distance,self.maxtDistance);
+       // NSLog(@"%f,%f,%f,%f",distanceAndIndex->distance , self.currentDistance , distanceAndIndex->distance,self.maxtDistance);
         if (distanceAndIndex->distance >= self.currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
             [self addSubview:poi.view];
         }

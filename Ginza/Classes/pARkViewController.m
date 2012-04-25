@@ -592,7 +592,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: 35.671635 longitude:139.763952];
-    double distance = [currentLocation distanceFromLocation: offerLoc];
+   // double distance = [currentLocation distanceFromLocation: offerLoc];
     
     //distance =500;
     /*if (distance>1000) {
