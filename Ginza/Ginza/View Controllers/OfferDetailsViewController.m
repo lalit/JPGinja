@@ -12,7 +12,7 @@
 #import "Offer.h"
 #import "Categories.h"
 #import "ShareViewController.h"
-#import "DirectionViewController.h"
+#import "MapWithRoutesViewController.h"
 @implementation OfferDetailsViewController
 @synthesize lblIsChild,lblIsLunch,lblIsPrivate,lblOfferTitle,lblCategoryName,lblDistanceLabel,imgIsChild,imgIsLunch,imgCategory,imgIsPrivate,imgOfferImage,offerId,scroll,webFreeText,storeLocation,offer;
 @synthesize viewOfferDetails,tableView,locationManager,imgDirection,arrowImage,shareVC;
@@ -425,11 +425,11 @@
 //Added by Mobiquest team
 
 - (IBAction)getDirectionButtonPressed:(id)sender {
-    DirectionViewController *directionVC=[[DirectionViewController alloc] initWithNibName:@"DirectionViewController" bundle:nil];
-    NSString *lat=[NSString stringWithFormat:@"%lf",self.storeLocation.coordinate.latitude];
-    NSString *lon=[NSString stringWithFormat:@"%lf",self.storeLocation.coordinate.longitude];
-    [directionVC setLat:lat setLong:lon];
+    MapWithRoutesViewController *directionVC=[[MapWithRoutesViewController alloc] initWithNibName:@"MapWithRoutesViewController" bundle:nil];
+    //directionVC setLat:lat setLong:lon];
+   directionVC.destination=self.storeLocation;
     [self presentModalViewController:directionVC animated:YES];
+    
 }
 
 - (IBAction)sharedButtonPressed:(id)sender {

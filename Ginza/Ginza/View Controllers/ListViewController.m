@@ -147,7 +147,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     locationManager.delegate = self;
     locationManager.distanceFilter =1; // whenever we move
     locationManager.headingFilter = 5;
-    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;; // 100 m
+    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters; // 100 m
     [locationManager startUpdatingLocation];
     [locationManager startUpdatingHeading];
     self.navigationController.navigationBarHidden = YES;
@@ -297,9 +297,9 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         cell.strLatitude = @"35.665756";
         cell.strLongitude = @"139.71179";
         double Latitude = 35.665756;
-        double Longitude = 139.71179;
+        double Longitude = 139.7117;
         CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
-        CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
+        CLLocationDistance meters =[currentLocation distanceFromLocation:storeLocation];
         double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
         int time = (me/4000)*15;
        
