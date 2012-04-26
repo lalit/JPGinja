@@ -104,6 +104,7 @@
     [mapView setCenterCoordinate:originalCenter animated:YES];
     
     //=======
+       [self plotOfferPositions:@"all"];
     
 }
 
@@ -128,7 +129,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated 
 {  
-    [self plotOfferPositions:@"all"];
+ 
 
 }
 
@@ -252,8 +253,8 @@
     //currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
     int k=0;
     NSMutableArray *nearestLocations=[[NSMutableArray alloc]init];
-    CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: 35.671635 longitude:139.763952];
-        [nearestLocations addObject:offerLoc];
+   // CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: 35.671635 longitude:139.763952];
+       // [nearestLocations addObject:offerLoc];
 
     for (id key in mapDataDict)
     {

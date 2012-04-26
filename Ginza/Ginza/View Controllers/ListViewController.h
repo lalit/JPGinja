@@ -98,5 +98,4 @@ CLLocationManager *locationManager;
 -(double) bearingToLocation:(CLLocation *) destinationLocation;
 -(NSString *) compassOrdinalToLocation:(CLLocation *) nwEndPoint;
 -(IBAction)btnGinzaMenu:(id)sender;
-- (UIImage *)rotate:(UIImage *)image radians:(float)rads;
 @end

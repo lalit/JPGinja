@@ -21,7 +21,7 @@
 #import "GinzaSubViewController.h"
 #import"Categories.h"
 #import "Offer.h"
-
+#import <QuartzCore/QuartzCore.h>
 #import "AppDelegate.h"
 
 
@@ -278,7 +278,13 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
         int time = (me/4000)*15;
         cell.lblDistance.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
-        cell.imgDirection.image=[self rotate: cell.imgDirection.image radians:((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360];
+        // Animate Arrow
+        double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360;
+        CABasicAnimation *theAnimation;
+        theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+        theAnimation.duration = 0.5f;    
+        [cell.imgDirection.layer addAnimation:theAnimation forKey:@"animateMyRotation"];
+        cell.imgDirection.transform = CGAffineTransformMakeRotation(radians);
     }
     
     if (indexPath.row==0) {
@@ -300,9 +306,14 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         CLLocationDistance meters =[currentLocation distanceFromLocation:storeLocation];
         double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
         int time = (me/4000)*15;
-       
         cell.lblDistance.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
-        cell.imgDirection.image=[self rotate: cell.imgDirection.image radians:((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360];
+        // Animate Arrow
+        double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360;
+        CABasicAnimation *theAnimation;
+        theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+        theAnimation.duration = 0.5f;    
+        [cell.imgDirection.layer addAnimation:theAnimation forKey:@"animateMyRotation"];
+        //cell.imgDirection.transform = CGAffineTransformMakeRotation(radians);
         
     }
     
@@ -310,21 +321,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     return cell;
     
     
-}
-
-//Compass rotation animation
-- (UIImage *)rotate:(UIImage *)image radians:(float)rads
-{
-    float newSide = MAX([image size].width, [image size].height);
-    CGSize size =  CGSizeMake(newSide, newSide);
-    UIGraphicsBeginImageContext(size);
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextTranslateCTM(ctx, newSide/2, newSide/2);
-    CGContextRotateCTM(ctx, rads);
-    CGContextDrawImage(UIGraphicsGetCurrentContext(),CGRectMake(-[image size].width/2,-[image size].height/2,size.width, size.height),image.CGImage);
-    UIImage *i = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return i;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
