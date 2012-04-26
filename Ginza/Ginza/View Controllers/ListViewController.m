@@ -97,7 +97,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 {
     CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]init];
     cbar.viewController = self;
-    cbar.backgroundColor = [UIColor redColor];
+    //cbar.backgroundColor = [UIColor redColor];
     [self.view addSubview:cbar];
     //[super viewDidLoad];
     currentPage=1;

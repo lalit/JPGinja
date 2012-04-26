@@ -446,6 +446,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         
 		float x = (v[0] / v[3] + 1.0f) * 0.5f;
 		float y = (v[1] / v[3] + 1.0f) * 0.5f;
+        NSLog(@"POI position x = %f , y =%f",x,y);
 		if (v[2] < 0.0f) {
 			poi.view.center = CGPointMake(x*self.bounds.size.width, self.bounds.size.height-y*self.bounds.size.height);
 			poi.view.hidden = NO;
@@ -464,7 +465,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	location = newLocation;
     
     //for testing
-    //location = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+    location = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
 	if (placesOfInterest != nil) {
 		[self updatePlacesOfInterestCoordinates];
 	}	

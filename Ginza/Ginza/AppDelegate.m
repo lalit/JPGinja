@@ -103,7 +103,7 @@
         }
         @catch (NSException *exception) {
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Execute fetch offer %@",exception ] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-            //[alert show];
+            [alert show];
             
         }
         @finally {
@@ -516,7 +516,7 @@
     }
     
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Execute fetch offer %@",urlString ] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    //[alert show];
+    [alert show];
 
     
         
@@ -542,7 +542,7 @@
     NSArray *dataArray = json;
     
      UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer fetched" message:[NSString stringWithFormat:@"%d",[dataArray count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    //[alert1 show];
+    [alert1 show];
     NSLog(@" offer data count = %d",[dataArray count]);
     
     int g=0;
