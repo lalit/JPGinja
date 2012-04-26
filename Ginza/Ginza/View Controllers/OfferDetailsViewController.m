@@ -13,12 +13,37 @@
 #import "Categories.h"
 #import "ShareViewController.h"
 #import "MapWithRoutesViewController.h"
+#import "Location.h"
+#import "ListViewController.h"
 @implementation OfferDetailsViewController
 @synthesize lblIsChild,lblIsLunch,lblIsPrivate,lblOfferTitle,lblCategoryName,lblDistanceLabel,imgIsChild,imgIsLunch,imgCategory,imgIsPrivate,imgOfferImage,offerId,scroll,webFreeText,storeLocation,offer;
 @synthesize viewOfferDetails,tableView,locationManager,imgDirection,arrowImage,shareVC;
 
 @synthesize btnSepecialOffers;
-@synthesize imgOfferdetailsView,bottomView,currentLocation,btnBookMark;
+@synthesize imgOfferdetailsView,bottomView,currentLocation,btnBookMark,compassImageView;
+
+double DegreesToRadians1(double degrees) {return degrees * M_PI / 180.0;};
+double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
+
+-(double) bearingToLocation:(CLLocation *) destinationLocation {
+    double lat1 = DegreesToRadians1(self.currentLocation.coordinate.latitude);
+    double lon1 = DegreesToRadians1(self.currentLocation.coordinate.longitude);
+    
+    double lat2 = DegreesToRadians1(destinationLocation.coordinate.latitude);
+    double lon2 = DegreesToRadians1(destinationLocation.coordinate.longitude);
+    
+    double dLon = lon2 - lon1;
+    
+    double y = sin(dLon) * cos(lat2);
+    double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
+    double radiansBearing = atan2(y, x);
+    if(radiansBearing < 0.0)
+        radiansBearing += 2*M_PI;
+    
+    
+    return DegreesToRadians(radiansBearing);
+}
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -168,6 +193,11 @@
         lblIsPrivate.hidden = YES;
         imgIsPrivate.hidden = YES;
     }
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+   
 }
 
 - (void)viewDidUnload
@@ -395,14 +425,72 @@
 {
     
     self.currentLocation=newLocation;
-    
+
     CLLocationDistance meters = [self.currentLocation distanceFromLocation:self.storeLocation];
     //4000 mtr = 15 min
     //NSLog(@"meters %d",meters);
     double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
     int time = (me/4000)*15;
     self.lblDistanceLabel.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
+    self.compassImageView.image=[self rotate:self.compassImageView.image radians:((([self bearingToLocation:self.storeLocation])- mHeading)*M_PI)/360];
+    [self.view setNeedsDisplay];
+     
 
+}
+
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading 
+{
+    // UITableViewCell *cell =  (UITableViewCell *)[tblListView cellForRowAtIndexPath:[NSIndexPath indexPathWithIndex:2]];
+    
+    
+    //  NSLog(@"update heading....");
+    
+    //  newHeadingObject = [[CLHeading alloc]init];
+    newHeadingObject = newHeading;
+    mHeading = newHeadingObject.magneticHeading;
+    
+    //imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
+    
+    
+    
+    if ((mHeading >= 339) || (mHeading <= 22)) {
+        //  NSLog(@"User Headingaa ......->N");
+        currenDirection = @"N";
+        
+    }else if ((mHeading > 23) && (mHeading <= 68)) {
+        currenDirection = @"NE";
+        // NSLog(@"User Heading ......->NE");
+    }else if ((mHeading > 69) && (mHeading <= 113)) {
+        currenDirection = @"E";
+        // NSLog(@"User Heading ......->E");
+    }else if ((mHeading > 114) && (mHeading <= 158)) {
+        currenDirection = @"SE";
+        // NSLog(@"User Heading ......->SE");
+    }else if ((mHeading > 159) && (mHeading <= 203)) {
+        currenDirection = @"S";
+        //  NSLog(@"User Heading ......->S");
+    }else if ((mHeading > 204) && (mHeading <= 248)) {
+        currenDirection = @"SW";
+        //  NSLog(@"User Heading ......->SW");
+    }else if ((mHeading > 249) && (mHeading <= 293)) {
+        currenDirection = @"W";
+        ///  NSLog(@"User Heading ......->W");
+    }else if ((mHeading > 294) && (mHeading <= 338)) {
+        
+        //NSLog(@"User Heading ......->NW");
+        currenDirection = @"NW";
+    }
+    
+    if ([currenDirection isEqualToString:previousDirection ]){
+        
+    }
+    else {
+        NSLog(@"Table Reload Called");
+        previousDirection = currenDirection;
+        self.compassImageView.image=[self rotate:self.compassImageView.image radians:((([self bearingToLocation:self.storeLocation])- mHeading)*M_PI)/360];
+    }
+    
 }
 
 -(IBAction)btnBookmark:(id)sender
@@ -423,6 +511,23 @@
 }
 //=======================================================================================================================
 //Added by Mobiquest team
+
+
+//Compass rotation animation
+- (UIImage *)rotate:(UIImage *)image radians:(float)rads
+{
+    float newSide = MAX([image size].width, [image size].height);
+    CGSize size =  CGSizeMake(newSide, newSide);
+    UIGraphicsBeginImageContext(size);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(ctx, newSide/2, newSide/2);
+    CGContextRotateCTM(ctx, rads);
+    CGContextDrawImage(UIGraphicsGetCurrentContext(),CGRectMake(-[image size].width/2,-[image size].height/2,size.width, size.height),image.CGImage);
+    UIImage *i = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return i;
+}
+
 
 - (IBAction)getDirectionButtonPressed:(id)sender {
     MapWithRoutesViewController *directionVC=[[MapWithRoutesViewController alloc] initWithNibName:@"MapWithRoutesViewController" bundle:nil];
@@ -460,7 +565,8 @@
 		self.shareVC = [[ShareViewController alloc] init];
 	}
     NSLog(@"Message:%@",[self shareKitMessage]);
-    [self.shareVC launchFacebookWithStr:[self shareKitMessage] WithImage:nil withParentVC:self withImagePath:nil];
+    [self.shareVC  launchFacebookWithStr:[self shareKitMessage] WithImage:nil withParentVC:self
+     ];
 }
 
 - (void) postTwitter
@@ -480,7 +586,7 @@
 }
 
 -(NSString *)shareKitMessage {
-        NSString *strMessage=[NSString stringWithFormat:@"Offer Title: %@,Location:%lf,%lf",self.offer.offer_title, self.storeLocation.coordinate.latitude,self.storeLocation.coordinate.longitude];
+        NSString *strMessage=[NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%lf,%lf&zoom=12&size=400x400&maptype=roadmap&sensor=true", self.storeLocation.coordinate.latitude,self.storeLocation.coordinate.longitude];
     return strMessage;
 }
 
