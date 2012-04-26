@@ -104,7 +104,7 @@
     [mapView setCenterCoordinate:originalCenter animated:YES];
     
     //=======
-       [self plotOfferPositions:@"all"];
+       
     
 }
 
@@ -129,7 +129,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated 
 {  
- 
+ [self plotOfferPositions:@"all"];
 
 }
 

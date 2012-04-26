@@ -81,10 +81,15 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     self.offer =  [appDeligate getOfferDataById:self.offerId];
+    NSLog(@"Title:%@",self.offer.offer_title);
+    NSLog(@"Category:%@",self.offer.category);
+    NSLog(@"Lead Text:%@",offer.lead_text);
+    NSLog(@"Copy Text:%@",offer.copy_text);
+    
     NSLog(@"DetailView Offer:%@",self.offerId);
     lblCategoryName.text = self.offer.category;
     lblOfferTitle.text=self.offer.offer_title;
-    scroll.contentSize = CGSizeMake(320, 1000);
+    scroll.contentSize = CGSizeMake(320, 1045);
     self.webFreeText.backgroundColor =[UIColor clearColor];
     [self.webFreeText setOpaque:NO];
     NSString *weViewData =[NSString stringWithFormat:@"<HTML><body style=\"background-color:transparent\"><table><tr><td>%@<hr></td></tr><tr><td>%@</td></tr><tr><td>%@</td></tr></table></HTML>",offer.lead_text,offer.copy_text,offer.free_text];
@@ -519,22 +524,6 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 }
 //=======================================================================================================================
 //Added by Mobiquest team
-
-
-//Compass rotation animation
-- (UIImage *)rotate:(UIImage *)image radians:(float)rads
-{
-    float newSide = MAX([image size].width, [image size].height);
-    CGSize size =  CGSizeMake(newSide, newSide);
-    UIGraphicsBeginImageContext(size);
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextTranslateCTM(ctx, newSide/2, newSide/2);
-    CGContextRotateCTM(ctx, rads);
-    CGContextDrawImage(UIGraphicsGetCurrentContext(),CGRectMake(-[image size].width/2,-[image size].height/2,size.width, size.height),image.CGImage);
-    UIImage *i = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return i;
-}
 
 
 - (IBAction)getDirectionButtonPressed:(id)sender {
