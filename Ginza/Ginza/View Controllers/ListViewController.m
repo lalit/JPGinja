@@ -313,7 +313,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
         theAnimation.duration = 0.5f;    
         [cell.imgDirection.layer addAnimation:theAnimation forKey:@"animateMyRotation"];
-        //cell.imgDirection.transform = CGAffineTransformMakeRotation(radians);
+        cell.imgDirection.transform = CGAffineTransformMakeRotation(radians);
         
     }
     

@@ -70,4 +70,5 @@
 - (void) postTwitter;
 - (void) sendEmail;
 -(NSString *) shareKitMessage;
+-(void) animateArrowImage;
 @end

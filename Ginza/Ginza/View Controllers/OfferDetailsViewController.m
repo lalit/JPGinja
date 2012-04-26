@@ -15,6 +15,7 @@
 #import "MapWithRoutesViewController.h"
 #import "Location.h"
 #import "ListViewController.h"
+#import <QuartzCore/QuartzCore.h>
 @implementation OfferDetailsViewController
 @synthesize lblIsChild,lblIsLunch,lblIsPrivate,lblOfferTitle,lblCategoryName,lblDistanceLabel,imgIsChild,imgIsLunch,imgCategory,imgIsPrivate,imgOfferImage,offerId,scroll,webFreeText,storeLocation,offer;
 @synthesize viewOfferDetails,tableView,locationManager,imgDirection,arrowImage,shareVC;
@@ -432,12 +433,19 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
     int time = (me/4000)*15;
     self.lblDistanceLabel.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
-    self.compassImageView.image=[self rotate:self.compassImageView.image radians:((([self bearingToLocation:self.storeLocation])- mHeading)*M_PI)/360];
-    [self.view setNeedsDisplay];
-     
-
+    [self animateArrowImage];
 }
 
+-(void) animateArrowImage {
+    
+    double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360;
+    CABasicAnimation *theAnimation;
+    theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+    theAnimation.duration = 0.5f;    
+    [self.compassImageView.layer addAnimation:theAnimation forKey:@"animateMyRotation"];
+    self.compassImageView.transform = CGAffineTransformMakeRotation(radians);
+    [self.view setNeedsDisplay];
+}
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading 
 {
@@ -488,7 +496,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     else {
         NSLog(@"Table Reload Called");
         previousDirection = currenDirection;
-        self.compassImageView.image=[self rotate:self.compassImageView.image radians:((([self bearingToLocation:self.storeLocation])- mHeading)*M_PI)/360];
+        [self animateArrowImage];
     }
     
 }
