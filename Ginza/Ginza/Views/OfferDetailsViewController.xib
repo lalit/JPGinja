@@ -525,6 +525,7 @@
 						<string key="NSFrame">{{269, 64}, {36, 37}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -720,6 +721,14 @@
 						<reference key="destination" ref="367749849"/>
 					</object>
 					<int key="connectionID">77</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">compassImageView</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="1004932813"/>
+					</object>
+					<int key="connectionID">84</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -1027,7 +1036,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">83</int>
+			<int key="maxID">84</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1063,6 +1072,7 @@
 						<string key="bottomView">UIView</string>
 						<string key="btnBookMark">UIButton</string>
 						<string key="btnSepecialOffers">UIButton</string>
+						<string key="compassImageView">UIImageView</string>
 						<string key="imgCategory">UIImageView</string>
 						<string key="imgDirection">UIImageView</string>
 						<string key="imgIsChild">UIImageView</string>
@@ -1097,6 +1107,10 @@
 						<object class="IBToOneOutletInfo" key="btnSepecialOffers">
 							<string key="name">btnSepecialOffers</string>
 							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="compassImageView">
+							<string key="name">compassImageView</string>
+							<string key="candidateClassName">UIImageView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="imgCategory">
 							<string key="name">imgCategory</string>
@@ -1183,7 +1197,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="Arrow.png">{16, 16}</string>
+			<string key="Arrow.png">{10, 15}</string>
 			<string key="Arrowwhite.png">{19, 16}</string>
 			<string key="Closebutton.png">{34, 34}</string>
 			<string key="Detailsloacationbutton.png">{283, 54}</string>

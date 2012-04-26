@@ -412,9 +412,10 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         //[alert show];
         
        // NSLog(@"%f,%f,%f,%f",distanceAndIndex->distance , self.currentDistance , distanceAndIndex->distance,self.maxtDistance);
-        if (distanceAndIndex->distance >= self.currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
+        NSLog(@"self.currentDistance = %f",self.currentDistance);
+       
             [self addSubview:poi.view];
-        }
+      
 		
 	}	
 }
@@ -446,7 +447,6 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         
 		float x = (v[0] / v[3] + 1.0f) * 0.5f;
 		float y = (v[1] / v[3] + 1.0f) * 0.5f;
-        NSLog(@"POI position x = %f , y =%f",x,y);
 		if (v[2] < 0.0f) {
 			poi.view.center = CGPointMake(x*self.bounds.size.width, self.bounds.size.height-y*self.bounds.size.height);
 			poi.view.hidden = NO;

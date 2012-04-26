@@ -85,6 +85,7 @@
     float               northOffest;
     float               radius;
     int                 radiusChanged;
+    float               currentDistance;
     
 }
 @property (nonatomic)BOOL isFirstTime;

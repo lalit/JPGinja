@@ -11,6 +11,7 @@
 		0B27111F1525F078003BF4F2 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B27111E1525F078003BF4F2 /* CoreMotion.framework */; };
 		0B6027ED15468D19002BD21F /* CustomTopNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6027EC15468D19002BD21F /* CustomTopNavigationBar.m */; };
 		0B6027F015468D53002BD21F /* CustomTopNavigationBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B6027EF15468D53002BD21F /* CustomTopNavigationBar.xib */; };
+		0B669E72154994FC001FF750 /* ListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B669E71154994FC001FF750 /* ListViewController.xib */; };
 		0B8AC9521535131D00317F83 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8AC9511535131D00317F83 /* SystemConfiguration.framework */; };
 		0B8AC95415354E4700317F83 /* filtersetting.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B8AC95315354E4700317F83 /* filtersetting.plist */; };
 		0B8B57F7153D22370080063A /* btnVirtualWalk.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B8B57F6153D22360080063A /* btnVirtualWalk.png */; };
@@ -387,6 +388,7 @@
 		0B6027EB15468D19002BD21F /* CustomTopNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTopNavigationBar.h; sourceTree = "<group>"; };
 		0B6027EC15468D19002BD21F /* CustomTopNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTopNavigationBar.m; sourceTree = "<group>"; };
 		0B6027EF15468D53002BD21F /* CustomTopNavigationBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTopNavigationBar.xib; sourceTree = "<group>"; };
+		0B669E71154994FC001FF750 /* ListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListViewController.xib; sourceTree = "<group>"; };
 		0B8AC9511535131D00317F83 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0B8AC95315354E4700317F83 /* filtersetting.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = filtersetting.plist; sourceTree = "<group>"; };
 		0B8B57F6153D22360080063A /* btnVirtualWalk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnVirtualWalk.png; sourceTree = "<group>"; };
@@ -841,7 +843,6 @@
 		296E70F51546BD6A00E88AAA /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		296E70F81546BD8B00E88AAA /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		296E71041546C41000E88AAA /* DirectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DirectionViewController.xib; sourceTree = "<group>"; };
-		CE0CD4EE1547FD21006D593E /* ListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListViewController.xib; sourceTree = "<group>"; };
 		CEE2760C1542E9F100C667D9 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		CEE2760D1542E9F100C667D9 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		F74371F61524341E006C74DE /* Ginza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ginza.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -994,6 +995,7 @@
 		0B8FC26E1541C88200528D9A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0B669E71154994FC001FF750 /* ListViewController.xib */,
 				296E71041546C41000E88AAA /* DirectionViewController.xib */,
 				0B8FC26F1541C88200528D9A /* AboutViewController.xib */,
 				0B8FC2701541C88200528D9A /* AddressAnnotation.h */,
@@ -1019,7 +1021,6 @@
 				0B8FC2841541C88200528D9A /* GinzaSubViewController.xib */,
 				0B8FC2851541C88200528D9A /* GinzaTopViewController.xib */,
 				0B8FC2861541C88200528D9A /* ListViewCell.xib */,
-				CE0CD4EE1547FD21006D593E /* ListViewController.xib */,
 				0B8FC2881541C88200528D9A /* MainView.xib */,
 				0B8FC2891541C88200528D9A /* MapViewController.xib */,
 				0B8FC28A1541C88200528D9A /* OfferDetailsViewController.xib */,
@@ -2024,6 +2025,7 @@
 				296E70E11546BA9400E88AAA /* TwitterLandscp.png in Resources */,
 				296E71051546C41000E88AAA /* DirectionViewController.xib in Resources */,
 				293B6E771547C93D001D90E2 /* MapWithRoutesViewController.xib in Resources */,
+				0B669E72154994FC001FF750 /* ListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2194,8 +2196,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rage  Communications Private Limited";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: ICSP Solutions Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ICSP Solutions Pte Ltd";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2213,8 +2215,8 @@
 				INCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = /Users/RAGE/Desktop/Ginza;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PROVISIONING_PROFILE = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
+				PROVISIONING_PROFILE = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2226,8 +2228,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rage  Communications Private Limited";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: ICSP Solutions Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ICSP Solutions Pte Ltd";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
@@ -2239,8 +2241,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-ObjC";
-				PROVISIONING_PROFILE = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
+				PROVISIONING_PROFILE = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = NO;
 			};
@@ -2250,7 +2252,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rage  Communications Private Limited";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2273,7 +2275,7 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2283,7 +2285,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rage  Communications Private Limited";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2306,7 +2308,7 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
 				WRAPPER_EXTENSION = app;
 			};

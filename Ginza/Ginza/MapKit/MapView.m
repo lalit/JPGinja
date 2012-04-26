@@ -111,8 +111,14 @@
 	region.center.longitude    = (maxLon + minLon) / 2;
 	region.span.latitudeDelta  = maxLat - minLat;
 	region.span.longitudeDelta = maxLon - minLon;
-	
-	[mapView setRegion:region animated:YES];
+	if ((region.center.latitude==0.0000000) && (region.center.longitude==0.0000000)) {
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Directions Not Available" message:@"Direction could not be found between these location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+        [alert release];
+    }
+    else {
+	   [mapView setRegion:region animated:YES];
+    }
 }
 
 -(void) showRouteFrom: (Place*) f to:(Place*) t {

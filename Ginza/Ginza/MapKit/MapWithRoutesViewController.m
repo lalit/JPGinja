@@ -44,30 +44,39 @@
 	Place* source = [[[Place alloc] init] autorelease];
 	source.name = @"Current Location";
 	source.description = @"";
-	source.latitude = 1.324658;
-	source.longitude = 103.93238;
-	//source.latitude=currentLoc.coordinate.latitude;
-   // source.longitude=currentLoc.coordinate.longitude;
+    //Ginza Latitirude & Longitude
+	//source.latitude = 35.6707504;
+	//source.longitude =  139.769467;
+	source.latitude=currentLoc.coordinate.latitude;
+    source.longitude=currentLoc.coordinate.longitude;
 	Place* dest = [[[Place alloc] init] autorelease];
 	dest.name = @"Destination";
 	dest.description = @"Destination";
-	dest.latitude = 1.3296047;
-	dest.longitude = 103.8932174;
-	//dest.latitude= self.destination.coordinate.latitude;
-   // dest.longitude=    self.destination.coordinate.longitude;
+	//dest.latitude = 1.3296047;
+	//dest.longitude = 103.8932174;
+	dest.latitude= self.destination.coordinate.latitude;
+    dest.longitude=    self.destination.coordinate.longitude;
 	
 	[mapView showRouteFrom:source to:dest];
-    
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [button addTarget:self 
-               action:@selector(cancel:)
-     forControlEvents:UIControlEventTouchDown];
-    [button setTitle:@"Cancel" forState:UIControlStateNormal];
-    button.frame = CGRectMake(255, 3, 60,35);
-    [self.view addSubview:button];
-
+    [self createTopBar];
 }
 
+- (void) createTopBar {
+    UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle:@"Get Direction"];
+    [navBar pushNavigationItem:navItem animated:NO];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                                                   style:UIBarButtonItemStyleBordered
+                                                                  target:self
+                                                                  action:@selector(cancel:)];
+    navItem.rightBarButtonItem = cancelButton;
+    
+    [self.view addSubview:navBar];
+    
+    [cancelButton release];
+    [navItem release];
+    [navBar release]; 
+}
 - (void) setDestination:(CLLocation *) aDestination {
        destination=aDestination;
     NSLog(@"Destinat");
@@ -77,13 +86,13 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-/*
+
 // Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
-*/
 
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.

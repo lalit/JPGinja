@@ -16,9 +16,11 @@
     float degrees;
 
     //Added by MobiQuest team
-    ShareViewController *shareVC;
-    
 
+    float mHeading;
+    CLHeading  *newHeadingObject;
+    NSString *currenDirection;
+    NSString *previousDirection;
 }
 @property (nonatomic, retain) ShareViewController *shareVC;
 
@@ -30,6 +32,7 @@
 @property(nonatomic,retain)CLLocation *currentLocation ;
 @property(nonatomic,retain)IBOutlet UIView *bottomView;
 @property(nonatomic,retain)IBOutlet UIImageView *imgCategory;
+@property(nonatomic,retain)IBOutlet UIImageView *compassImageView;
 @property(nonatomic,retain)IBOutlet UILabel *lblCategoryName;
 @property(nonatomic,retain)IBOutlet UILabel *lblOfferTitle;
 @property(nonatomic,retain)IBOutlet UIImageView *imgOfferImage;
@@ -67,4 +70,5 @@
 - (void) postTwitter;
 - (void) sendEmail;
 -(NSString *) shareKitMessage;
+-(void) animateArrowImage;
 @end

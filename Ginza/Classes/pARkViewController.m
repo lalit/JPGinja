@@ -102,7 +102,7 @@
     //
     
     if (isFirstTime) {
-        //[self updateView];
+        [self updateView];
         self.isFirstTime=NO;
     }
     
@@ -135,15 +135,12 @@
     
     //arView.currentDistance =5393913;
     //arView.maxtDistance=5393913+50;
-    
-    UIAlertView *alert =[[UIAlertView alloc]initWithTitle:@"Your current location" message:[NSString stringWithFormat:@"Lati = %f, Long = %f",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-    //[alert show];
-    
-   
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
-    if (placesOfInterest==nil) {
-        placesOfInterest = [NSMutableArray arrayWithCapacity:[mapDataDict count]];
+    //if (placesOfInterest==nil) 
+    {
+       // placesOfInterest = [NSMutableArray arrayWithCapacity:[mapDataDict count]];
+        placesOfInterest = [[NSMutableArray alloc]init];
         int i=0;
         for (id key in mapDataDict)
         {
@@ -152,37 +149,47 @@
             ShopList *merchant = [deligate getStoreDataById:offer.store_id];
             double latitude =[merchant.latitude doubleValue];
             double longitude = [merchant.longitude doubleValue];
-            
-
-           // CLLocation *storelocation =[[CLLocation alloc] initWithLatitude: latitude longitude:longitude];;
-            
-            CustomCallOutView *popup =[[CustomCallOutView alloc]init];
-            popup.currentLocation = currentLocation;
-            popup.parentViewController = self;
-            [popup prepareCallOutView:offer offerArray:offerdataArray];
-            
-            PlaceOfInterest *poi1 =[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer];
-            
-            
-            
-            CLLocation *pointALocation = currentLocation;  
+        
+            //For testing
+            //CLLocation *pointALocation = currentLocation;
+            CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
             //NSLog(@"%f",currentLocation.coordinate.latitude);
             
             CLLocation *pointBLocation = [[CLLocation alloc] initWithLatitude:[merchant.latitude doubleValue] longitude:[merchant.longitude doubleValue]];  
             
             float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
-            //float distanceMiles = (distanceMeters / 1609.344); 
-           // NSLog(@"No of poi's1 %f",distanceMeters);
-            // if (distanceMeters<radius) {
-            [placesOfInterest insertObject:poi1 atIndex:i++];
-            //} 
+            radius=250;
+            NSLog(@"distance = %f,%f",distanceMeters,currentDistance);
+             if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
+                 
+                 if (distanceMeters<radius) {
+                     
+                     CustomCallOutView *popup =[[CustomCallOutView alloc]init];
+                     popup.currentLocation = currentLocation;
+                     popup.parentViewController = self;
+                     [popup prepareCallOutView:offer offerArray:offerdataArray];
+                     
+                     PlaceOfInterest *poi1 =[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer];
+                     
+                     
+                     //float distanceMiles = (distanceMeters / 1609.344); 
+                     NSLog(@"No of poi's1 %f",distanceMeters);
+                     
+                     [placesOfInterest insertObject:poi1 atIndex:i++];
+                 }
+
+             }
+            
+           // CLLocation *storelocation =[[CLLocation alloc] initWithLatitude: latitude longitude:longitude];;
+
+           
         }
         
     }
     ARView *arView = (ARView *)self.view;
     //[arView start];
-    arView.currentDistance =0;
-    arView.maxtDistance=1050;
+    arView.currentDistance =150;
+    arView.maxtDistance=300;
    	[arView setPlacesOfInterest:placesOfInterest];	
 }
 
@@ -212,14 +219,14 @@
 
 - (void)viewDidLoad
 {
-     
+    currentDistance = 150;
     
     CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]init ];//]WithFrame:CGRectMake(0, 0, 300, 300)];
     cbar.viewController = self;
     [self.view addSubview:cbar];
     
     
-     [self updateView];
+    // [self updateView];
     self.sdrRadius.transform= CGAffineTransformRotate(self.slider.transform, 90 * M_PI /180);
     
 	[super viewDidLoad];
@@ -333,8 +340,8 @@
 -(IBAction)btnMoveForward:(id)sender
 {
     
-    ARView *arView = (ARView *)self.view;
-    arView.currentDistance =arView.currentDistance+1;
+    //ARView *arView = (ARView *)self.view;
+    currentDistance =currentDistance+10;
     //NSLog(@"Move forward = %f",arView.currentDistance);
     //[arView setPlacesOfInterest:placesOfInterest];
     [self updateView];
@@ -342,8 +349,8 @@
 
 -(IBAction)btnMoveReverse:(id)sender
 {
-    ARView *arView = (ARView *)self.view;
-    arView.currentDistance =arView.currentDistance-1;
+    //ARView *arView = (ARView *)self.view;
+    currentDistance =currentDistance-10;
     //NSLog(@"Move reverse = %f",arView.currentDistance);
     [self updateView];
 }
