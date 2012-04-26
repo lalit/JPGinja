@@ -844,10 +844,7 @@
 		296E70F51546BD6A00E88AAA /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		296E70F81546BD8B00E88AAA /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		296E71041546C41000E88AAA /* DirectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DirectionViewController.xib; sourceTree = "<group>"; };
-<<<<<<< HEAD
-=======
 		CEA8610B1548563D002D6F59 /* ListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListViewController.xib; sourceTree = "<group>"; };
->>>>>>> bca1448092758f764fcf8c1d7057d896e4895bea
 		CEE2760C1542E9F100C667D9 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		CEE2760D1542E9F100C667D9 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		F74371F61524341E006C74DE /* Ginza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ginza.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1026,10 +1023,7 @@
 				0B8FC2841541C88200528D9A /* GinzaSubViewController.xib */,
 				0B8FC2851541C88200528D9A /* GinzaTopViewController.xib */,
 				0B8FC2861541C88200528D9A /* ListViewCell.xib */,
-<<<<<<< HEAD
-=======
 				CEA8610B1548563D002D6F59 /* ListViewController.xib */,
->>>>>>> bca1448092758f764fcf8c1d7057d896e4895bea
 				0B8FC2881541C88200528D9A /* MainView.xib */,
 				0B8FC2891541C88200528D9A /* MapViewController.xib */,
 				0B8FC28A1541C88200528D9A /* OfferDetailsViewController.xib */,
@@ -2034,11 +2028,8 @@
 				296E70E11546BA9400E88AAA /* TwitterLandscp.png in Resources */,
 				296E71051546C41000E88AAA /* DirectionViewController.xib in Resources */,
 				293B6E771547C93D001D90E2 /* MapWithRoutesViewController.xib in Resources */,
-<<<<<<< HEAD
 				0B15B07F1548568500DF0B5B /* ListViewController.xib in Resources */,
-=======
 				CEA8610C1548563D002D6F59 /* ListViewController.xib in Resources */,
->>>>>>> bca1448092758f764fcf8c1d7057d896e4895bea
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2209,8 +2200,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: ICSP Solutions Pte Ltd";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ICSP Solutions Pte Ltd";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2228,8 +2219,8 @@
 				INCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = /Users/RAGE/Desktop/Ginza;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PROVISIONING_PROFILE = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
+				PROVISIONING_PROFILE = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2241,8 +2232,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: ICSP Solutions Pte Ltd";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ICSP Solutions Pte Ltd";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
@@ -2254,8 +2245,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-ObjC";
-				PROVISIONING_PROFILE = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
+				PROVISIONING_PROFILE = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = NO;
 			};
@@ -2265,8 +2256,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/include/libxml2",
@@ -2288,8 +2279,8 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2298,8 +2289,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/include/libxml2",
@@ -2321,8 +2312,8 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
