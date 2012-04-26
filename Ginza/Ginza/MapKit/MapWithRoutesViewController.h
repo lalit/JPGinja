@@ -17,6 +17,7 @@
 
 @property(nonatomic,retain)   CLLocation *destination;
 - (void) setDestination:(CLLocation *) aDestination;
-- (IBAction)cancel:(id)sender;
+- (void)cancel:(id)sender;
+- (void) createTopBar;
 @end
 
