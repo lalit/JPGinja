@@ -119,10 +119,10 @@
     NSLog(@"%f,%f,%f",x,y,z);
     if (self.tabBarController.selectedIndex==0) {
         if (z>=-0.9) {
-            self.tabBarController.selectedIndex =0;
+            //self.tabBarController.selectedIndex =0;
         }else
         {
-            self.tabBarController.selectedIndex =1;
+            //self.tabBarController.selectedIndex =1;
         }
     }
     

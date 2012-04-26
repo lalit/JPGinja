@@ -64,7 +64,7 @@
 - (void)viewDidLoad
 {
     
-    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
+    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]init];
     cbar.viewController = self;
     [self.view addSubview:cbar];
 

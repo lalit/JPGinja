@@ -84,7 +84,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "1428"
          endingLineNumber = "1428"
-         landmarkName = "-fetchOfferData:"
+         landmarkName = "-getPointOfInterestItems"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -225,6 +225,20 @@
          startingLineNumber = "164"
          endingLineNumber = "164"
          landmarkName = "-setPlacesOfInterest:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "Ginza/AppDelegate.m"
+         timestampString = "357061780.084263"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "140"
+         endingLineNumber = "140"
+         landmarkName = "-application:didFinishLaunchingWithOptions:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

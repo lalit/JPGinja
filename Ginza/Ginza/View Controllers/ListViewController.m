@@ -95,10 +95,10 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 #import "CustomTopNavigationBar.h"
 - (void)viewDidLoad
 {
-//    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
-//    cbar.viewController = self;
-//    cbar.backgroundColor = [UIColor redColor];
-//    [self.view addSubview:cbar];
+    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]init];
+    cbar.viewController = self;
+    cbar.backgroundColor = [UIColor redColor];
+    [self.view addSubview:cbar];
     //[super viewDidLoad];
     currentPage=1;
     self.navigationController.navigationBar.hidden = YES;

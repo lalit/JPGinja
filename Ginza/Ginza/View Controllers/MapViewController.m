@@ -49,9 +49,9 @@
 {
     [super viewDidLoad];
     
-//    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
-//    cbar.viewController = self;
-//    [self.view addSubview:cbar];
+    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]init];
+    cbar.viewController = self;
+    [self.view addSubview:cbar];
     
     
     self.deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
