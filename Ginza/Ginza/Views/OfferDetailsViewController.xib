@@ -525,6 +525,7 @@
 						<string key="NSFrame">{{269, 64}, {36, 37}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -1196,7 +1197,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="Arrow.png">{15, 22}</string>
+			<string key="Arrow.png">{10, 15}</string>
 			<string key="Arrowwhite.png">{19, 16}</string>
 			<string key="Closebutton.png">{34, 34}</string>
 			<string key="Detailsloacationbutton.png">{283, 54}</string>
