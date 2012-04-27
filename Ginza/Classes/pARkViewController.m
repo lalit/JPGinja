@@ -116,7 +116,7 @@
     float x = acceleration.x;
     float y = acceleration.y;
     float z = acceleration.z;
-    NSLog(@"%f,%f,%f",x,y,z);
+    //NSLog(@"%f,%f,%f",x,y,z);
     if (self.tabBarController.selectedIndex==0) {
         if (z>=-0.9) {
             //self.tabBarController.selectedIndex =0;
@@ -159,7 +159,7 @@
             
             float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
             radius=250;
-            NSLog(@"distance = %f,%f",distanceMeters,currentDistance);
+            //NSLog(@"distance = %f,%f",distanceMeters,currentDistance);
              if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
                  
                  if (distanceMeters<radius) {
@@ -173,7 +173,7 @@
                      
                      
                      //float distanceMiles = (distanceMeters / 1609.344); 
-                     NSLog(@"No of poi's1 %f",distanceMeters);
+                     //NSLog(@"No of poi's1 %f",distanceMeters);
                      
                      [placesOfInterest insertObject:poi1 atIndex:i++];
                  }
@@ -220,8 +220,8 @@
 - (void)viewDidLoad
 {
     currentDistance = 150;
-    
-    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]init ];//]WithFrame:CGRectMake(0, 0, 300, 300)];
+    zoomlevel=1;
+    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0, 300, 40)];
     cbar.viewController = self;
     [self.view addSubview:cbar];
     
@@ -340,18 +340,27 @@
 -(IBAction)btnMoveForward:(id)sender
 {
     
-    //ARView *arView = (ARView *)self.view;
+    ARView *arView = (ARView *)self.view;
+    
+    
     currentDistance =currentDistance+10;
-    //NSLog(@"Move forward = %f",arView.currentDistance);
-    //[arView setPlacesOfInterest:placesOfInterest];
+    CGRect rect = arView.captureLayer.frame;
+    rect.size.width = rect.size.width+20;
+    rect.size.height = rect.size.height+20;
+    arView.captureLayer.frame = rect;
+
     [self updateView];
 }
 
 -(IBAction)btnMoveReverse:(id)sender
 {
-    //ARView *arView = (ARView *)self.view;
+    ARView *arView = (ARView *)self.view;
+    
     currentDistance =currentDistance-10;
-    //NSLog(@"Move reverse = %f",arView.currentDistance);
+    CGRect rect = arView.captureLayer.frame;
+    rect.size.width = rect.size.width-20;
+    rect.size.height = rect.size.height-20;
+    arView.captureLayer.frame = rect;    
     [self updateView];
 }
 -(IBAction)btnClose:(id)sender

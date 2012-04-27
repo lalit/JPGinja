@@ -52,6 +52,8 @@
     {
     popupbg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"annodation.png"]];
     }
+    popupbg.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    popup.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [popup addSubview:popupbg];
     
     popupThumb = [[UIImageView alloc]initWithFrame:CGRectMake(8, 50, 80, 60)];

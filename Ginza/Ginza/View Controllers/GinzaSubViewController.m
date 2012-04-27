@@ -39,7 +39,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    arrayOflist = [NSMutableArray arrayWithObjects:@"イベントのご案内",@"カード適用",@"このアプリについて ",@"お問い合わせ",@"銀座ラウンジのサービスについて", nil];
+    self.arrayOflist = [NSMutableArray arrayWithObjects:@"イベントのご案内",@"カード適用",@"このアプリについて ",@"お問い合わせ",@"銀座ラウンジのサービスについて", nil];
     
     [self.view addSubview:viewGinza];
     
@@ -68,7 +68,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return arrayOflist.count;
+    return [self.arrayOflist count];
 }
 
 // Customize the appearance of table view cells.
@@ -85,7 +85,7 @@
     }
     
     
-    NSData *object = [arrayOflist objectAtIndex:indexPath.row];
+    NSData *object = [self.arrayOflist objectAtIndex:indexPath.row];
     cell.textLabel.text = [object description];
     cell.textLabel.font = [UIFont systemFontOfSize:14];
     

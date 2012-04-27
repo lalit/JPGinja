@@ -64,5 +64,6 @@
 -(void)oriendationChangeLandscape:(CGRect )viewSize;
 -(void)oriendationChangePortirt:(CGRect )viewSize;
 - (void)updatePlacesOfInterestCoordinates;
+- (float)angleFromCoordinate:(CLLocationCoordinate2D)first toCoordinate:(CLLocationCoordinate2D)second ;
 
 @end
