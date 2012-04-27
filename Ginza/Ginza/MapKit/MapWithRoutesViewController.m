@@ -11,7 +11,7 @@
 @implementation MapWithRoutesViewController
 
 @synthesize destination;
-
+@synthesize destinationAddress;
 
 /*
 // The designated initializer. Override to perform setup that is required before the view is loaded.
@@ -45,13 +45,13 @@
 	source.name = @"Current Location";
 	source.description = @"";
     //Ginza Latitirude & Longitude
-	//source.latitude = 35.6707504;
-	//source.longitude =  139.769467;
-	source.latitude=currentLoc.coordinate.latitude;
-    source.longitude=currentLoc.coordinate.longitude;
+	source.latitude = 35.6707504;
+	source.longitude =  139.769467;
+	//source.latitude=currentLoc.coordinate.latitude;
+    //source.longitude=currentLoc.coordinate.longitude;
 	Place* dest = [[[Place alloc] init] autorelease];
-	dest.name = @"Destination";
-	dest.description = @"Destination";
+	dest.name =destinationAddress;
+	//dest.description = @"Destination";
 	//dest.latitude = 1.3296047;
 	//dest.longitude = 103.8932174;
 	dest.latitude= self.destination.coordinate.latitude;
@@ -79,9 +79,10 @@
 }
 - (void) setDestination:(CLLocation *) aDestination {
        destination=aDestination;
-    NSLog(@"Destinat");
 }
-
+- (void) setDestinationAddress:(NSString *) aDestinationAddress {
+    destinationAddress=aDestinationAddress;
+}
 - (void)cancel:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
 }

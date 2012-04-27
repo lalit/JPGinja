@@ -13,9 +13,11 @@
 @interface MapWithRoutesViewController : UIViewController {
 
     CLLocation *destination;
+    NSString *destinationAddress;
 }
 
-@property(nonatomic,retain)   CLLocation *destination;
+@property(nonatomic,retain)  CLLocation *destination;
+@property(nonatomic,retain)  NSString *destinationAddress;
 - (void) setDestination:(CLLocation *) aDestination;
 - (void)cancel:(id)sender;
 - (void) createTopBar;

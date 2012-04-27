@@ -18,6 +18,7 @@
     //Added by MobiQuest team
 
     float mHeading;
+    float mWebViewFlexibleHeight;
     CLHeading  *newHeadingObject;
     NSString *currenDirection;
     NSString *previousDirection;
@@ -71,4 +72,6 @@
 - (void) sendEmail;
 -(NSString *) shareKitMessage;
 -(void) animateArrowImage;
+- (void)setUILabel:(UILabel *)myLabel withMaxFrame:(CGRect)maxFrame withText:(NSString *)theText usingVerticalAlign:(int)vertAlign;
+- (void) loadWebView;
 @end
