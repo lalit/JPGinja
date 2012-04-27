@@ -279,7 +279,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         int time = (me/4000)*15;
         cell.lblDistance.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
         // Animate Arrow
-        double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360;
+        double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
         CABasicAnimation *theAnimation;
         theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
         theAnimation.duration = 0.5f;    
@@ -308,7 +308,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         int time = (me/4000)*15;
         cell.lblDistance.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
         // Animate Arrow
-        double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360;
+        double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
         CABasicAnimation *theAnimation;
         theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
         theAnimation.duration = 0.5f;    

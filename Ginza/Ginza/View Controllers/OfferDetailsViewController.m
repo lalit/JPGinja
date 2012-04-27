@@ -79,22 +79,20 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     [locationManager startUpdatingHeading];
     
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
     self.offer =  [appDeligate getOfferDataById:self.offerId];
     NSLog(@"Title:%@",self.offer.offer_title);
     NSLog(@"Category:%@",self.offer.category);
     NSLog(@"Lead Text:%@",offer.lead_text);
     NSLog(@"Copy Text:%@",offer.copy_text);
-    
     NSLog(@"DetailView Offer:%@",self.offerId);
     lblCategoryName.text = self.offer.category;
     lblOfferTitle.text=self.offer.offer_title;
-    scroll.contentSize = CGSizeMake(320, 1045);
+    scroll.contentSize = CGSizeMake(320, 670);
+    [[self.webFreeText.subviews objectAtIndex:0] setScrollEnabled:NO];
     self.webFreeText.backgroundColor =[UIColor clearColor];
     [self.webFreeText setOpaque:NO];
-    NSString *weViewData =[NSString stringWithFormat:@"<HTML><body style=\"background-color:transparent\"><table><tr><td>%@<hr></td></tr><tr><td>%@</td></tr><tr><td>%@</td></tr></table></HTML>",offer.lead_text,offer.copy_text,offer.free_text];
-    [self.webFreeText loadHTMLString:weViewData baseURL:nil];
-    
+    [self loadWebView];
+    [self.webFreeText setDelegate:self];
     
     ShopList *merchant = [appDeligate getStoreDataById:offer.store_id];
     Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:merchant.sub_category];
@@ -172,20 +170,11 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     
     double Latitude = [merchant.latitude doubleValue];
     double Longitude = [merchant.longitude doubleValue];
-    
-    
-    
     self.storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
-    
-    
     CLLocationDistance meters = [self.currentLocation distanceFromLocation:self.storeLocation];
-    //4000 mtr = 15 min
-    //NSLog(@"meters %d",meters);
     double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
     int time = (me/4000)*15;
     self.lblDistanceLabel.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
-
-    
    
     if (merchant.is_child == 0) {
         lblIsChild.hidden = YES;
@@ -205,7 +194,16 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 {
    
 }
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    mWebViewFlexibleHeight=[[webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"] floatValue];
+    
+}
+- (void) loadWebView {
+    NSString *weViewData =[NSString stringWithFormat:@"<HTML><body style=\"background-color:transparent\"><table><tr><td>%@<hr></td></tr><tr><td>%@</td></tr><tr><td>%@</td></tr></table></HTML>",offer.lead_text,offer.copy_text,offer.free_text];
+    [self.webFreeText loadHTMLString:weViewData baseURL:nil];
 
+}
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -216,6 +214,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
+    [self loadWebView];
     return YES;
 }
 -(IBAction)btnOfferDetailsOpenClose:(id)sender
@@ -223,8 +222,10 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     UIButton *btn = sender;
     if(btn.tag ==0)
     {
+        NSLog(@"WebviewHeifgt%lf",self.webFreeText.frame.size.height);
         CGRect rec = self.viewOfferDetails.frame;
-        rec.size.height = 500;
+        rec.size.height = mWebViewFlexibleHeight+50;
+        scroll.contentSize = CGSizeMake(320, scroll.contentSize.height+mWebViewFlexibleHeight-50);
         self.viewOfferDetails.frame = rec;
         [self.scroll scrollRectToVisible:self.viewOfferDetails.frame animated:YES];
         CGRect rec1 =  self.bottomView.frame;
@@ -236,12 +237,12 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     {
         CGRect rec = self.viewOfferDetails.frame;
         rec.size.height = 115;
+        scroll.contentSize = CGSizeMake(320, 670);
         self.viewOfferDetails.frame = rec;
         [self.scroll scrollRectToVisible:self.viewOfferDetails.frame animated:YES];
         CGRect rec1 =  self.bottomView.frame;
         rec1.origin.y = rec.origin.y + rec.size.height+20;
         self.bottomView.frame = rec1;
-       
         btn.tag=0;
         [self.arrowImage setImage:[UIImage imageNamed:@"Arrowwhite.png"]];
     }
@@ -298,8 +299,8 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         [cell addSubview:lblAddress];
         
         UILabel *lblAddressdetails = [[UILabel alloc]init];
-        lblAddressdetails.frame = CGRectMake(150,0,150, 40);
-        lblAddressdetails.textAlignment = UITextAlignmentCenter;
+        lblAddressdetails.frame = CGRectMake(160,0,150, 50);
+        lblAddressdetails.textAlignment = UITextAlignmentLeft;
         lblAddressdetails.lineBreakMode = UILineBreakModeWordWrap;
         lblAddressdetails.numberOfLines = 3;
         
@@ -307,7 +308,6 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         lblAddressdetails.backgroundColor = [UIColor clearColor];
         lblAddressdetails.textColor = [UIColor blackColor];
         lblAddressdetails.text = merchant.address;
-
         [cell addSubview:lblAddressdetails];
         
         
@@ -319,10 +319,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         UILabel *lblphone = [[UILabel alloc]init];
         lblphone.frame = CGRectMake(0,0,150, 40);
         lblphone.textAlignment = UITextAlignmentLeft;
-        
-        
         lblphone.font = [UIFont systemFontOfSize:12];
-        
         lblphone.backgroundColor = [UIColor clearColor];
         lblphone.textColor = [UIColor blackColor];
         lblphone.text = @"電話番号";
@@ -330,8 +327,8 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         [cell addSubview:lblphone];
         
         UILabel *lblphonedetails = [[UILabel alloc]init];
-        lblphonedetails.frame = CGRectMake(150,0,150, 40);
-        lblphonedetails.textAlignment = UITextAlignmentCenter;
+        lblphonedetails.frame = CGRectMake(160,0,150, 50);
+        lblphonedetails.textAlignment = UITextAlignmentLeft;
         lblphonedetails.lineBreakMode = UILineBreakModeWordWrap;
         lblphonedetails.numberOfLines = 3;
         
@@ -339,33 +336,28 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         lblphonedetails.backgroundColor = [UIColor clearColor];
         lblphonedetails.textColor = [UIColor blackColor];
         lblphonedetails.text = merchant.phone;
-        
         [cell addSubview:lblphonedetails];
-        
-        
-        
+        UIButton * btnPhoneNumber= [UIButton buttonWithType:UIButtonTypeCustom];
+        [btnPhoneNumber addTarget:self action:@selector(clickPhoneNumber:) forControlEvents:UIControlEventTouchUpInside];
+        btnPhoneNumber.frame=CGRectMake(160,0,150, 50);
+        [cell addSubview:btnPhoneNumber];
         
         
     }
     if (indexPath.row==2) {
-        
-        
+
         UILabel *lbltime = [[UILabel alloc]init];
         lbltime.frame = CGRectMake(0,0,150, 40);
         lbltime.textAlignment = UITextAlignmentLeft;
-        
-        
         lbltime.font = [UIFont systemFontOfSize:12];
-        
         lbltime.backgroundColor = [UIColor clearColor];
         lbltime.textColor = [UIColor blackColor];
         lbltime.text = @"営業時間";
-        
         [cell addSubview:lbltime];
         
         UILabel *lbltimedetails = [[UILabel alloc]init];
-        lbltimedetails.frame = CGRectMake(150,0,150, 40);
-        lbltimedetails.textAlignment = UITextAlignmentCenter;
+        lbltimedetails.frame = CGRectMake(160,0,150, 50);
+        lbltimedetails.textAlignment = UITextAlignmentLeft;
         lbltimedetails.lineBreakMode = UILineBreakModeWordWrap;
         lbltimedetails.numberOfLines = 3;
         
@@ -397,8 +389,8 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         [cell addSubview:lblholiday];
         
         UILabel *lblholidaydetails = [[UILabel alloc]init];
-        lblholidaydetails.frame = CGRectMake(150,0,150, 40);
-        lblholidaydetails.textAlignment = UITextAlignmentCenter;
+        lblholidaydetails.frame = CGRectMake(160,0,150, 50);
+        lblholidaydetails.textAlignment = UITextAlignmentLeft;
         lblholidaydetails.lineBreakMode = UILineBreakModeWordWrap;
         lblholidaydetails.numberOfLines = 3;
         
@@ -431,7 +423,6 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 {
     
     self.currentLocation=newLocation;
-
     CLLocationDistance meters = [self.currentLocation distanceFromLocation:self.storeLocation];
     //4000 mtr = 15 min
     //NSLog(@"meters %d",meters);
@@ -528,8 +519,10 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 
 - (IBAction)getDirectionButtonPressed:(id)sender {
     MapWithRoutesViewController *directionVC=[[MapWithRoutesViewController alloc] initWithNibName:@"MapWithRoutesViewController" bundle:nil];
-    //directionVC setLat:lat setLong:lon];
-   directionVC.destination=self.storeLocation;
+    AppDelegate  *appDeligate =(AppDelegate *) [[UIApplication sharedApplication]delegate];
+    ShopList *merchant = [appDeligate getStoreDataById:self.offer.store_id];
+    directionVC.destination=self.storeLocation;
+    directionVC.destinationAddress=merchant.address;
     [self presentModalViewController:directionVC animated:YES];
     
 }
@@ -585,6 +578,13 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 -(NSString *)shareKitMessage {
         NSString *strMessage=[NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%lf,%lf&zoom=12&size=400x400&maptype=roadmap&sensor=true", self.storeLocation.coordinate.latitude,self.storeLocation.coordinate.longitude];
     return strMessage;
+}
+
+- (void)clickPhoneNumber:(id) sender {
+    AppDelegate  *appDeligate =(AppDelegate *) [[UIApplication sharedApplication]delegate];
+    ShopList *merchant = [appDeligate getStoreDataById:offer.store_id];
+    NSString *phoneNumber = [@"tel://" stringByAppendingString:merchant.phone];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
 }
 
 @end

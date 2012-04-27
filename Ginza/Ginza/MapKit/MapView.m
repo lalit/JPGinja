@@ -31,8 +31,7 @@
 		routeView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 40, mapView.frame.size.width, mapView.frame.size.height)];
 		routeView.userInteractionEnabled = NO;
 		[mapView addSubview:routeView];
-		
-		self.lineColor = [UIColor blueColor];
+		self.lineColor = [UIColor colorWithRed:0.0 green:0.5 blue:1 alpha:0.6];
 	}
 	return self;
 }
@@ -151,7 +150,7 @@
 	
 	CGContextSetStrokeColorWithColor(context, lineColor.CGColor);
 	CGContextSetRGBFillColor(context, 0.0, 0.0, 1.0, 1.0);
-	CGContextSetLineWidth(context, 3.0);
+	CGContextSetLineWidth(context, 10.0);
 	
 	for(int i = 0; i < routes.count; i++) {
 		CLLocation* location = [routes objectAtIndex:i];
@@ -185,6 +184,48 @@
 	[self updateRouteView];
 	routeView.hidden = NO;
 	[routeView setNeedsDisplay];
+}
+
+-(MKAnnotationView *)mapView:(MKMapView *)mV viewForAnnotation:
+(id <MKAnnotation>)annotation {
+    
+    BOOL isGreen = YES;
+    //if([annotation isKindOfClass:[MKAnnotation class]])
+     //   isGreen = NO;
+    
+    MKPinAnnotationView *pinView = nil;
+    PlaceMark *pMark=annotation;
+    if([pMark.place.name isEqualToString:@"Current Location"])
+        isGreen=NO;
+    NSLog(@"Current Location:%@",annotation);
+    if (isGreen) {
+        static NSString *greenPin = @"greenPin";
+        pinView = (MKPinAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:greenPin];
+        if (!pinView) {
+            pinView = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:greenPin] autorelease];
+            pinView.pinColor = MKPinAnnotationColorGreen;
+            pinView.animatesDrop = NO;
+            pinView.canShowCallout = YES;
+        }
+        else
+            pinView.annotation = annotation;
+        
+    }
+    else {
+        static NSString *purplePin = @"purplePin";
+        pinView = (MKPinAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:purplePin];
+        if (!pinView) {
+            pinView = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:purplePin] autorelease];
+            pinView.pinColor = MKPinAnnotationColorRed;
+            pinView.animatesDrop = NO;
+            pinView.canShowCallout = YES;
+        }
+        else
+            pinView.annotation = annotation;
+    }
+    
+    
+    return pinView;  
 }
 
 - (void)dealloc {
