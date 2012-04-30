@@ -64,7 +64,7 @@
 
     
     //add a line from 0,0 to the point 100,100
-    CGContextAddLineToPoint( contextRef, 0.5,self.RADIUS);
+    //CGContextAddLineToPoint( contextRef, 0.5,self.RADIUS);
     //"stroke" the path
     CGContextStrokePath(contextRef);
     

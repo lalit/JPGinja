@@ -28,6 +28,7 @@
 @property (nonatomic, retain) NSString * phone;
 @property (nonatomic, retain) NSString * store_id;
 @property (nonatomic, retain) NSString * sub_category;
+@property (nonatomic, retain) NSString * image_name;
 @property(nonatomic,retain)NSString *time;
 
 @end

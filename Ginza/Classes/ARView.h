@@ -49,13 +49,18 @@
 #import <CoreLocation/CoreLocation.h>
 #import <CoreMotion/CoreMotion.h>
 #import <AVFoundation/AVFoundation.h>
-
+#define CC_RADIANS_TO_DEGREES(__ANGLE__) ((__ANGLE__) / (float)M_PI * 180.0f)
+#define radianConst M_PI/180.0
 @interface ARView : UIView  <CLLocationManagerDelegate> {
 }
 @property(nonatomic,retain)AVCaptureVideoPreviewLayer *captureLayer;
-@property (nonatomic, retain) NSArray *placesOfInterest;
+@property (nonatomic, retain) NSMutableArray *placesOfInterest;
 @property(nonatomic)float currentDistance;
 @property(nonatomic)float maxtDistance;
+@property(nonatomic)int interfaceOrientation;
+@property(nonatomic,retain)UIView *parentActionView;
+@property(nonatomic)float               radius;
+@property(nonatomic, retain)NSMutableArray  *poiData;
 //@property(nonatomic,retain)NSArray *placesOfInterest;;
 
 
@@ -65,5 +70,10 @@
 -(void)oriendationChangePortirt:(CGRect )viewSize;
 - (void)updatePlacesOfInterestCoordinates;
 - (float)angleFromCoordinate:(CLLocationCoordinate2D)first toCoordinate:(CLLocationCoordinate2D)second ;
+-(void)updateView;
+-(void)constructCalloutPOI;
+-(void)radarSpecificSettings;
+-(void)createRadar;
+- (void)updater:(NSTimer *)timer ;
 
 @end

@@ -10,7 +10,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "Offer.h"
 
-@interface CustomCallOutView : UIView<CLLocationManagerDelegate>
+@interface CustomCallOutView : UIView
 {
     int currentPos;
 }

@@ -1,29 +1,13 @@
-/*
- * Copyright (C) 2010- Peer internet solutions
- * 
- * This file is part of mixare.
- * 
- * This program is free software: you can redistribute it and/or modify it 
- * under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License 
- * for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with 
- * this program. If not, see <http://www.gnu.org/licenses/>
- */
 
 #import "RadarViewPortView.h"
 #import "AppDelegate.h"
 #import "Location.h"
+#import "PlaceOfInterest.h"
+#import "pARkViewController.h"
 #define radians(x) (M_PI * (x) / 180.0)
 
 @implementation RadarViewPortView
-@synthesize newAngle, referenceAngle,RADIUS = _RADIUS;
+@synthesize newAngle, referenceAngle,RADIUS = _RADIUS,superViewController,placesOfInterest;
 
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
@@ -41,6 +25,40 @@
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
+    
+    //NSMutableArray *poiArray = ((pARkViewController *)superViewController).placesOfInterest;
+
+    for (PlaceOfInterest *poi in self.placesOfInterest) {
+        CGContextRef contextRef = UIGraphicsGetCurrentContext();
+        CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
+        currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;        
+        float heading = [self getHeadingFromCoordinate:currentLocation toCoordinate:poi.location];
+        //NSLog(@"heading = %f",heading);
+        
+        float radius = self.RADIUS-10;
+        float x0 = 0.0; 
+        float y0 = 0.0;
+        
+        //leave in radians and subtract from PI to rotate 180
+        float angle = M_PI - heading; 
+        //angle = angle*(180 / M_PI);
+        //NSLog(@"angle = %f,%f",angle,M_PI);
+        
+        float x1 = (x0 + radius * sin(angle));   
+        float y1 = (y0 + radius * cos(angle)); 
+        
+        NSLog(@"distance = %f,%f,%f",x1,y1,self.RADIUS);
+        
+        CGContextMoveToPoint(contextRef, self.RADIUS, self.RADIUS);
+        CGContextFillEllipseInRect(contextRef, CGRectMake(x1+30,y1+30, 2, 2));
+        //CGContextFillRect(contextRef, CGRectMake(0, 0, self.frame.size.width, self.frame.size.height));
+        CGContextFillEllipseInRect(contextRef, CGRectMake(29, 29,5,5));
+        AppDelegate *deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
+        deligate.arviewController.lblMessage.hidden=YES;
+
+    }
+
+    return;
        CGContextRef contextRef = UIGraphicsGetCurrentContext();
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
@@ -51,12 +69,12 @@
         ShopList *merchant = [deligate getStoreDataById:offer.store_id];
         double latitude =[merchant.latitude doubleValue];
         double longitude = [merchant.longitude doubleValue];
-        
-        //CLLocation *currentLocation1 =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;
-        CLLocation *storelocation =[[CLLocation alloc] initWithLatitude: latitude longitude:longitude];;
         CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
+        currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;
+        CLLocation *storelocation =[[CLLocation alloc] initWithLatitude: latitude longitude:longitude];;
+        
         float heading = [self getHeadingFromCoordinate:currentLocation toCoordinate:storelocation];
-        NSLog(@"heading = %f",heading);
+        //NSLog(@"heading = %f",heading);
         
         float radius = self.RADIUS;
         float x0 = 0.0; 
@@ -74,7 +92,7 @@
         CGContextFillEllipseInRect(contextRef, CGRectMake(x1,y1, 2, 2));
     }
 
-    
+   
 }
 
 
@@ -109,7 +127,7 @@
     float x1 = (x0 + radius * sin(angle));   
     float y1 = (y0 + radius * cos(angle)); 
     
-    NSLog(@"distance = %f,%f",x1,y1);
+    //NSLog(@"distance = %f,%f",x1,y1);
     
     
 }

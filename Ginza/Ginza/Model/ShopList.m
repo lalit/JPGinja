@@ -28,5 +28,6 @@
 @dynamic store_id;
 @dynamic sub_category;
 @dynamic time;
+@dynamic image_name;
 
 @end

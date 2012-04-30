@@ -13,7 +13,8 @@
 #import "Categories.h"
 #import "OfferDetailsViewController.h"
 #import <CoreLocation/CoreLocation.h>
-
+#import "pARkViewController.h"
+#import "Location.h"
 @implementation CustomCallOutView
 @synthesize locationManager,currentLocation,offerDataArray,offerTitleLabel;
 @synthesize popupThumb,distanceLabel,timeLabel,btnBookmark,popupbg,currentOffer;
@@ -46,64 +47,48 @@
     Categories *categoryData = (Categories *)[deligate getCategoryDataById:merchant.sub_category];
 
     UIView *popup = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 172 , 163)];
+    [popup setContentMode:UIViewContentModeScaleToFill];
     if ([offer.offer_type isEqualToString:@"special"]) {
          popupbg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"spbg.png"]];
     }else
     {
     popupbg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"annodation.png"]];
     }
-    popupbg.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    popupbg.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
     popup.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    //[popup setBackgroundColor:[UIColor redColor]];
     [popup addSubview:popupbg];
-    
+    NSLog(@"image =%@",categoryData.image_name);
     popupThumb = [[UIImageView alloc]initWithFrame:CGRectMake(8, 50, 80, 60)];
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     path = [path stringByAppendingString:@"/"];
-    path = [path stringByAppendingString:categoryData.image_name];
+    path = [path stringByAppendingString:[NSString stringWithFormat:@"80x60_%@",categoryData.image_name]];
     
     UIImage *image = [UIImage imageWithContentsOfFile:path];
     
     
-    float actualHeight = 60;//image.size.height;
-    float actualWidth = 80;//image.size.width;
-    float imgRatio = actualWidth/actualHeight;
-    float maxRatio = 320.0/480.0;
+    [popupThumb setImage:image];
     
-    if(imgRatio!=maxRatio){
-        if(imgRatio < maxRatio){
-            imgRatio = 480.0 / actualHeight;
-            actualWidth = imgRatio * actualWidth;
-            actualHeight = 480.0;
-        }
-        else{
-            imgRatio = 320.0 / actualWidth;
-            actualHeight = imgRatio * actualHeight;
-            actualWidth = 320.0;
-        }
-    }
-    CGRect rect = CGRectMake(0.0, 0.0, actualWidth, actualHeight);
-    UIGraphicsBeginImageContext(rect.size);
-    [image drawInRect:rect];
-    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    [popupThumb setImage:img];
-    
-    
+     popupThumb.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     [popup addSubview:popupThumb];
     
     offerTitleLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 5, 150, 21)];
     offerTitleLabel.backgroundColor =[UIColor clearColor];
     offerTitleLabel.text = categoryData.category_name;
     offerTitleLabel.textColor =[UIColor grayColor];
+    offerTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+    
     [popup addSubview:offerTitleLabel];
     
     desLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 20, 150, 21)];
     desLabel.backgroundColor =[UIColor clearColor];
     desLabel.text = merchant.store_name;
+    desLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     [popup addSubview:desLabel];
     txtcp = [[UILabel alloc]initWithFrame:CGRectMake(8, 35, 150, 21)];
     txtcp.backgroundColor =[UIColor clearColor];
     txtcp.text = offer.copy_text;
+    txtcp.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     [popup addSubview:txtcp];
     double Latitude = [merchant.latitude doubleValue];
     double Longitude = [merchant.longitude doubleValue];
@@ -114,11 +99,11 @@
     CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
     double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
     int time = (me/4000)*15;
-    
-    
+    [popup sizeToFit];
+     UIColor *mycolor= [UIColor colorWithRed:0/255.0 green:105/255.0 blue:170/255.0 alpha:1.0];
     //trmp
     
-    distanceLabel1 =[[UILabel alloc]initWithFrame:CGRectMake(100, 60, 84, 21)];
+    /*distanceLabel1 =[[UILabel alloc]initWithFrame:CGRectMake(100, 60, 84, 21)];
     distanceLabel1.backgroundColor =[UIColor clearColor];
     UIColor *mycolor= [UIColor colorWithRed:0/255.0 green:105/255.0 blue:170/255.0 alpha:1.0];
     distanceLabel1.textColor = mycolor;
@@ -152,23 +137,26 @@
     [popup addSubview:distanceLabel4];
 
     
-
+*/
     
     
     
-    distanceLabel =[[UILabel alloc]initWithFrame:CGRectMake(100, 90, 84, 21)];
+    distanceLabel =[[UILabel alloc]initWithFrame:CGRectMake(100, 90, 64, 21)];
     distanceLabel.backgroundColor =[UIColor clearColor];
     mycolor= [UIColor colorWithRed:0/255.0 green:105/255.0 blue:170/255.0 alpha:1.0];
     distanceLabel.textColor = mycolor;
     distanceLabel.font  =[UIFont systemFontOfSize:10.0];
     distanceLabel.text = [NSString stringWithFormat:@" %.fm",meters];
+    distanceLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+    distanceLabel.textAlignment = UITextAlignmentCenter;
     [popup addSubview:distanceLabel];
     
     timeLabel =[[UILabel alloc]initWithFrame:CGRectMake(100, 100, 84, 21)];
     timeLabel.backgroundColor =[UIColor clearColor];
     timeLabel.text = [NSString stringWithFormat:@"(徒歩%d分)",time];;
     timeLabel.font  =[UIFont systemFontOfSize:10.0];
-    
+     timeLabel.textAlignment = UITextAlignmentCenter;
+    timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     timeLabel.textColor = mycolor;
     [popup addSubview:timeLabel];
     
@@ -184,6 +172,7 @@
     }
     
     [btnBookmark addTarget:self action:@selector(btnBookMark:) forControlEvents:UIControlEventTouchUpInside];
+    btnBookmark.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     [popup addSubview:btnBookmark];
     
     
@@ -196,15 +185,19 @@
         self.btnNext =[[UIButton alloc]initWithFrame:CGRectMake(popup.frame.size.width-19-10, popup.frame.size.height/2 -32, 38, 38)];
         [self.btnNext setImage:[UIImage imageNamed:@"nextbtn.png"] forState:UIControlStateNormal];          
         [self.btnNext addTarget:self action:@selector(btnNext:) forControlEvents:UIControlEventTouchUpInside];
+        self.btnNext.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
         [popup addSubview:self.btnNext];
         self.btnPrevious =[[UIButton alloc]initWithFrame:CGRectMake(-19, popup.frame.size.height/2-32, 38, 38)];
         [self.btnPrevious setImage:[UIImage imageNamed:@"previousBtn.png"] forState:UIControlStateNormal];          
         [self.btnPrevious addTarget:self action:@selector(btnPrevious:) forControlEvents:UIControlEventTouchUpInside];
+        self.btnPrevious.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
         [popup addSubview:self.btnPrevious];
         self.btnPrevious.hidden=YES;
     }
     self.frame= popup.frame;
+    popup.contentMode = UIViewContentModeScaleToFill;
     [self addSubview:popup];
+    
     return popup;
 }
 
@@ -217,11 +210,19 @@
    Offer *offer = [offerDataArray objectAtIndex:currentPos];
     
     detail.offerId = offer.offer_id;
-    
+
+    if (self.parentViewController ==nil) {
+        AppDelegate *deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
+        //NSLog(@"parent = %@", deligate.arviewController);
+        [deligate.arviewController  presentModalViewController:detail animated:YES];
+
+    }else
+    {
     
     [self.parentViewController  presentModalViewController:detail animated:YES];
     
        [self removeFromSuperview];
+    }
 }
 -(void)refreshView:(Offer *)offer
 {
@@ -240,34 +241,11 @@
     
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     path = [path stringByAppendingString:@"/"];
-    path = [path stringByAppendingString:categoryData.image_name];
+    path = [path stringByAppendingString:[NSString stringWithFormat:@"80x60_%@",categoryData.image_name]];
     
     UIImage *image = [UIImage imageWithContentsOfFile:path];
     
-    
-    float actualHeight = 60;//image.size.height;
-    float actualWidth = 80;//image.size.width;
-    float imgRatio = actualWidth/actualHeight;
-    float maxRatio = 320.0/480.0;
-    
-    if(imgRatio!=maxRatio){
-        if(imgRatio < maxRatio){
-            imgRatio = 480.0 / actualHeight;
-            actualWidth = imgRatio * actualWidth;
-            actualHeight = 480.0;
-        }
-        else{
-            imgRatio = 320.0 / actualWidth;
-            actualHeight = imgRatio * actualHeight;
-            actualWidth = 320.0;
-        }
-    }
-    CGRect rect = CGRectMake(0.0, 0.0, actualWidth, actualHeight);
-    UIGraphicsBeginImageContext(rect.size);
-    [image drawInRect:rect];
-    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    [popupThumb setImage:img];
+    [popupThumb setImage:image];
      txtcp.text = offer.copy_text;
     offerTitleLabel.text = categoryData.category_name;
 
@@ -279,7 +257,7 @@
     
     CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
     
-    
+    currentLocation  = [[Location sharedInstance]currentLocation];
     CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
     double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
     int time = (me/4000)*15;
@@ -376,6 +354,11 @@
        
     
     
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
 }
 
 /*-(NSMutableArray *)getPOIViews

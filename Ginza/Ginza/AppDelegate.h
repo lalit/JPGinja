@@ -11,6 +11,7 @@
 #import "ShopList.h"
 #import "Offer.h"
 #import "Categories.h"
+#import "pARkViewController.h"
 
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
@@ -20,6 +21,7 @@
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
     NSString *isFilterOn;
 }
+@property (nonatomic)BOOL isSyncON;
 @property(nonatomic,retain)UIViewController *bookmarkviewController;
 @property (nonatomic,retain) NSMutableArray *arrayStoreIds;
 @property (nonatomic, retain) NSString *isFilterOn;
@@ -34,9 +36,12 @@
 @property(nonatomic,retain)NSString *offerType;
 @property(nonatomic,retain)NSMutableArray *ginzaEvents;
 
+@property(nonatomic,retain)pARkViewController *arviewController;
+
 @property(nonatomic,retain)NSMutableArray *offerDataArray;
 @property(nonatomic,retain)NSMutableDictionary *poiDataDictionary;
 @property(nonatomic,retain)NSMutableDictionary *listViewDataArray;
+@property(nonatomic, retain)NSString *lastSyncedDate;
 - (NSString *)applicationDocumentsDirectory;
 -(NSMutableArray *)getOfferData;
 -(ShopList *)getStoreDataById:(NSString *)storeid;
@@ -54,6 +59,8 @@
 -(NSMutableArray *)getListViewData;
 -(void)updateBookMarkCount:(Offer *)offer;
 - (UIImage*)imageWithImage:(UIImage*)sourceImage scaledToSize:(CGSize)newSize;
+-(void)syncData;
+-(void)refreshData;
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) UITabBarController *tabBarController;

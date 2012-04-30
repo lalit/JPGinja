@@ -60,9 +60,16 @@
 #import "CustomTopNavigationBar.h"
 
 @implementation pARkViewController
+
+//#define SYNTHESIZE_SINGLETON_FOR_CLASS(pARkViewController);
+
+
+#define DEGREES_TO_RADIANS (M_PI/180.0)
+#define degreesToRadianX(x) (M_PI * (x) / 180.0)
+
 @synthesize rotateImg,compassImg,trueNorth;
-@synthesize compassDif,compassFault,calibrateBtn,lblFilterText,currentLocation,locationManager,slider,settingView,btnClose,lblDistance,btnSettings,orientation,lblEventCount,placesOfInterest,btnVMMode,btnBack,btnHelp,helpView,btnForward,btnReverse,virtualwalkArrow;
-@synthesize lblRadius,viewSetting,sdrRadius,settingRadar,settingRadarViewPort,viewScale,isFirstTime;
+@synthesize compassDif,compassFault,calibrateBtn,lblFilterText,slider,settingView,btnClose,lblDistance,btnSettings,orientation,lblEventCount,placesOfInterest,btnVMMode,btnBack,btnHelp,helpView,btnForward,btnReverse,virtualwalkArrow,waitingMessage,arView,lblMessage,cbar,actionsView;
+@synthesize lblRadius,viewSetting,sdrRadius,settingRadar,settingRadarViewPort,viewScale,isFirstTime,actionViewLandScape;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -79,6 +86,15 @@
     if (self) {
         self.title = NSLocalizedString(@"AR", @"AR");
         self.tabBarItem.image = [UIImage imageNamed:@"CameraIcon.png"];
+        self.navigationController.navigationBar.hidden = YES; 
+        
+        //[self constructCalloutPOI];
+        arView = (ARView *)self.view;
+        arView.parentActionView = self.actionsView;
+        //arView =[[ARView alloc]init];
+        //[self.view addSubview:arView];
+        [arView start];
+        NSLog(@"init");
     }
     return self;
 }
@@ -87,13 +103,11 @@
     didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation
 {
-    
-    
-    
     NSLog(@"AR update location");
-    currentLocation = newLocation;
+   // currentLocation = newLocation;
     Location *loc = [[Location sharedInstance]init];
-    loc.currentLocation=currentLocation;
+    
+   // loc.currentLocation=currentLocation;
     //if (radiusChanged == 1) {
     //
     radiusChanged=0;
@@ -108,7 +122,6 @@
     
     
 }
-
 
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
 {
@@ -130,113 +143,127 @@
 
 
 
--(void)updateView
-{
-    
-    //arView.currentDistance =5393913;
-    //arView.maxtDistance=5393913+50;
-    AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
-    //if (placesOfInterest==nil) 
-    {
-       // placesOfInterest = [NSMutableArray arrayWithCapacity:[mapDataDict count]];
-        placesOfInterest = [[NSMutableArray alloc]init];
-        int i=0;
-        for (id key in mapDataDict)
-        {
-            NSMutableArray *offerdataArray  = [mapDataDict objectForKey:key];
-            Offer *offer =[offerdataArray objectAtIndex:0];
-            ShopList *merchant = [deligate getStoreDataById:offer.store_id];
-            double latitude =[merchant.latitude doubleValue];
-            double longitude = [merchant.longitude doubleValue];
-        
-            //For testing
-            //CLLocation *pointALocation = currentLocation;
-            CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
-            //NSLog(@"%f",currentLocation.coordinate.latitude);
-            
-            CLLocation *pointBLocation = [[CLLocation alloc] initWithLatitude:[merchant.latitude doubleValue] longitude:[merchant.longitude doubleValue]];  
-            
-            float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
-            radius=250;
-            //NSLog(@"distance = %f,%f",distanceMeters,currentDistance);
-             if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
-                 
-                 if (distanceMeters<radius) {
-                     
-                     CustomCallOutView *popup =[[CustomCallOutView alloc]init];
-                     popup.currentLocation = currentLocation;
-                     popup.parentViewController = self;
-                     [popup prepareCallOutView:offer offerArray:offerdataArray];
-                     
-                     PlaceOfInterest *poi1 =[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer];
-                     
-                     
-                     //float distanceMiles = (distanceMeters / 1609.344); 
-                     //NSLog(@"No of poi's1 %f",distanceMeters);
-                     
-                     [placesOfInterest insertObject:poi1 atIndex:i++];
-                 }
-
-             }
-            
-           // CLLocation *storelocation =[[CLLocation alloc] initWithLatitude: latitude longitude:longitude];;
-
-           
-        }
-        
-    }
-    ARView *arView = (ARView *)self.view;
-    //[arView start];
-    arView.currentDistance =150;
-    arView.maxtDistance=300;
-   	[arView setPlacesOfInterest:placesOfInterest];	
-}
 
 -(IBAction)sliderChanged:(id)sender
 {
     NSLog(@"slider changed %d",(int)slider.value);
     if ((int)self.sdrRadius.value==4) {
-        radius=0;
+        arView.radius=0;
     }
     if ((int)self.sdrRadius.value==3) {
-        radius=50;
+        arView.radius=50;
     }
     if ((int)self.sdrRadius.value==2) {
-        radius=200;
+        arView.radius=200;
     }
     if ((int)self.sdrRadius.value==1) {
-        radius=500;
+        arView.radius=500;
     }
     if ((int)self.sdrRadius.value==0) {
-        radius=1000;
+        arView.radius=1000;
     }
-    NSLog(@"radius = %f",radius);
-    self.lblDistance.text =[NSString stringWithFormat:@"%.f",radius];
+    NSLog(@"radius = %f",arView.radius);
+    radius = arView.radius;
+    self.lblDistance.text =[NSString stringWithFormat:@"%.f",arView.radius];
+    self.lblRadius.text =[NSString stringWithFormat:@"%.f",arView.radius];
     [self.lblDistance sizeToFit];
-    //[self updateView];
+    
+    
+    if ([self.placesOfInterest count]==0) {
+        [self constructCalloutPOI];
+    }
+    int i=0;
+    NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
+    for (PlaceOfInterest *poi in self.placesOfInterest) {
+        //NSLog(@"UPdate view POI %@",[NSDate date]);
+        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        CLLocation *pointBLocation = poi.location;  
+        
+        float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
+        
+        //NSLog(@"distanceMeters = %f,%f,%f",distanceMeters,currentDistance,radius);
+        //radius=250;
+        if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
+            
+            if (distanceMeters<radius) {
+                NSLog(@"radius POI insert = %f",radius);
+                [placesOfInterestTemp insertObject:poi atIndex:i++];
+            }
+            
+        }
+        
+    }
+    self.settingRadarViewPort.placesOfInterest = placesOfInterestTemp;
+    [self.settingRadarViewPort setNeedsDisplay];
 }
+
+
+
+-(void)constructCalloutPOI
+{
+    AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
+    placesOfInterest = [[NSMutableArray alloc]init];
+    NSLog(@"UPdate view loop start1 %@",[NSDate date]);
+    int i=0;
+    for (id key in mapDataDict)
+    {
+        NSMutableArray *offerdataArray  = [mapDataDict objectForKey:key];
+        Offer *offer =[offerdataArray objectAtIndex:0];
+        NSLog(@"Callout construction %@",offer.offer_id);
+        ShopList *merchant = [deligate getStoreDataById:offer.store_id];
+        double latitude =[merchant.latitude doubleValue];
+        double longitude = [merchant.longitude doubleValue];
+        
+        //For testing
+        //CLLocation *pointALocation = currentLocation;
+        //CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        //CLLocation *pointBLocation = [[CLLocation alloc] initWithLatitude:[merchant.latitude doubleValue] longitude:[merchant.longitude doubleValue]];  
+        
+        // float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
+        //radius=250;
+        //if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
+        
+        //if (distanceMeters<radius) {
+        
+        CustomCallOutView *popup =[[CustomCallOutView alloc]init];
+        //popup.currentLocation = _currentAction;
+        NSLog(@"PARENT = %@",deligate.arviewController);
+        popup.parentViewController = deligate.arviewController;
+        [popup prepareCallOutView:offer offerArray:offerdataArray];
+        
+        PlaceOfInterest *poi1 =[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer];
+        [self.placesOfInterest insertObject:poi1 atIndex:i++];
+        //}
+        
+        //}
+    }
+    NSLog(@"UPdate view loop end %@",[NSDate date]);   
+    
+}
+
 
 - (void)viewDidLoad
 {
+ self.navigationController.navigationBar.hidden = YES;   
+    NSLog(@"View loading start");
+    rotationAngle=0;
+     UIView *tabBar = [self.tabBarController.view.subviews objectAtIndex:1];
+    tabbarRect = tabBar.frame;
+    [super viewDidLoad];
+    [self.actionsView.layer setZPosition:101.0f];
+    //[[UIAccelerometer sharedAccelerometer] setDelegate: self ];
+    //[[UIAccelerometer sharedAccelerometer] setUpdateInterval:2.0f];
+    
+    //self.waitingMessage = [[UIAlertView alloc]initWithTitle:@"Message" message:@"Please wait loading data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    //[self.waitingMessage  show];
     currentDistance = 150;
     zoomlevel=1;
-    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0, 300, 40)];
-    cbar.viewController = self;
-    [self.view addSubview:cbar];
-    
-    
-    // [self updateView];
+   // [self updateView];
     self.sdrRadius.transform= CGAffineTransformRotate(self.slider.transform, 90 * M_PI /180);
     
-	[super viewDidLoad];
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
-    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
-    [locationManager startUpdatingLocation];
-    [[UIAccelerometer sharedAccelerometer] setDelegate: self ];
-    [[UIAccelerometer sharedAccelerometer] setUpdateInterval:2.0f];
+	
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     
@@ -252,7 +279,7 @@
     deligate.arraySelectedCategories =[[NSMutableArray alloc]init ];
     [deligate getCategories];
     [deligate getSubCategories];
-    NSMutableArray *dataArray = [deligate getOfferData];
+    
     for (int index=0; index<[deligate.arraySelectedCategories count]; index++) {
         
         Categories *c =(Categories *)[deligate getCategoryDataById:[deligate.arraySelectedCategories objectAtIndex:index]];
@@ -264,35 +291,9 @@
     
     
     
-	ARView *arView = (ARView *)self.view;
+	arView = (ARView *)self.view;
 	
-    //RadarViewPortView *radar = [[RadarViewPortView alloc]init];
-    radarView = [[Radar alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];	
-    radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];
-    
-    
-    NSMutableArray * radarPointValues= [[NSMutableArray alloc]initWithCapacity:[dataArray count]];
-    for (int index=0; index<[dataArray count]; index++) {
-        Offer *offer =[dataArray objectAtIndex:index];
-        ShopList *merchant = [deligate getStoreDataById:offer.store_id];
-        
-        //PoiItem *item =[[PoiItem alloc]init];
-        CGFloat alt = 0.0;
-        float lat = [merchant.latitude floatValue];
-        float lon = [merchant.longitude floatValue];
-        
-        CLLocation *tempLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(lat, lon) altitude:alt horizontalAccuracy:1.0 verticalAccuracy:1.0 timestamp:nil];
-        PhysicalPlace *tempCoordinate = [PhysicalPlace coordinateWithLocation:tempLocation];
-        
-        
-        [radarPointValues addObject:tempCoordinate];
-        
-    }
-    radarView.pois = radarPointValues;
-    radarView.radius = 30.0;
-    [arView addSubview:radar];
-    [arView addSubview:radarView];
-    [arView bringSubviewToFront:btnSettings];
+       [arView bringSubviewToFront:btnSettings];
     self.slider = [[UISlider alloc] initWithFrame:CGRectMake(self.view.frame.size.width-100, 200, 120, 25)];
 	[self.slider addTarget:self action:@selector(sliderChanged:)     forControlEvents:UIControlEventValueChanged];
     self.slider.transform = CGAffineTransformRotate(self.slider.transform, 90 * M_PI /180);
@@ -318,7 +319,7 @@
     
     self.isFirstTime = YES;
     
-    [self radarSpecificSettings];
+    //[self radarSpecificSettings];
     self.slider.value = 3;
     radius=50;
     //self.lblDistance.text = [NSString stringWithFormat:@"%d m",30];
@@ -329,222 +330,45 @@
     int radarRadius = 75;
     self.settingRadar = [[Radar alloc]initWithFrame:CGRectMake(50,150, radarRadius*2, radarRadius*2)];	
     self.settingRadar.RADIUS = radarRadius;
-    self.settingRadarViewPort = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50,150, radarRadius*2, radarRadius*2)];
+    self.settingRadarViewPort = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50+radarRadius/2,150+radarRadius/2, radarRadius*2, radarRadius*2)];
     self.settingRadarViewPort.RADIUS =radarRadius;
     [self.viewSetting addSubview:self.settingRadar];
     [self.viewSetting addSubview:self.settingRadarViewPort];
     
-    
+    [self constructCalloutPOI];
+    //[arView start];
+    NSLog(@"View loading end");
     
 }
 -(IBAction)btnMoveForward:(id)sender
 {
-    
-    ARView *arView = (ARView *)self.view;
-    
-    
-    currentDistance =currentDistance+10;
+    arView.currentDistance =arView.currentDistance+10;
     CGRect rect = arView.captureLayer.frame;
     rect.size.width = rect.size.width+20;
     rect.size.height = rect.size.height+20;
     arView.captureLayer.frame = rect;
-
-    [self updateView];
+    [arView updateView];
 }
 
 -(IBAction)btnMoveReverse:(id)sender
 {
-    ARView *arView = (ARView *)self.view;
+    //ARView *arView = (ARView *)self.view;
     
-    currentDistance =currentDistance-10;
+    arView.currentDistance =arView.currentDistance-10;
     CGRect rect = arView.captureLayer.frame;
     rect.size.width = rect.size.width-20;
     rect.size.height = rect.size.height-20;
     arView.captureLayer.frame = rect;    
-    [self updateView];
+    [arView updateView];
 }
 -(IBAction)btnClose:(id)sender
 {
+
     [self.settingView setHidden:YES];
-    ARView *arView = (ARView *)self.view;
-    [radar removeFromSuperview];
-    [radarView removeFromSuperview];
-    if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
-        radarView = [[Radar alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];	
-        radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];
-    }else
-    {
-        radarView = [[Radar alloc]initWithFrame:CGRectMake(402, 52, 65, 65)];	
-        radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(402, 52, 65, 65)];
-    }
-    
-    
-    [arView addSubview:radarView];
-    [arView addSubview:radar];
-    [arView bringSubviewToFront:btnSettings];
-    btnSettings.enabled = YES;
-    //[self updateView];
-    //[btnSettings sendActionsForControlEvents:<#(UIControlEvents)#>];
 }
 
--(IBAction)btnARViewClicked:(id)sender
-{
-    
-    viewSetting.frame = self.view.frame;
-    
-    [self.view addSubview:self.viewSetting];
-    return;
-    NSLog(@"AR Clicked");
-    btnSettings.enabled = NO;
-    [self.settingView setHidden:NO];
-    ARView *arView = (ARView *)self.view;
-    if (orientation == UIInterfaceOrientationPortrait) {
-        
-        CGRect rect = btnClose.frame;
-        rect.origin = CGPointMake(self.view.frame.size.width-100, 10);
-        btnClose.frame = rect;
-        if (self.settingView.hidden == NO) {
-            [radar removeFromSuperview];
-            [radarView removeFromSuperview];
-            radarView = [[Radar alloc]initWithFrame:CGRectMake(self.view.frame.size.width/2-80, self.view.frame.size.height/2-80, 170, 170)];	
-            radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/2-80, self.view.frame.size.height/2-80, 170, 170)];
-            [arView addSubview:radarView];
-            [arView addSubview:radar];
-            [arView bringSubviewToFront:btnSettings];
-        }else
-        {
-            
-            [radar removeFromSuperview];
-            [radarView removeFromSuperview];
-            [arView.captureLayer setOrientation:AVCaptureVideoOrientationPortrait];
-            [arView oriendationChangePortirt:self.view.frame];
-            
-            radarView = [[Radar alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];	
-            radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];
-            [arView addSubview:radarView];
-            [arView addSubview:radar];
-            [arView bringSubviewToFront:btnSettings];
-        }
-        self.settingView.frame = self.view.frame;
-        self.slider.frame = CGRectMake(self.view.frame.size.width-100, 200, 120, 125);
-        
-        
-        
-        
-    }else
-    {
-        
-        if (self.settingView.hidden == NO) {
-            [radar removeFromSuperview];
-            [radarView removeFromSuperview];
-            radarView = [[Radar alloc]initWithFrame:CGRectMake(50, 50, 200, 200)];	
-            radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50, 50, 200, 200)];
-            [arView addSubview:radarView];
-            [arView addSubview:radar];
-            [arView bringSubviewToFront:btnSettings];
-        }else
-        {
-            [radar removeFromSuperview];
-            [radarView removeFromSuperview];
-            
-            [arView.captureLayer setOrientation:AVCaptureVideoOrientationLandscapeLeft];
-            [arView oriendationChangeLandscape:self.view.frame];
-            
-            radarView = [[Radar alloc]initWithFrame:CGRectMake(402, 52, 65, 65)];	
-            radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(402, 52, 65, 65)];
-            [arView addSubview:radarView];
-            [arView addSubview:radar];  
-            [arView bringSubviewToFront:btnSettings];
-        }
-        
-        
-        
-        self.settingView.frame = self.view.frame;
-        self.slider.frame =CGRectMake(self.view.frame.size.width-100, 100, 120, 125);
-        
-    }
-	
-    
-    
-}
 
--(void)radarSpecificSettings
-{
-    oldHeading          = 0;
-    offsetG             = 0;
-    newCompassTarget    = 0;
-    
-    // Set up location manager
-    //locationManager=[[CLLocationManager alloc] init];
-	//locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-	
-    // We listen to events from the locationManager 
-    //locationManager.delegate=self;
-	
-	if([CLLocationManager headingAvailable] == YES){
-		NSLog(@"Heading is available");
-	} else {
-		NSLog(@"Heading isn't available");
-	}
-    
-    // Start listening to events from locationManager
-    //[locationManager startUpdatingHeading];
-    //[locationManager stopUpdatingLocation];
-    
-    // Set up motionManager
-    motionManager = [[CMMotionManager alloc]  init];
-    motionManager.deviceMotionUpdateInterval = 1.0/60.0;
-    opQ = [NSOperationQueue currentQueue] ;
-    
-    if(motionManager.isDeviceMotionAvailable) {
-        
-        // Listen to events from the motionManager
-        motionHandler = ^ (CMDeviceMotion *motion, NSError *error) {
-            CMAttitude *currentAttitude = motion.attitude;
-            float yawValue = currentAttitude.yaw; // Use the yaw value
-            
-            // Yaw values are in radians (-180 - 180), here we convert to degrees
-            float yawDegrees = CC_RADIANS_TO_DEGREES(yawValue);
-            currentYaw = yawDegrees;
-            
-            // We add new compass value together with new yaw value
-            yawDegrees = newCompassTarget + (yawDegrees - offsetG);
-            
-            // Degrees should always be positive
-            if(yawDegrees < 0) {
-                yawDegrees = yawDegrees + 360;
-            }
-            
-            compassDif.text = [NSString stringWithFormat:@"Gyro: %f",yawDegrees]; // Debug
-            
-            float gyroDegrees = (yawDegrees*radianConst);
-            
-            // If there is a new compass value the gyro graphic animates to this position
-            if(updateCompass) {
-                [UIView beginAnimations:nil context:NULL];
-                [UIView setAnimationDuration:0.25];
-                [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-                [rotateImg setTransform:CGAffineTransformMakeRotation(gyroDegrees)];
-                [UIView commitAnimations];
-                updateCompass = 0;
-                
-            } else {
-                rotateImg.transform = CGAffineTransformMakeRotation(gyroDegrees);
-            }
-        };
-        
-        
-    } else {
-        NSLog(@"No Device Motion on device.");
-        
-    }
-    
-    // Start listening to motionManager events
-    [motionManager startDeviceMotionUpdatesToQueue:opQ withHandler:motionHandler];
-    
-    // Start interval to run every other second
-    updateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updater:) userInfo:nil repeats:YES];
-}
+
 
 - (IBAction)calibrate:(id)sender
 {   
@@ -553,37 +377,10 @@
     compassFault.text = [NSString stringWithFormat:@"Northoffset: %f",northOffest]; // Debug
 }
 
-- (void)updater:(NSTimer *)timer 
-{
-    // If the compass hasn't moved in a while we can calibrate the gyro 
-    if(updatedHeading == oldHeading) {
-        // NSLog(@"Update gyro");
-        // Populate newCompassTarget with new compass value and the offset we set in calibrate
-        newCompassTarget = (0 - updatedHeading) + northOffest;
-        compassFault.text = [NSString stringWithFormat:@"newCompassTarget: %f",newCompassTarget]; // Debug
-        offsetG = currentYaw;
-        updateCompass = 1;
-    } else {
-        updateCompass = 0;
-    }
-    
-    oldHeading = updatedHeading;
-}
 
 
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading
-{
-    // Update variable updateHeading to be used in updater method
-    updatedHeading = newHeading.magneticHeading;
-    float headingFloat = 0 - newHeading.magneticHeading;
-    
-    // Update rotation of graphic compassImg
-    compassImg.transform = CGAffineTransformMakeRotation((headingFloat + northOffest)*radianConst); 
-    
-    // Update rotation of graphic trueNorth
-    radar.transform = CGAffineTransformMakeRotation(headingFloat*radianConst);    
-}
+
 
 
 - (void)viewDidUnload
@@ -595,18 +392,40 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    //[super viewWillAppear:animated];
    
+    self.navigationController.navigationBar.hidden= YES;
+	[self.settingView.layer setZPosition:250.0f];
     
-	
-	ARView *arView = (ARView *)self.view;
+    arView.radius =50;
+           
+	//arView = (ARView *)self.view;
 	[arView start];
-    [locationManager startUpdatingHeading];
-    [locationManager startUpdatingLocation];
+    
+    //[locationManager startUpdatingHeading];
+    //[locationManager startUpdatingLocation];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    
+    NSLog(@"%d",[self.tabBarController.view.subviews count]);
+    //if (cbar ==nil) 
+    {
+        UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
+        
+        cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 40)];
+        cbar.viewController = self;
+        cbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [transView addSubview:cbar];
+        CGRect rect = self.actionsView.frame;
+        rect.origin.y = 50;
+        self.actionsView.frame = rect;
+        [self.actionsView.layer setZPosition:200.0f];
+        [transView addSubview:self.actionsView];
+    }
+
+    
     CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: 35.671635 longitude:139.763952];
    // double distance = [currentLocation distanceFromLocation: offerLoc];
     
@@ -617,151 +436,139 @@
     }*/
 
 	[super viewDidAppear:animated];
-    [locationManager startUpdatingHeading];
-    [locationManager startUpdatingLocation];
+    //[locationManager startUpdatingHeading];
+    //[locationManager startUpdatingLocation];
+    self.lblMessage.hidden = YES;
     
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
-    [locationManager stopUpdatingHeading];
-    [locationManager stopUpdatingLocation];
+    //[locationManager stopUpdatingHeading];
+    //[locationManager stopUpdatingLocation];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-    [locationManager stopUpdatingHeading];
-    [locationManager stopUpdatingLocation];
+    //[locationManager stopUpdatingHeading];
+    //[locationManager stopUpdatingLocation];
     
-	ARView *arView = (ARView *)self.view;
+	//ARView *arView = (ARView *)self.view;
 	[arView stop];
     
 }
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    ARView *arView = (ARView *)self.view;
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation 
+{ 
     
-    CGRect rect = btnClose.frame;
-    rect.origin = CGPointMake(self.view.frame.size.width-100, 50);
-    btnClose.frame = rect;
+    return;
+    UIInterfaceOrientation toOrientation = self.interfaceOrientation;
+    //[self.arView setNeedsLayout];
     
-    if (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-        self.orientation = UIInterfaceOrientationPortrait;
-               [self.settingRadar removeFromSuperview];
-        [self.settingRadarViewPort removeFromSuperview];
-        int radarRadius = 75;
-        self.settingRadar = [[Radar alloc]initWithFrame:CGRectMake(50,150, radarRadius*2, radarRadius*2)];	
-        self.settingRadar.RADIUS = radarRadius;
-        self.settingRadarViewPort = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50,150, radarRadius*2, radarRadius*2)];
-        self.settingRadarViewPort.RADIUS =radarRadius;
-        
-        
-        [self.viewSetting addSubview:self.settingRadar];
-        [self.viewSetting addSubview:self.settingRadarViewPort];
-        
-        
-        
-        
-        
-        if (self.settingView.hidden == NO) {
-            [radar removeFromSuperview];
-            [radarView removeFromSuperview];
-            radarView = [[Radar alloc]initWithFrame:CGRectMake(self.view.frame.size.width/2-80, self.view.frame.size.height/2-80, 170, 170)];	
-            radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/2-80, self.view.frame.size.height/2-80, 170, 170)];
-            [arView addSubview:radarView];
-            [arView addSubview:radar];
-            [arView bringSubviewToFront:btnSettings];
-        }else
-        {
-            self.orientation = UIInterfaceOrientationLandscapeLeft;
-            
-                        
-            [radar removeFromSuperview];
-            [radarView removeFromSuperview];
-            [arView.captureLayer setOrientation:AVCaptureVideoOrientationPortrait];
-            [arView oriendationChangePortirt:self.view.frame];
-            
-            radarView = [[Radar alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];	
-            radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];
-            [arView addSubview:radarView];
-            [arView addSubview:radar];
-            [arView bringSubviewToFront:btnSettings];
-        }
-        self.settingView.frame = self.view.frame;
-        self.slider.frame = CGRectMake(self.view.frame.size.width-100, 170, 120, 125);
-        
-        
-        
-        
-    }else
+    if ( self.tabBarController.view.subviews.count >= 2 )
     {
+        UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
         
-        
-        [self.settingRadar removeFromSuperview];
-        [self.settingRadarViewPort removeFromSuperview];
-        
-        int radarRadius = 75;
-        self.settingRadar = [[Radar alloc]initWithFrame:CGRectMake(50,50, radarRadius*2, radarRadius*2)];	
-        self.settingRadar.RADIUS = radarRadius;
-        self.settingRadarViewPort = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50,50, radarRadius*2, radarRadius*2)];
-        self.settingRadarViewPort.RADIUS =radarRadius;
-        [self.viewSetting addSubview:self.settingRadar];
-        [self.viewSetting addSubview:self.settingRadarViewPort];
-
-        
-        
-        if (self.settingView.hidden == NO) {
-            [radar removeFromSuperview];
-            [radarView removeFromSuperview];
-            radarView = [[Radar alloc]initWithFrame:CGRectMake(50, 50, 200, 200)];	
-            radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50, 50, 200, 200)];
-            [arView addSubview:radarView];
-            [arView addSubview:radar];
-            [arView bringSubviewToFront:btnSettings];
-        }else
-        {
-            [radar removeFromSuperview];
-            [radarView removeFromSuperview];
-            
-            [arView.captureLayer setOrientation:AVCaptureVideoOrientationLandscapeLeft];
-            [arView oriendationChangeLandscape:self.view.frame];
-            
-            radarView = [[Radar alloc]initWithFrame:CGRectMake(402, 52, 65, 65)];	
-            radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(402, 52, 65, 65)];
-            UIButton *rButton = [[UIButton alloc]initWithFrame:CGRectMake(402, 52, 65, 65)];
-            
-            
-            [arView addSubview:radarView];
-            [arView addSubview:radar];  
-            [arView bringSubviewToFront:btnSettings];
+        transView.transform = CGAffineTransformIdentity;
+        self.actionsView.transform = CGAffineTransformIdentity;
+        switch (fromInterfaceOrientation) {
+            case UIInterfaceOrientationLandscapeLeft:
+                transView.transform = CGAffineTransformMakeRotation(M_PI_2); // 90 degress
+                break;
+            case UIInterfaceOrientationLandscapeRight:
+                transView.transform = CGAffineTransformMakeRotation(M_PI + M_PI_2); // 270 degrees
+                break;
+            case UIInterfaceOrientationPortraitUpsideDown:
+                transView.transform = CGAffineTransformMakeRotation(M_PI); // 180 degrees
+                break;
+            default:
+                transView.transform = CGAffineTransformMakeRotation(0.0);
+                break;
         }
         
-        
-        
-        self.settingView.frame = self.view.frame;
-        self.slider.frame =CGRectMake(self.view.frame.size.width-100, 84, 170, 125);
         
     }
-	
-	CGRect rect1 =  self.sdrRadius.frame;
-    rect1.origin.x = self.settingRadar.frame.origin.x+self.settingRadar.frame.size.width+50;
-    rect1.origin.y = self.settingRadar.frame.origin.y;
-    self.sdrRadius.frame = rect1;
+}
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
     
     
-    CGRect rect2 =  self.viewScale.frame;
-    rect2.origin.x = self.sdrRadius.frame.origin.x-50;
-    rect2.origin.y = self.sdrRadius.frame.origin.y;
-    self.viewScale.frame = rect2;
-	return YES;//interfaceOrientation == UIInterfaceOrientationPortrait;
+    if ( self.tabBarController.view.subviews.count >= 2 )
+    {
+      //  UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
+        
+        self.arView.transform = CGAffineTransformIdentity;
+        self.actionsView.transform = CGAffineTransformIdentity;
+        //self.actionsView.transform = CGAffineTransformMakeRotation(M_PI_2);
+        switch (interfaceOrientation) {
+            case UIInterfaceOrientationLandscapeLeft:
+                self.arView.transform = CGAffineTransformMakeRotation(M_PI_2);
+                //[self.actionsView removeFromSuperview];
+                //[transView addSubview:self.actionViewLandScape];
+                // 90 degress
+                break;
+            case UIInterfaceOrientationLandscapeRight:
+                self.arView.transform = CGAffineTransformMakeRotation(M_PI + M_PI_2); // 270 degrees
+                
+                //self.actionsView.transform = CGAffineTransformMakeRotation(M_PI_2);
+                //self.actionsView.frame = self.view.frame;
+
+                
+                break;
+            case UIInterfaceOrientationPortraitUpsideDown:
+                self.arView.transform = CGAffineTransformMakeRotation(M_PI); // 180 degrees
+                //self.actionsView.transform = CGAffineTransformMakeRotation(M_PI_2);
+                //self.actionsView.frame = self.view.frame;
+                break;
+            default:
+                self.arView.transform = CGAffineTransformMakeRotation(0.0);
+                [self.actionViewLandScape removeFromSuperview];
+                
+               // self.cbar.transform = CGAffineTransformMakeRotation(0.0);
+                break;
+        }
+        
+        
+    }
+
+    
+    
+    return YES;
+    UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
+    UIView *tabBar = [self.tabBarController.view.subviews objectAtIndex:1];
+    
+    if (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+        tabBar.transform = CGAffineTransformIdentity;
+        
+
+    }
+    if (interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+       
+        
+        NSLog(@"land");
+        rotationAngle =90;
+        tabBar.transform = CGAffineTransformIdentity;
+        tabBar.transform = CGAffineTransformMakeRotation(degreesToRadianX(rotationAngle));
+        CGRect rect = tabBar.frame;
+        rect.origin.x=0;//self.view.frame.size.width-50;
+        rect.origin.y = 20;//self.view.frame.size.height - 50;
+        rect.size.height = self.view.frame.size.height;
+        tabBar.frame = rect;
+        
+
+        
+    } 
+    return NO;
+    return interfaceOrientation == UIInterfaceOrientationPortrait;
+    //ARView *arView = (ARView *)self.view;
+    
 }
 
 -(IBAction)settingOpen:(id)sender
 {
     NSLog(@"setting");
+    self.actionsView.hidden = YES;
     self.settingView.hidden= NO;
 }
 -(IBAction)btnGinzaMenu:(id)sender
@@ -859,8 +666,44 @@
     NSLog(@"next");
 }
 
+
+-(IBAction)btnARViewClicked:(id)sender
+{
+    
+    viewSetting.frame = self.view.frame;
+    
+    [self.actionsView addSubview:self.viewSetting];
+    int i=0;
+    NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
+    for (PlaceOfInterest *poi in self.placesOfInterest) {
+        //NSLog(@"UPdate view POI %@",[NSDate date]);
+        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        CLLocation *pointBLocation = poi.location;  
+        
+        float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
+        
+        //NSLog(@"distanceMeters = %f,%f,%f",distanceMeters,currentDistance,radius);
+        //radius=250;
+        if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
+            
+            if (distanceMeters<radius) {
+                NSLog(@"radius POI insert = %f",radius);
+                [placesOfInterestTemp insertObject:poi atIndex:i++];
+            }
+            
+        }
+        
+    }
+    self.settingRadarViewPort.placesOfInterest = placesOfInterestTemp;
+    [self.settingRadarViewPort setNeedsDisplay];
+}
+
 -(IBAction)btnSettingClose:(id)sender
 {
+    //[arView stop];
+    //[arView start];
+    [arView updateView];
     [self.viewSetting removeFromSuperview];
-}
+    
+   }
 @end

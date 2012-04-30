@@ -301,6 +301,8 @@
 		0B9FAF1A152B05F400E44F64 /* PhysicalPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FAF17152B05F400E44F64 /* PhysicalPlace.m */; };
 		0B9FAF1B152B05F400E44F64 /* PoiItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FAF19152B05F400E44F64 /* PoiItem.m */; };
 		0BBB0A1B15459582008997CC /* settingback.png in Resources */ = {isa = PBXBuildFile; fileRef = 0BBB0A1A15459582008997CC /* settingback.png */; };
+		0BDD8677154E65CD0046A106 /* ARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BDD8675154E65CC0046A106 /* ARViewController.m */; };
+		0BDD8678154E65CD0046A106 /* ARViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BDD8676154E65CD0046A106 /* ARViewController.xib */; };
 		293B6E751547C93D001D90E2 /* MapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 293B6E6A1547C93D001D90E2 /* MapView.m */; };
 		293B6E761547C93D001D90E2 /* MapWithRoutesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 293B6E6C1547C93D001D90E2 /* MapWithRoutesViewController.m */; };
 		293B6E771547C93D001D90E2 /* MapWithRoutesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 293B6E6D1547C93D001D90E2 /* MapWithRoutesViewController.xib */; };
@@ -724,6 +726,9 @@
 		0B9FAF18152B05F400E44F64 /* PoiItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PoiItem.h; sourceTree = "<group>"; };
 		0B9FAF19152B05F400E44F64 /* PoiItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PoiItem.m; sourceTree = "<group>"; };
 		0BBB0A1A15459582008997CC /* settingback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settingback.png; sourceTree = "<group>"; };
+		0BDD8674154E65CC0046A106 /* ARViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARViewController.h; sourceTree = "<group>"; };
+		0BDD8675154E65CC0046A106 /* ARViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARViewController.m; sourceTree = "<group>"; };
+		0BDD8676154E65CD0046A106 /* ARViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ARViewController.xib; sourceTree = "<group>"; };
 		293B6E691547C93D001D90E2 /* MapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapView.h; sourceTree = "<group>"; };
 		293B6E6A1547C93D001D90E2 /* MapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapView.m; sourceTree = "<group>"; };
 		293B6E6B1547C93D001D90E2 /* MapWithRoutesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapWithRoutesViewController.h; sourceTree = "<group>"; };
@@ -918,6 +923,9 @@
 				0B9FAF02152AF85D00E44F64 /* pARkAppDelegate.m */,
 				0B9FAF03152AF85D00E44F64 /* pARkViewController_iPhone.xib */,
 				0B9FAF04152AF85D00E44F64 /* pARkViewController_iPad.xib */,
+				0BDD8674154E65CC0046A106 /* ARViewController.h */,
+				0BDD8675154E65CC0046A106 /* ARViewController.m */,
+				0BDD8676154E65CD0046A106 /* ARViewController.xib */,
 			);
 			name = AR;
 			path = Classes;
@@ -2026,6 +2034,7 @@
 				296E71051546C41000E88AAA /* DirectionViewController.xib in Resources */,
 				293B6E771547C93D001D90E2 /* MapWithRoutesViewController.xib in Resources */,
 				0B669E72154994FC001FF750 /* ListViewController.xib in Resources */,
+				0BDD8678154E65CD0046A106 /* ARViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2149,6 +2158,7 @@
 				293B6E781547C93D001D90E2 /* Place.m in Sources */,
 				293B6E791547C93D001D90E2 /* PlaceMark.m in Sources */,
 				293B6E7F1547C9BA001D90E2 /* RegexKitLite.m in Sources */,
+				0BDD8677154E65CD0046A106 /* ARViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2252,8 +2262,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rage  Communications Private Limited";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/include/libxml2",
@@ -2275,8 +2285,8 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2285,8 +2295,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rage  Communications Private Limited";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/include/libxml2",
@@ -2308,8 +2318,8 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B9D4571A-F210-41A9-A5F8-960E45EAE71E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

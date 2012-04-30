@@ -126,8 +126,8 @@
     Offer *offer = [self.arrayEventsDataArray objectAtIndex:indexPath.row];
     cell.lblOfferTitle.text = offer.offer_title;
     cell.lblCopyText.text = offer.copy_text;
-    cell.imgShopImage.image = [UIImage imageNamed:offer.image_name];
-    NSLog(@"%@",offer.image_name);
+   // cell.imgShopImage.image = [UIImage imageNamed:offer.image_name];
+    //NSLog(@"%@",offer.image_name);
 
     return cell;
 }

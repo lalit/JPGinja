@@ -50,13 +50,14 @@
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
 #import <math.h>
+#import "ARView.h"
+#import "CustomTopNavigationBar.h"
 
 #define CC_RADIANS_TO_DEGREES(__ANGLE__) ((__ANGLE__) / (float)M_PI * 180.0f)
 #define radianConst M_PI/180.0
 
-@interface pARkViewController : UIViewController <CLLocationManagerDelegate, UIAccelerometerDelegate>{	
-    RadarViewPortView *radar;
-    Radar *radarView;
+@interface pARkViewController : UIViewController <UIAccelerometerDelegate>{	
+
     CLLocationManager *locationManager;
     CMDeviceMotionHandler motionHandler;
     CMMotionManager     *motionManager;
@@ -87,14 +88,19 @@
     int                 radiusChanged;
     float               currentDistance;
     int                 zoomlevel;
+    CGRect              tabbarRect;
+    int                 rotationAngle;
     
 }
+@property (nonatomic, retain)IBOutlet UIView *actionsView;
+@property (nonatomic, retain)IBOutlet UIView *actionViewLandScape;
+@property (nonatomic, retain)CustomTopNavigationBar *cbar;
+@property (nonatomic, retain)ARView *arView;
 @property (nonatomic)BOOL isFirstTime;
 @property (nonatomic, retain)NSMutableArray *placesOfInterest;
 @property (nonatomic)int  orientation;
 @property (nonatomic, retain)IBOutlet UIButton *btnSettings;
 @property (nonatomic, retain) IBOutlet UILabel *lblDistance;
-@property (nonatomic, retain)CLLocation *currentLocation;
 @property (nonatomic, retain) IBOutlet UIImageView *rotateImg;
 @property (nonatomic, retain) IBOutlet UIImageView *compassImg;
 @property (nonatomic, retain) IBOutlet UIImageView *trueNorth;
@@ -120,6 +126,8 @@
 @property (nonatomic, retain)Radar *settingRadar ;
 @property (nonatomic, retain)RadarViewPortView *settingRadarViewPort;
 @property (nonatomic, retain)IBOutlet UIView *viewScale;
+@property (nonatomic, retain)UIAlertView *waitingMessage;
+@property (nonatomic, retain)IBOutlet UILabel *lblMessage;
 -(float) getHeadingFromCoordinate:(CLLocation*)fromLocation toCoordinate:(CLLocation*)toLocation;
 -(void) addTargetIndicatorWithHeading:(float)heading andDistance:(float)distance;
 - (IBAction)calibrate:(id)sender;
@@ -138,4 +146,5 @@
 -(IBAction)btnHelpClose:(id)sender;
 -(IBAction)btnSettingClose:(id)sender;
 -(void)updateView;
+-(void)constructCalloutPOI;
 @end

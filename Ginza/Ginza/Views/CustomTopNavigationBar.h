@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CustomTopNavigationBar : UIView
+@interface CustomTopNavigationBar : UIView <UINavigationBarDelegate>
 @property(nonatomic,retain)IBOutlet UIView *toplevelSubView;
 @property(nonatomic,retain)UIViewController *viewController;
 @property(nonatomic,retain)IBOutlet UILabel *lblEventCount;

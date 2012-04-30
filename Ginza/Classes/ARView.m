@@ -49,10 +49,14 @@
 #import "PlaceOfInterest.h"
 #import <AVFoundation/AVFoundation.h>
 #import "Location.h"
+#import "Radar.h"
+#import "AppDelegate.h"
+#import "RadarViewPortView.h"
 #pragma mark -
 #pragma mark Math utilities declaration
 
 #define DEGREES_TO_RADIANS (M_PI/180.0)
+#define degreesToRadianX(x) (M_PI * (x) / 180.0)
 
 typedef float mat4f_t[16];	// 4x4 matrix in column major order
 typedef float vec4f_t[4];	// 4D vector
@@ -99,6 +103,43 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     int zoomLevel;
     BOOL iszButtonPressed;
     int lastvalue;
+    
+    RadarViewPortView *radar;
+    Radar *radarView;
+    
+    CMDeviceMotionHandler motionHandler;
+    NSOperationQueue    *opQ;
+    
+    // Graphics
+    UIImageView         *rotateImg;
+    UIImageView         *compassImg;
+    UIImageView         *trueNorth;
+    UILabel             *compassDif;
+    UILabel             *compassFault;
+    UIButton            *calibrateBtn;
+    
+    NSTimer             *updateTimer;
+    
+
+    
+    float               oldHeading;
+    float               updatedHeading;
+    float               newYaw;
+    float               oldYaw;
+    float               offsetG;
+    float               updateCompass;
+    float               newCompassTarget;
+    float               currentYaw;
+    float               currentHeading;
+    float               compassDiff;
+    float               northOffest;
+    
+    int                 radiusChanged;
+    float               currentDistance;
+    int                 zoomlevel;
+
+    BOOL                isFirstTime;
+    
 }
 
 - (void)initialize;
@@ -130,7 +171,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 @implementation ARView
 @synthesize captureLayer;
 @synthesize placesOfInterest;
-@synthesize  currentDistance,maxtDistance;
+@synthesize  currentDistance,maxtDistance,interfaceOrientation,parentActionView,radius,poiData;
 
 - (void)dealloc
 {
@@ -182,7 +223,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     //self.frame= viewSize;
     CGRect r = captureView.frame;
     r.origin.x= 0;r.origin.y=0;
-    NSLog(@"s =%f",viewSize.size.width);
+    //NSLog(@"s =%f",viewSize.size.width);
     r.size =viewSize.size;
     captureLayer.frame=r;
     captureView.frame=r;
@@ -200,11 +241,12 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     
     
 }
+
 -(void)oriendationChangePortirt:(CGRect )viewSize
 {
     CGRect r = captureView.frame;
     r.origin.x= 0;r.origin.y=0;
-    NSLog(@"s =%f",viewSize.size.width);
+    //NSLog(@"s =%f",viewSize.size.width);
     r.size =viewSize.size;
     captureLayer.frame=r;
     captureView.frame=r;
@@ -212,7 +254,10 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     captureView.bounds = r;
     
 }
-
+-(NSArray *)interfaceOrientationAtIndexes:(NSIndexSet *)indexes
+{
+    NSLog(@"index = %@",indexes);
+}
 -(void)oriendationChange
 {
     // captureView.bounds = self.bounds;
@@ -220,16 +265,236 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 - (void)initialize
 {
     
-    
+    NSLog(@"ARView");
+    isFirstTime =YES;
+    self.currentDistance =150;
+    self.maxtDistance=300;
 	captureView = [[UIView alloc] initWithFrame:self.bounds];
 	captureView.bounds = self.bounds;
 	[self addSubview:captureView];
 	[self sendSubviewToBack:captureView];
 	
-    
+    //[self constructCalloutPOI];
+    //[self createRadar];
+    //[self radarSpecificSettings];
 	// Initialize projection matrix	
 	createProjectionMatrix(projectionTransform, 60.0f*DEGREES_TO_RADIANS, self.bounds.size.width*1.0f / self.bounds.size.height, 0.25f, 1000.0f);
 }
+
+
+-(void)createRadar
+{
+    //RadarViewPortView *radar = [[RadarViewPortView alloc]init];
+    radarView = [[Radar alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];	
+    radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];
+    AppDelegate *deligate= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    NSMutableArray *dataArray = [deligate getOfferData];
+    //radar.superViewController = self;
+    NSMutableArray * radarPointValues= [[NSMutableArray alloc]initWithCapacity:[dataArray count]];
+    for (int index=0; index<[dataArray count]; index++) {
+        Offer *offer =[dataArray objectAtIndex:index];
+        ShopList *merchant = [deligate getStoreDataById:offer.store_id];
+        
+        //PoiItem *item =[[PoiItem alloc]init];
+        CGFloat alt = 0.0;
+        float lat = [merchant.latitude floatValue];
+        float lon = [merchant.longitude floatValue];
+        
+        CLLocation *tempLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(lat, lon) altitude:alt horizontalAccuracy:1.0 verticalAccuracy:1.0 timestamp:nil];
+        PhysicalPlace *tempCoordinate = [PhysicalPlace coordinateWithLocation:tempLocation];
+        
+        
+        [radarPointValues addObject:tempCoordinate];
+        
+    }
+    radarView.pois = radarPointValues;
+    radarView.radius = 30.0;
+    [radar.layer setZPosition:104.0f];
+    [self addSubview:radar];
+    [self addSubview:radarView];
+    NSLog(@"%@",self.parentActionView);
+    //[self.parentActionView addSubview:radar];
+    //[self.parentActionView addSubview:radarView];
+
+}
+#import "CustomCallOutView.h"
+
+-(void)constructCalloutPOI
+{
+    AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
+    placesOfInterest = [[[NSMutableArray alloc]init]retain];
+    self.poiData =[[[NSMutableArray alloc]init]retain];
+    NSLog(@"UPdate view loop start1 %@",[NSDate date]);
+    int i=0;
+    for (id key in mapDataDict)
+    {
+        NSMutableArray *offerdataArray  = [mapDataDict objectForKey:key];
+        Offer *offer =[offerdataArray objectAtIndex:0];
+        NSLog(@"Callout construction ARView %@",offer.offer_id);
+        ShopList *merchant = [deligate getStoreDataById:offer.store_id];
+        double latitude =[merchant.latitude doubleValue];
+        double longitude = [merchant.longitude doubleValue];
+        
+        //For testing
+        //CLLocation *pointALocation = currentLocation;
+        //CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        //CLLocation *pointBLocation = [[CLLocation alloc] initWithLatitude:[merchant.latitude doubleValue] longitude:[merchant.longitude doubleValue]];  
+        
+        // float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
+        //radius=250;
+        //if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
+        
+        //if (distanceMeters<radius) {
+        
+        CustomCallOutView *popup =[[CustomCallOutView alloc]init];
+        popup.currentLocation = [[Location sharedInstance]currentLocation];
+        
+        popup.parentViewController = deligate.arviewController;
+        [popup prepareCallOutView:offer offerArray:offerdataArray];
+        
+        PlaceOfInterest *poi1 =[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer];
+        //[self.placesOfInterest insertObject:poi1 atIndex:i++];
+        [self.poiData addObject:poi1];
+        
+        //}
+        
+        //}
+    }
+    self.placesOfInterest = [[self.poiData copy]retain];
+    NSLog(@"UPdate view loop end %@",[NSDate date]);   
+   
+}
+
+
+-(void)updateView
+{
+    NSLog(@"Update view");
+    int i =0;
+    //int radius=0;
+    if ([self.poiData count]==0) {
+        [self constructCalloutPOI];
+    }
+    self.placesOfInterest = [self.poiData copy];
+    NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
+    for (PlaceOfInterest *poi in self.placesOfInterest) {
+        //NSLog(@"UPdate view POI %@",[NSDate date]);
+        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        CLLocation *pointBLocation = poi.location;  
+        
+        float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
+        distanceMeters = distanceMeters -currentDistance;
+        //NSLog(@"distanceMeters = %f,%f,%f",distanceMeters,currentDistance,radius);
+        //radius=250;
+        if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
+            NSLog(@"radius = %f",radius);
+            if (distanceMeters<radius) {
+                [placesOfInterestTemp insertObject:poi atIndex:i++];
+            }
+            
+        }
+        
+    }
+    radar.placesOfInterest = placesOfInterestTemp;
+    [radar setNeedsDisplay];
+    
+    
+   	[self setPlacesOfInterest:placesOfInterestTemp];	
+}
+
+-(void)radarSpecificSettings
+{
+    oldHeading          = 0;
+    offsetG             = 0;
+    newCompassTarget    = 0;
+    
+    // Set up motionManager
+    motionManager = [[CMMotionManager alloc]  init];
+    motionManager.deviceMotionUpdateInterval = 1.0/60.0;
+    opQ = [NSOperationQueue currentQueue] ;
+    
+    if(motionManager.isDeviceMotionAvailable) {
+        
+        // Listen to events from the motionManager
+        motionHandler = ^ (CMDeviceMotion *motion, NSError *error) {
+            CMAttitude *currentAttitude = motion.attitude;
+            float yawValue = currentAttitude.yaw; // Use the yaw value
+            
+            // Yaw values are in radians (-180 - 180), here we convert to degrees
+            float yawDegrees = CC_RADIANS_TO_DEGREES(yawValue);
+            currentYaw = yawDegrees;
+            
+            // We add new compass value together with new yaw value
+            yawDegrees = newCompassTarget + (yawDegrees - offsetG);
+            
+            // Degrees should always be positive
+            if(yawDegrees < 0) {
+                yawDegrees = yawDegrees + 360;
+            }
+            
+            compassDif.text = [NSString stringWithFormat:@"Gyro: %f",yawDegrees]; // Debug
+            
+            float gyroDegrees = (yawDegrees*radianConst);
+            
+            // If there is a new compass value the gyro graphic animates to this position
+            if(updateCompass) {
+                [UIView beginAnimations:nil context:NULL];
+                [UIView setAnimationDuration:0.25];
+                [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+                [rotateImg setTransform:CGAffineTransformMakeRotation(gyroDegrees)];
+                [UIView commitAnimations];
+                updateCompass = 0;
+                
+            } else {
+                rotateImg.transform = CGAffineTransformMakeRotation(gyroDegrees);
+            }
+        };
+        
+        
+    } else {
+        NSLog(@"No Device Motion on device.");
+        
+    }
+    
+    // Start listening to motionManager events
+    [motionManager startDeviceMotionUpdatesToQueue:opQ withHandler:motionHandler];
+    
+    // Start interval to run every other second
+    updateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updater:) userInfo:nil repeats:YES];
+}
+
+
+- (void)updater:(NSTimer *)timer 
+{
+    // If the compass hasn't moved in a while we can calibrate the gyro 
+    if(updatedHeading == oldHeading) {
+        NSLog(@"Update gyro");
+        // Populate newCompassTarget with new compass value and the offset we set in calibrate
+        newCompassTarget = (0 - updatedHeading) + northOffest;
+        compassFault.text = [NSString stringWithFormat:@"newCompassTarget: %f",newCompassTarget]; // Debug
+        offsetG = currentYaw;
+        updateCompass = 1;
+    } else {
+        updateCompass = 0;
+    }
+    
+    oldHeading = updatedHeading;
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading
+{
+    // Update variable updateHeading to be used in updater method
+    updatedHeading = newHeading.magneticHeading;
+    float headingFloat = 0 - newHeading.magneticHeading;
+    
+    // Update rotation of graphic compassImg
+    compassImg.transform = CGAffineTransformMakeRotation((headingFloat + northOffest)*radianConst); 
+    
+    // Update rotation of graphic trueNorth
+    radar.transform = CGAffineTransformMakeRotation(headingFloat*radianConst);    
+}
+
 
 - (void)startCameraPreview:(NSString *)oriendation
 {	
@@ -307,6 +572,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	locationManager.delegate = self;
 	locationManager.distanceFilter = 100.0;
 	[locationManager startUpdatingLocation];
+    [locationManager startUpdatingHeading];
 }
 
 - (void)stopLocation
@@ -353,7 +619,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 - (void)updatePlacesOfInterestCoordinates
 {
-	
+	NSLog(@"updatePlacesOfInterestCoordinates start ");
 	if (placesOfInterestCoordinates != NULL) {
 		free(placesOfInterestCoordinates);
 	}
@@ -410,22 +676,18 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	}];
 	
 	// Add subviews in descending Z-order so they overlap properly
+    int zPos = 250;
 	for (NSData *d in [orderedDistances reverseObjectEnumerator]) {
 		const DistanceAndIndex *distanceAndIndex = (const DistanceAndIndex *)d.bytes;
 		PlaceOfInterest *poi = (PlaceOfInterest *)[placesOfInterest objectAtIndex:distanceAndIndex->index];	
-        
-        //UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"distance" message:[NSString stringWithFormat: @"offer distance = %f,current distance =%f, max distance = %f",distanceAndIndex->distance , self.currentDistance , self.maxtDistance] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        
-        //[alert show];
-        
-       // NSLog(@"%f,%f,%f,%f",distanceAndIndex->distance , self.currentDistance , distanceAndIndex->distance,self.maxtDistance);
-        NSLog(@"self.currentDistance = %f",self.currentDistance);
-       
-
-            [self addSubview:poi.view];
+        //poi.view.hidden = YES;
+       [poi.view.layer setZPosition:zPos--];
+       [self addSubview:poi.view];
       
 		
 	}	
+    
+    NSLog(@"updatePlacesOfInterestCoordinates end ");
 }
 
 - (void)onDisplayLink:(id)sender
@@ -448,6 +710,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	multiplyMatrixAndMatrix(projectionCameraTransform, projectionTransform, cameraTransform);
 	
 	int i = 0;
+    int zPos = 250;
 	for (PlaceOfInterest *poi in [placesOfInterest objectEnumerator]) {
 		vec4f_t v;
 		multiplyMatrixAndVector(v, projectionCameraTransform, placesOfInterestCoordinates[i]);
@@ -459,9 +722,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         CLLocation *pointBLocation = poi.location;  
         
         float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
-        
-        float ratio = distanceMeters/100;
-        
+        distanceMeters = distanceMeters -currentDistance;
 		float x = (v[0] / v[3] + 1.0f) * 0.5f;
 		float y = (v[1] / v[3] + 1.0f) * 0.5f;
 		if (v[2] < 0.0f) {
@@ -472,25 +733,56 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
             rec.size.width = (172*scaleFactor)+172;
             rec.size.height = (163*scaleFactor)+163;
             poi.view.frame =rec;
-
-            CATransform3D transform = CATransform3DIdentity;
-
-           
-            if (poi.view.frame.origin.x<20) {
-                 transform.m34 = 1.0 / -500.0;
-                transform = CATransform3DRotate(transform,  (M_PI / 6.0) , 0, .1, 0);
-                [poi.view.layer setZPosition:100.0f];
+            //[poi.view setNeedsLayout];
+            //NSLog(@"%d",[UIDevice currentDevice].orientation);
+            if ([UIDevice currentDevice].orientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+                
+                radar.center = CGPointMake(252+32.5, 52+32.5);
+                radarView.center = CGPointMake(252+32.5, 52+32.5); 
             }
-            if (poi.view.frame.origin.x + (poi.view.frame.size.width/2)>(self.frame.size.width - 20.0f)) {
-                transform.m34 = 1.0 / 500.0;
-                transform = CATransform3DRotate(transform,  (M_PI / 6.0) , 0, .1, 0);
+            if([UIDevice currentDevice].orientation == UIInterfaceOrientationLandscapeRight)
+            {
+                
+                poi.view.transform = CGAffineTransformIdentity;
+                poi.view.transform = CGAffineTransformMakeRotation(degreesToRadianX(90));
                 [poi.view.layer setZPosition:100.0f];
+                
+                radar.center = CGPointMake(172, self.frame.size.width - 35);
+                [radar.layer setZPosition:101.0f];
+                radarView.center = CGPointMake(172, self.frame.size.width - 35); 
+            }else if([UIDevice currentDevice].orientation == UIInterfaceOrientationLandscapeLeft)
+            {
+                poi.view.transform = CGAffineTransformIdentity;
+                poi.view.transform = CGAffineTransformMakeRotation(degreesToRadianX(-90));
+                [poi.view.layer setZPosition:100.0f];
+                
+                radar.center = CGPointMake(35+50, 35);
+                [radar.layer setZPosition:101.0f];
+                radarView.center = CGPointMake(35+50, 35); 
+
+                
             }
-            
-           poi.view.layer.transform = transform;
+            else
+            {
+                CATransform3D transform = CATransform3DIdentity;
+                if (poi.view.frame.origin.x<20) {
+                    transform.m34 = 1.0 / -500.0;
+                    transform = CATransform3DRotate(transform,  (M_PI / 6.0) , 0, .1, 0);
+                    [poi.view.layer setZPosition:100.0f];
+                }
+                if (poi.view.frame.origin.x + (poi.view.frame.size.width/2)>(self.frame.size.width - 20.0f)) {
+                    transform.m34 = 1.0 / 500.0;
+                    transform = CATransform3DRotate(transform,  (M_PI / 6.0) , 0, .1, 0);
+                    [poi.view.layer setZPosition:100.0f];
+                }
+                poi.view.layer.transform = transform;
+            }
+
             
             
 			poi.view.hidden = NO;
+            
+                       
 		} else {
 			poi.view.hidden = YES;
 		}
@@ -519,13 +811,22 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
+    NSLog(@"location started");
     // for shairing current location added by mobiquest
 	[Location sharedInstance].currentLocation=newLocation;
 	location = newLocation;
     
     //for testing
     location = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+    if (isFirstTime) {
+        
+        [self constructCalloutPOI];
+        [self createRadar];
+        isFirstTime = NO;
+    }
 	if (placesOfInterest != nil) {
+        
+        [self updateView];
 		[self updatePlacesOfInterestCoordinates];
 	}	
 }

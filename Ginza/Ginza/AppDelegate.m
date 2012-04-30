@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 
 #import "CustomARViewController.h"
-
 #import "ListViewController.h"
 #import "MapViewController.h"
 #import "BookMarkViewController.h"
@@ -25,12 +24,12 @@
 
 @synthesize window = _window;
 @synthesize tabBarController = _tabBarController;
-@synthesize managedObjectModel,managedObjectContext,persistentStoreCoordinator,filterString,arraySelectedCategories,arraySelectedSubCategories,splashView,isFilterOn,arrayStoreIds,bookmarkviewController,lastmerchantsynceddate,offerDataArray,poiDataDictionary,offerType,listViewDataArray,ginzaEvents;
+@synthesize managedObjectModel,managedObjectContext,persistentStoreCoordinator,filterString,arraySelectedCategories,arraySelectedSubCategories,splashView,isFilterOn,arrayStoreIds,bookmarkviewController,lastmerchantsynceddate,offerDataArray,poiDataDictionary,offerType,listViewDataArray,ginzaEvents,isSyncON,arviewController;
 
 //test
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
+    isSyncON = NO;
     NSError *error;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); //1
     NSString *documentsDirectory = [paths objectAtIndex:0]; //2
@@ -63,6 +62,14 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.arraySelectedCategories =[[NSMutableArray alloc]init ];
     filterString =@"";
+    
+    [self getOfferData];
+    self.poiDataDictionary = [self getPointOfInterestItems];
+    [self getListViewData];
+    [self getGinzaEvents];
+    
+        
+    
     NSString *URLString = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"http://www.google.com"]];
     BOOL val =  ( URLString != NULL ) ? YES : NO;
     if (! val) {
@@ -90,49 +97,51 @@
         // NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://staging.citiworldprivileges.com/mobile/ginza-promotions/shop-list/?created_on=2012-03-02"]];
         //[self performSelectorOnMainThread:@selector(fetchedData:) 
         //                 withObject:data waitUntilDone:NO];
-        [self getOfferData];
        
         
-        self.poiDataDictionary = [self getPointOfInterestItems];
-        [self getListViewData];
-        [self getGinzaEvents];
-
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"Data Fetch started %@",[NSDate date]);
         @try {
             [self fetchOfferData:lastSyncedDate];
-        }
-        @catch (NSException *exception) {
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Execute fetch offer %@",exception ] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-            [alert show];
+            
+            //[self performSelectorInBackground:@selector(fetchOfferData:) withObject:lastSyncedDate];
+            NSLog(@"fetch offers");
             
         }
+        @catch (NSException *exception) {
+                   }
         @finally {
-            //NSLog(@" ");
         }
         
         
         @try {
             [self fetchCategoryData];
+            
+            //[self performSelectorInBackground:@selector(fetchCategoryData) withObject:nil];
+            NSLog(@"fetch categories");
         }
         @catch (NSException *exception) {
             NSLog(@"fecth Category data %@",exception);
         }
         @finally {
-            NSLog(@"error1");
+           
         }
+            if (isSyncON) {
+
+                [self performSelectorInBackground:@selector(refreshData) withObject:nil];
+            }
+              
             
-            [self getOfferData];
-            self.poiDataDictionary = [self getPointOfInterestItems];
-            [self getListViewData];
-            [self getGinzaEvents];
-        });
+      });
+         NSLog(@"Data Fetch ended %@",[NSDate date]);
     }
     
    
+    NSLog(@"End");
+    self.arviewController = [[pARkViewController alloc] initWithNibName:@"pARkViewController_iPhone" bundle:nil];
+
     
-    pARkViewController *arviewController = [[pARkViewController alloc] initWithNibName:@"pARkViewController_iPhone" bundle:nil]; 
-    
-    UINavigationController *navigation1 = [[UINavigationController alloc]initWithRootViewController:arviewController];
+    UINavigationController *navigation1 = [[UINavigationController alloc]initWithRootViewController:self.arviewController];
     
     
    // UIViewController *listviewController = [[ListViewController alloc] initWithNibName:@"ListViewController" bundle:nil];
@@ -169,7 +178,18 @@
     
     return YES;
 }
+-(void)refreshData
+{
+    NSLog(@"assign offers");
+    [self getOfferData];
+    NSLog(@"assign pois");
+    self.poiDataDictionary = [self getPointOfInterestItems];
+    NSLog(@"assign list view data");
+    [self getListViewData];
+    NSLog(@"assign events");
+    [self getGinzaEvents];
 
+}
 
 -(NSMutableArray *)getSubCategories:(NSString *)parent
 {
@@ -376,6 +396,7 @@
 
 -(NSMutableArray *)getOfferData
 {
+    NSLog(@"Assign offer data start %@",[NSDate date]);
     NSError *error;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context =[appDeligate managedObjectContext];
@@ -390,8 +411,7 @@
     
     NSMutableArray *array = (NSMutableArray *)[managedObjectContext executeFetchRequest:request error:&error];
     self.offerDataArray = array;
-     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Total No of offer taken from DB" message:[NSString stringWithFormat:@"%d",[array count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    //[alert show];
+     NSLog(@"Assign offer data end %@",[NSDate date]);
     return array;
     
 }
@@ -492,9 +512,7 @@
                 NSMutableDictionary *data = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
                 [data setObject:self.lastmerchantsynceddate forKey:@"lastmerchantsynceddate"];
                 
-                [data writeToFile: path atomically:YES];
-                
-                
+                [data writeToFile: path atomically:YES]; 
             }    
             
         }
@@ -515,15 +533,24 @@
         urlString = [NSString stringWithFormat:@"%@/offers/?created_on=%@",dataURL,lastSyncedDate];
     }
     
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Execute fetch offer %@",urlString ] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    [alert show];
-
+    NSData* responseData = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
+    NSLog(@"fetch offer data1");
+    // Check if the data length is zero return. This means their is no new offers available in the online database     
+    if (responseData.length<=0) {
+        NSLog(@"fetch offer data 2");
+        return;
+    }
+    isSyncON = YES;
+    NSLog(@"fetch offer data 3");
+    NSError *error;
+    NSArray* json = [NSJSONSerialization 
+                     JSONObjectWithData:responseData //1
+                     
+                     options:kNilOptions 
+                     error:&error];
     
         
-    NSData* responseData = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
     
-   
-    NSError *error;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context =[appDeligate managedObjectContext];
     
@@ -531,13 +558,6 @@
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Offer" inManagedObjectContext:context];
     [request setEntity:entity];
 
-    
-    
-    NSArray* json = [NSJSONSerialization 
-                     JSONObjectWithData:responseData //1
-                     
-                     options:kNilOptions 
-                     error:&error];
     
     NSArray *dataArray = json;
     
@@ -1187,7 +1207,9 @@
     
     
     NSData* responseData = [NSData dataWithContentsOfURL:[NSURL URLWithString:[ NSString stringWithFormat: @"%@/categories/?created_on=2012-03-02",dataURL]]];
-    
+    if (responseData.length<=0) {
+        return;
+    }
     NSError *error;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context =[appDeligate managedObjectContext];
@@ -1410,12 +1432,15 @@
 
 -(NSMutableDictionary *) getPointOfInterestItems
 {
+    
+    NSLog(@"POI start %@",[NSDate date]);
     NSMutableArray *dataArray = self.offerDataArray;
     
     NSMutableDictionary *mapDataDict = [[NSMutableDictionary alloc]init ];
     
     for (int index=0; index<[dataArray count]; index++) {
         Offer *offer =[dataArray objectAtIndex:index];
+        NSLog(@"offer = %@",offer.offer_id);
         ShopList *merchant = [self getStoreDataById:offer.store_id];
         {
                 if ([mapDataDict valueForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]]==nil) {
@@ -1433,7 +1458,7 @@
     }
     self.poiDataDictionary = mapDataDict;
    // NSLog(@"%@",[mapDataDict valueForKey:[NSString stringWithFormat:@"%@-%@", merchant.latitude,merchant.longitude]]);
-
+NSLog(@"POI end %@",[NSDate date]);
     return mapDataDict;
 }
 
