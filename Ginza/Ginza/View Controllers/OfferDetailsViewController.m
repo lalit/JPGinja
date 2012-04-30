@@ -164,9 +164,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-
-    
-    [self.imgCategory setImage:img];
+    [self.imgCategory setImage:[self resizeImage:[UIImage imageWithContentsOfFile:path] toSize:CGSizeMake(39,36)]];
     
     double Latitude = [merchant.latitude doubleValue];
     double Longitude = [merchant.longitude doubleValue];
@@ -189,6 +187,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         imgIsPrivate.hidden = YES;
     }
 }
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -249,6 +248,36 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 }
 
 
+-(UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)size
+{
+    float width = size.width;
+    float height = size.height;
+    
+    UIGraphicsBeginImageContext(size);
+    CGRect rect = CGRectMake(0, 0, width, height);
+    
+    float widthRatio = image.size.width / width;
+    float heightRatio = image.size.height / height; 
+    float divisor = widthRatio > heightRatio ? widthRatio : heightRatio;
+    
+    width = image.size.width / divisor; 
+    height = image.size.height / divisor;
+    
+    rect.size.width  = width;
+    rect.size.height = height;
+    
+    if(height < width)
+        rect.origin.y = height / 3;
+    
+    [image drawInRect: rect];
+    
+    UIImage *smallImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();   
+    
+    return smallImage;
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     
@@ -263,11 +292,11 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     return  4;
     
 }
-
-
-
-
-
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row==2) 
+        return 60.0;
+    return 45.0;
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView1 cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -288,10 +317,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         UILabel *lblAddress = [[UILabel alloc]init];
         lblAddress.frame = CGRectMake(0,0,150, 40);
         lblAddress.textAlignment = UITextAlignmentLeft;
-        
-       
         lblAddress.font = [UIFont systemFontOfSize:12];
-
         lblAddress.backgroundColor = [UIColor clearColor];
         lblAddress.textColor = [UIColor blackColor];
         lblAddress.text = @"所在地";
@@ -299,7 +325,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         [cell addSubview:lblAddress];
         
         UILabel *lblAddressdetails = [[UILabel alloc]init];
-        lblAddressdetails.frame = CGRectMake(160,0,150, 50);
+        lblAddressdetails.frame = CGRectMake(80,0,250, 50);
         lblAddressdetails.textAlignment = UITextAlignmentLeft;
         lblAddressdetails.lineBreakMode = UILineBreakModeWordWrap;
         lblAddressdetails.numberOfLines = 3;
@@ -314,8 +340,6 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
       //  NSLog(@"Shop Address = %@", merchant.address);
     }
     if (indexPath.row==1) {
-        
-        
         UILabel *lblphone = [[UILabel alloc]init];
         lblphone.frame = CGRectMake(0,0,150, 40);
         lblphone.textAlignment = UITextAlignmentLeft;
@@ -327,19 +351,19 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         [cell addSubview:lblphone];
         
         UILabel *lblphonedetails = [[UILabel alloc]init];
-        lblphonedetails.frame = CGRectMake(160,0,150, 50);
+        lblphonedetails.frame = CGRectMake(80,0,250, 50);
         lblphonedetails.textAlignment = UITextAlignmentLeft;
         lblphonedetails.lineBreakMode = UILineBreakModeWordWrap;
         lblphonedetails.numberOfLines = 3;
         
         lblphonedetails.font = [UIFont systemFontOfSize:12];
         lblphonedetails.backgroundColor = [UIColor clearColor];
-        lblphonedetails.textColor = [UIColor blackColor];
+        lblphonedetails.textColor = [UIColor colorWithRed:0.0 green:0.5 blue:1.0 alpha:1.0];
         lblphonedetails.text = merchant.phone;
         [cell addSubview:lblphonedetails];
         UIButton * btnPhoneNumber= [UIButton buttonWithType:UIButtonTypeCustom];
         [btnPhoneNumber addTarget:self action:@selector(clickPhoneNumber:) forControlEvents:UIControlEventTouchUpInside];
-        btnPhoneNumber.frame=CGRectMake(160,0,150, 50);
+        btnPhoneNumber.frame=CGRectMake(80,0,150, 50);
         [cell addSubview:btnPhoneNumber];
         
         
@@ -356,7 +380,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         [cell addSubview:lbltime];
         
         UILabel *lbltimedetails = [[UILabel alloc]init];
-        lbltimedetails.frame = CGRectMake(160,0,150, 50);
+        lbltimedetails.frame = CGRectMake(80,0,250, 50);
         lbltimedetails.textAlignment = UITextAlignmentLeft;
         lbltimedetails.lineBreakMode = UILineBreakModeWordWrap;
         lbltimedetails.numberOfLines = 3;
@@ -365,7 +389,6 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         lbltimedetails.backgroundColor = [UIColor clearColor];
         lbltimedetails.textColor = [UIColor blackColor];
         lbltimedetails.text = merchant.time;
-        
         [cell addSubview:lbltimedetails];
         
         
@@ -389,7 +412,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         [cell addSubview:lblholiday];
         
         UILabel *lblholidaydetails = [[UILabel alloc]init];
-        lblholidaydetails.frame = CGRectMake(160,0,150, 50);
+        lblholidaydetails.frame = CGRectMake(80,0,250, 50);
         lblholidaydetails.textAlignment = UITextAlignmentLeft;
         lblholidaydetails.lineBreakMode = UILineBreakModeWordWrap;
         lblholidaydetails.numberOfLines = 3;
