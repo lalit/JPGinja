@@ -74,4 +74,5 @@
 -(void) animateArrowImage;
 - (void)setUILabel:(UILabel *)myLabel withMaxFrame:(CGRect)maxFrame withText:(NSString *)theText usingVerticalAlign:(int)vertAlign;
 - (void) loadWebView;
+-(UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)size;
 @end

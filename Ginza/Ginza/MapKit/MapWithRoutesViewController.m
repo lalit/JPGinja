@@ -45,10 +45,10 @@
 	source.name = @"Current Location";
 	source.description = @"";
     //Ginza Latitirude & Longitude
-	source.latitude = 35.6707504;
-	source.longitude =  139.769467;
-	//source.latitude=currentLoc.coordinate.latitude;
-    //source.longitude=currentLoc.coordinate.longitude;
+	//source.latitude = 35.6707504;
+	//source.longitude =  139.769467;
+	source.latitude=currentLoc.coordinate.latitude;
+    source.longitude=currentLoc.coordinate.longitude;
 	Place* dest = [[[Place alloc] init] autorelease];
 	dest.name =destinationAddress;
 	//dest.description = @"Destination";

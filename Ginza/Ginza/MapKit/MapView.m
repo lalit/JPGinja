@@ -195,6 +195,10 @@
     
     MKPinAnnotationView *pinView = nil;
     PlaceMark *pMark=annotation;
+    NSLog(@"Current Location:%@",annotation);
+    if ([annotation isKindOfClass:[MKUserLocation class]]) {
+        return pinView;
+    }
     if([pMark.place.name isEqualToString:@"Current Location"])
         isGreen=NO;
     NSLog(@"Current Location:%@",annotation);

@@ -167,7 +167,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    return 100;
+    return 95;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -239,7 +239,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         
         
         cell.lblDescription.text = shopData.store_name;
-        cell.lblDescription.font = [UIFont systemFontOfSize:12];
         cell.offer = offer;
         
         
@@ -257,7 +256,10 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         if([offer.offer_type isEqualToString:@"special"])
         {
             cell.imgGinzaBackground.image = [UIImage imageNamed:@"Specialoffercellbg.png"];
-            cell.lblFreeText.text = offer.lead_text;
+           
+            
+            NSString *sOff=[NSString stringWithFormat:@"★ %@",offer.lead_text];
+             cell.lblFreeText.text = sOff;
             UIColor *mycolor= [UIColor colorWithRed:192/255.0 green:150.0/255.0 blue:49.0/255.0 alpha:5.0];
             cell.lblFreeText.textColor = mycolor;
         }
@@ -296,7 +298,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         cell.imgDeatils.image = [UIImage imageNamed:@"thumb.png"];
         cell.lblDescription.text = @"銀座ラウンシ";
         cell.lblDescription.textColor =[UIColor whiteColor];
-        cell.lblDescription.font = [UIFont systemFontOfSize:12];
         
         cell.strLatitude = @"35.665756";
         cell.strLongitude = @"139.71179";
