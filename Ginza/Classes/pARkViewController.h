@@ -86,6 +86,7 @@
     float               radius;
     int                 radiusChanged;
     float               currentDistance;
+    int                 zoomlevel;
     
 }
 @property (nonatomic)BOOL isFirstTime;

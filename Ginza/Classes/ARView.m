@@ -95,6 +95,10 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	mat4f_t projectionTransform;
 	mat4f_t cameraTransform;	
 	vec4f_t *placesOfInterestCoordinates;
+    
+    int zoomLevel;
+    BOOL iszButtonPressed;
+    int lastvalue;
 }
 
 - (void)initialize;
@@ -236,6 +240,8 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	
 	captureSession = [[AVCaptureSession alloc] init];
 	AVCaptureDeviceInput *newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:camera error:nil] ;
+    
+    
 	[captureSession addInput:newVideoInput];
 	
 	captureLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];
@@ -268,6 +274,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	}
 	
 	captureSession = [[AVCaptureSession alloc] init];
+    
 	AVCaptureDeviceInput *newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:camera error:nil] ;
 	[captureSession addInput:newVideoInput];
 	
@@ -414,6 +421,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
        // NSLog(@"%f,%f,%f,%f",distanceAndIndex->distance , self.currentDistance , distanceAndIndex->distance,self.maxtDistance);
         NSLog(@"self.currentDistance = %f",self.currentDistance);
        
+
             [self addSubview:poi.view];
       
 		
@@ -445,10 +453,43 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 		multiplyMatrixAndVector(v, projectionCameraTransform, placesOfInterestCoordinates[i]);
 		createProjectionMatrix(projectionTransform, 60.0f*DEGREES_TO_RADIANS, self.bounds.size.width*1.0f / self.bounds.size.height, 0.25f, 1000.0f);
         
+        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        //NSLog(@"%f",currentLocation.coordinate.latitude);
+        
+        CLLocation *pointBLocation = poi.location;  
+        
+        float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
+        
+        float ratio = distanceMeters/100;
+        
 		float x = (v[0] / v[3] + 1.0f) * 0.5f;
 		float y = (v[1] / v[3] + 1.0f) * 0.5f;
 		if (v[2] < 0.0f) {
 			poi.view.center = CGPointMake(x*self.bounds.size.width, self.bounds.size.height-y*self.bounds.size.height);
+            float scaleFactor = 1.0 - 1.0 * (distanceMeters / 250);
+           
+            CGRect rec = poi.view.frame;
+            rec.size.width = (172*scaleFactor)+172;
+            rec.size.height = (163*scaleFactor)+163;
+            poi.view.frame =rec;
+
+            CATransform3D transform = CATransform3DIdentity;
+
+           
+            if (poi.view.frame.origin.x<20) {
+                 transform.m34 = 1.0 / -500.0;
+                transform = CATransform3DRotate(transform,  (M_PI / 6.0) , 0, .1, 0);
+                [poi.view.layer setZPosition:100.0f];
+            }
+            if (poi.view.frame.origin.x + (poi.view.frame.size.width/2)>(self.frame.size.width - 20.0f)) {
+                transform.m34 = 1.0 / 500.0;
+                transform = CATransform3DRotate(transform,  (M_PI / 6.0) , 0, .1, 0);
+                [poi.view.layer setZPosition:100.0f];
+            }
+            
+           poi.view.layer.transform = transform;
+            
+            
 			poi.view.hidden = NO;
 		} else {
 			poi.view.hidden = YES;
@@ -457,6 +498,24 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	}
     
 }
+
+
+- (float)angleFromCoordinate:(CLLocationCoordinate2D)first toCoordinate:(CLLocationCoordinate2D)second {
+	
+	float longitudinalDifference	= second.longitude - first.longitude;
+	float latitudinalDifference		= second.latitude  - first.latitude;
+	float possibleAzimuth			= (M_PI * .5f) - atan(latitudinalDifference / longitudinalDifference);
+	
+	if (longitudinalDifference > 0) 
+		return possibleAzimuth;
+	else if (longitudinalDifference < 0) 
+		return possibleAzimuth + M_PI;
+	else if (latitudinalDifference < 0) 
+		return M_PI;
+	
+	return 0.0f;
+}
+
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
@@ -488,6 +547,27 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	}
 	return self;
 }
+/*
+-(void)ZoomINOUT
+{
+    zoomLevel =angle*10;
+    
+    
+    if (lastvalue != zoomLevel && iszButtonPressed) {
+        if (lastvalue>0) {
+            CGFloat cameraTransformX = zoom;
+            CGFloat cameraTransformY = zoom;
+            self.camera.cameraViewTransform = CGAffineTransformScale(picker.cameraViewTransform, cameraTransformX, cameraTransformY);
+        }
+        if (lastvalue<0) {
+            CGFloat cameraTransformX = 1/zoom;
+            CGFloat cameraTransformY = 1/zoom;
+            picker.cameraViewTransform = CGAffineTransformScale(picker.cameraViewTransform, cameraTransformX, cameraTransformY);
+        }
+        
+    }
+    lastvalue = zoomLevel;
+}*/
 
 @end
 
