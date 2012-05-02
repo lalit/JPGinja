@@ -49,6 +49,9 @@
 #import <CoreLocation/CoreLocation.h>
 #import <CoreMotion/CoreMotion.h>
 #import <AVFoundation/AVFoundation.h>
+#import "Radar.h"
+#import "RadarViewPortView.h"
+
 #define CC_RADIANS_TO_DEGREES(__ANGLE__) ((__ANGLE__) / (float)M_PI * 180.0f)
 #define radianConst M_PI/180.0
 @interface ARView : UIView  <CLLocationManagerDelegate> {
@@ -61,6 +64,9 @@
 @property(nonatomic,retain)UIView *parentActionView;
 @property(nonatomic)float               radius;
 @property(nonatomic, retain)NSMutableArray  *poiData;
+@property(nonatomic, retain)UIViewController *parentViewController;
+@property(nonatomic,retain) RadarViewPortView *radar;
+@property(nonatomic,retain)Radar *radarView;          
 //@property(nonatomic,retain)NSArray *placesOfInterest;;
 
 

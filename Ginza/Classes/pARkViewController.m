@@ -87,12 +87,16 @@
         self.title = NSLocalizedString(@"AR", @"AR");
         self.tabBarItem.image = [UIImage imageNamed:@"CameraIcon.png"];
         self.navigationController.navigationBar.hidden = YES; 
-        
-        //[self constructCalloutPOI];
+
         arView = (ARView *)self.view;
         arView.parentActionView = self.actionsView;
-        //arView =[[ARView alloc]init];
-        //[self.view addSubview:arView];
+        arView.parentViewController= self;
+        //btnSettings = [UIButton buttonWithType:UIButtonTypeRoundedRect];        
+        //[btnSettings addTarget:self action:@selector(btnARViewClicked:) forControlEvents:UIControlEventTouchUpInside];
+        //btnSettings.frame = CGRectMake(80.0, 210.0, 100.0,100.0);
+        [btnSettings.layer setZPosition:205.0f];
+        //[self.view addSubview:btnSettings];
+        //[arView bringSubviewToFront:btnSettings];
         [arView start];
         NSLog(@"init");
     }
@@ -304,6 +308,10 @@
 	//[self.slider setMaximumValue:4];
     //[self.slider setValue:4];
     self.settingView = [[UIView alloc]initWithFrame:self.view.frame];
+    CGRect rect = self.settingView.frame;
+    rect.origin.y = 20;
+    self.settingView.frame = rect;
+    self.settingView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.settingView.backgroundColor =[UIColor blackColor];
     // self.settingView.alpha = 0.8;
     btnClose = [[UIButton alloc]initWithFrame:CGRectMake(self.view.frame.size.width-100, 0, 100, 37)];
@@ -342,7 +350,7 @@
 }
 -(IBAction)btnMoveForward:(id)sender
 {
-    arView.currentDistance =arView.currentDistance+10;
+    arView.currentDistance =arView.currentDistance+1;
     CGRect rect = arView.captureLayer.frame;
     rect.size.width = rect.size.width+20;
     rect.size.height = rect.size.height+20;
@@ -354,7 +362,7 @@
 {
     //ARView *arView = (ARView *)self.view;
     
-    arView.currentDistance =arView.currentDistance-10;
+    arView.currentDistance =arView.currentDistance-1;
     CGRect rect = arView.captureLayer.frame;
     rect.size.width = rect.size.width-20;
     rect.size.height = rect.size.height-20;
@@ -418,11 +426,14 @@
         cbar.viewController = self;
         cbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [transView addSubview:cbar];
-        CGRect rect = self.actionsView.frame;
-        rect.origin.y = 50;
+        /*CGRect rect = self.actionsView.frame;
+        rect.origin.y = self.view.frame.size.height-rect.size.height;
         self.actionsView.frame = rect;
-        [self.actionsView.layer setZPosition:200.0f];
+        [self.actionsView.layer setZPosition:200.0f];*/
         [transView addSubview:self.actionsView];
+        
+        [transView addSubview:btnSettings];
+        [transView addSubview:lblDistance];
     }
 
     
@@ -471,10 +482,12 @@
         UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
         
         transView.transform = CGAffineTransformIdentity;
+        arView.radar.transform = CGAffineTransformIdentity;
         self.actionsView.transform = CGAffineTransformIdentity;
         switch (fromInterfaceOrientation) {
             case UIInterfaceOrientationLandscapeLeft:
-                transView.transform = CGAffineTransformMakeRotation(M_PI_2); // 90 degress
+                transView.transform = CGAffineTransformMakeRotation(M_PI_2);
+                 arView.radar.transform = CGAffineTransformMakeRotation(M_PI_2);// 90 degress
                 break;
             case UIInterfaceOrientationLandscapeRight:
                 transView.transform = CGAffineTransformMakeRotation(M_PI + M_PI_2); // 270 degrees
@@ -492,32 +505,32 @@
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    
-    
+    self.lblDistance.transform = CGAffineTransformIdentity;
+    arView.radarView.transform = CGAffineTransformIdentity;
+     //self.lblDistance.center = CGPointMake(self.view.frame.size.width-40, 50);
+    //self.btnSettings.center = CGPointMake(self.lblDistance.frame.origin.x, 100);
     if ( self.tabBarController.view.subviews.count >= 2 )
     {
       //  UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
         
         self.arView.transform = CGAffineTransformIdentity;
-        self.actionsView.transform = CGAffineTransformIdentity;
+        
+        //self.actionsView.transform = CGAffineTransformIdentity;
         //self.actionsView.transform = CGAffineTransformMakeRotation(M_PI_2);
         switch (interfaceOrientation) {
             case UIInterfaceOrientationLandscapeLeft:
                 self.arView.transform = CGAffineTransformMakeRotation(M_PI_2);
-                //[self.actionsView removeFromSuperview];
-                //[transView addSubview:self.actionViewLandScape];
+                arView.radarView.transform = CGAffineTransformMakeRotation(-M_PI_2);
                 // 90 degress
                 break;
             case UIInterfaceOrientationLandscapeRight:
                 self.arView.transform = CGAffineTransformMakeRotation(M_PI + M_PI_2); // 270 degrees
-                
-                //self.actionsView.transform = CGAffineTransformMakeRotation(M_PI_2);
-                //self.actionsView.frame = self.view.frame;
-
-                
+                arView.radarView.transform = CGAffineTransformMakeRotation(M_PI_2);
+                //self.lblDistance.center = CGPointMake(50, 30);
                 break;
             case UIInterfaceOrientationPortraitUpsideDown:
-                self.arView.transform = CGAffineTransformMakeRotation(M_PI); // 180 degrees
+                self.arView.transform = CGAffineTransformMakeRotation(M_PI); 
+                 // 180 degrees
                 //self.actionsView.transform = CGAffineTransformMakeRotation(M_PI_2);
                 //self.actionsView.frame = self.view.frame;
                 break;
@@ -671,8 +684,11 @@
 {
     
     viewSetting.frame = self.view.frame;
-    
-    [self.actionsView addSubview:self.viewSetting];
+    CGRect rect = viewSetting.frame;
+    rect.origin.y=20;
+    viewSetting.frame=rect;
+    UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
+    [transView addSubview:self.viewSetting];
     int i=0;
     NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
     for (PlaceOfInterest *poi in self.placesOfInterest) {
@@ -706,4 +722,12 @@
     [self.viewSetting removeFromSuperview];
     
    }
+
+-(BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    for (UIView *view in self.view.subviews) {
+        if ([view pointInside:[self.view convertPoint:point toView:view] withEvent:event])
+            return YES;
+    }
+    return NO;
+}
 @end

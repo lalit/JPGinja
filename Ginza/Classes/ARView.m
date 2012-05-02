@@ -52,6 +52,7 @@
 #import "Radar.h"
 #import "AppDelegate.h"
 #import "RadarViewPortView.h"
+#import "pARkViewController.h"
 #pragma mark -
 #pragma mark Math utilities declaration
 
@@ -104,8 +105,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     BOOL iszButtonPressed;
     int lastvalue;
     
-    RadarViewPortView *radar;
-    Radar *radarView;
+
     
     CMDeviceMotionHandler motionHandler;
     NSOperationQueue    *opQ;
@@ -171,9 +171,10 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 @implementation ARView
 @synthesize captureLayer;
 @synthesize placesOfInterest;
-@synthesize  currentDistance,maxtDistance,interfaceOrientation,parentActionView,radius,poiData;
+@synthesize  currentDistance,maxtDistance,interfaceOrientation,parentActionView,radius,poiData,parentViewController;
+@synthesize radar,radarView;
 
-- (void)dealloc
+- (void)dealloc1
 {
 	[self stop];
     [captureView removeFromSuperview];
@@ -287,6 +288,9 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     //RadarViewPortView *radar = [[RadarViewPortView alloc]init];
     radarView = [[Radar alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];	
     radar = [[RadarViewPortView alloc]initWithFrame:CGRectMake(252, 52, 65, 65)];
+   // ((pARkViewController *)self.parentViewController).btnSettings.center = radarView.center;
+    
+
     AppDelegate *deligate= (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSMutableArray *dataArray = [deligate getOfferData];
     //radar.superViewController = self;
@@ -307,12 +311,15 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         [radarPointValues addObject:tempCoordinate];
         
     }
-    radarView.pois = radarPointValues;
+    radarView.pois = [radarPointValues copy];
     radarView.radius = 30.0;
+    
+    
     [radar.layer setZPosition:104.0f];
+    
+    
     [self addSubview:radar];
     [self addSubview:radarView];
-    NSLog(@"%@",self.parentActionView);
     //[self.parentActionView addSubview:radar];
     //[self.parentActionView addSubview:radarView];
 
@@ -676,17 +683,26 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	}];
 	
 	// Add subviews in descending Z-order so they overlap properly
-    int zPos = 250;
+    int zPos = 350;
 	for (NSData *d in [orderedDistances reverseObjectEnumerator]) {
 		const DistanceAndIndex *distanceAndIndex = (const DistanceAndIndex *)d.bytes;
+        int p = [[NSString stringWithFormat:@"%f",distanceAndIndex->distance] intValue];
+        NSLog(@"%d,%d",p,distanceAndIndex->index);
 		PlaceOfInterest *poi = (PlaceOfInterest *)[placesOfInterest objectAtIndex:distanceAndIndex->index];	
         //poi.view.hidden = YES;
-       [poi.view.layer setZPosition:zPos--];
+       [poi.view.layer setZPosition:1000-p];
+       
        [self addSubview:poi.view];
+        [self bringSubviewToFront:self.parentActionView];
+        [poi.view sendSubviewToBack:self.parentActionView];
+        //[self.parentActionView addSubview:poi.view];
+        //[self insertSubview:poi.view aboveSubview:self.parentActionView];
+        //[poi.view bringSubviewToFront:self.parentActionView];
       
 		
 	}	
-    
+    [radar setNeedsDisplay];
+    [radarView setNeedsDisplay];
     NSLog(@"updatePlacesOfInterestCoordinates end ");
 }
 
@@ -702,6 +718,31 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 - (void)drawRect:(CGRect)rect
 {
+    
+    if ([UIDevice currentDevice].orientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+        
+        radar.center = CGPointMake(252+32.5, 52+32.5);
+        radarView.center = CGPointMake(252+32.5, 52+32.5); 
+        //((pARkViewController *)self.parentViewController).btnSettings.center = radarView.center;
+        
+    }
+    if([UIDevice currentDevice].orientation == UIInterfaceOrientationLandscapeRight)
+    {
+        
+        radar.center = CGPointMake(172, self.frame.size.width - 35);
+        [radar.layer setZPosition:101.0f];
+        radarView.center = CGPointMake(172, self.frame.size.width - 35); 
+       // ((pARkViewController *)self.parentViewController).btnSettings.center = radarView.center;
+    }else if([UIDevice currentDevice].orientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        radar.center = CGPointMake(35+50, 35);
+        [radar.layer setZPosition:101.0f];
+        radarView.center = CGPointMake(35+50, 35); 
+        //((pARkViewController *)self.parentViewController).btnSettings.center = radarView.center;
+        
+    }
+
+    
 	if (placesOfInterestCoordinates == nil) {
 		return;
 	}
@@ -710,7 +751,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	multiplyMatrixAndMatrix(projectionCameraTransform, projectionTransform, cameraTransform);
 	
 	int i = 0;
-    int zPos = 250;
+    int zPos = 350;
 	for (PlaceOfInterest *poi in [placesOfInterest objectEnumerator]) {
 		vec4f_t v;
 		multiplyMatrixAndVector(v, projectionCameraTransform, placesOfInterestCoordinates[i]);
@@ -735,31 +776,35 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
             poi.view.frame =rec;
             //[poi.view setNeedsLayout];
             //NSLog(@"%d",[UIDevice currentDevice].orientation);
+            
             if ([UIDevice currentDevice].orientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
                 
                 radar.center = CGPointMake(252+32.5, 52+32.5);
                 radarView.center = CGPointMake(252+32.5, 52+32.5); 
+                //((pARkViewController *)self.parentViewController).btnSettings.center = radarView.center;
+                
             }
             if([UIDevice currentDevice].orientation == UIInterfaceOrientationLandscapeRight)
             {
                 
                 poi.view.transform = CGAffineTransformIdentity;
                 poi.view.transform = CGAffineTransformMakeRotation(degreesToRadianX(90));
-                [poi.view.layer setZPosition:100.0f];
+                //[poi.view.layer setZPosition:100.0f];
                 
                 radar.center = CGPointMake(172, self.frame.size.width - 35);
                 [radar.layer setZPosition:101.0f];
                 radarView.center = CGPointMake(172, self.frame.size.width - 35); 
+                //((pARkViewController *)self.parentViewController).btnSettings.center = radarView.center;
             }else if([UIDevice currentDevice].orientation == UIInterfaceOrientationLandscapeLeft)
             {
                 poi.view.transform = CGAffineTransformIdentity;
                 poi.view.transform = CGAffineTransformMakeRotation(degreesToRadianX(-90));
-                [poi.view.layer setZPosition:100.0f];
+                //[poi.view.layer setZPosition:100.0f];
                 
                 radar.center = CGPointMake(35+50, 35);
                 [radar.layer setZPosition:101.0f];
                 radarView.center = CGPointMake(35+50, 35); 
-
+                 //((pARkViewController *)self.parentViewController).btnSettings.center = radarView.center;
                 
             }
             else
@@ -768,12 +813,12 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
                 if (poi.view.frame.origin.x<20) {
                     transform.m34 = 1.0 / -500.0;
                     transform = CATransform3DRotate(transform,  (M_PI / 6.0) , 0, .1, 0);
-                    [poi.view.layer setZPosition:100.0f];
+                   // [poi.view.layer setZPosition:100.0f];
                 }
                 if (poi.view.frame.origin.x + (poi.view.frame.size.width/2)>(self.frame.size.width - 20.0f)) {
                     transform.m34 = 1.0 / 500.0;
                     transform = CATransform3DRotate(transform,  (M_PI / 6.0) , 0, .1, 0);
-                    [poi.view.layer setZPosition:100.0f];
+                    //[poi.view.layer setZPosition:100.0f];
                 }
                 poi.view.layer.transform = transform;
             }

@@ -13,6 +13,7 @@
     if ((self = [super initWithFrame:frame])) {
         // Initialization code
     }
+    self.placesOfInterest = [[[NSMutableArray alloc]init ]retain];
     self.RADIUS = 30;//frame.size.width/2;
     self.backgroundColor = [UIColor clearColor];
     isFirstAccess = YES;

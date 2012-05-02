@@ -147,16 +147,18 @@
     distanceLabel.textColor = mycolor;
     distanceLabel.font  =[UIFont systemFontOfSize:10.0];
     distanceLabel.text = [NSString stringWithFormat:@" %.fm",meters];
-    distanceLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+    distanceLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleTopMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     distanceLabel.textAlignment = UITextAlignmentCenter;
+    [distanceLabel sizeToFit];
     [popup addSubview:distanceLabel];
     
     timeLabel =[[UILabel alloc]initWithFrame:CGRectMake(100, 100, 84, 21)];
     timeLabel.backgroundColor =[UIColor clearColor];
     timeLabel.text = [NSString stringWithFormat:@"(徒歩%d分)",time];;
     timeLabel.font  =[UIFont systemFontOfSize:10.0];
+    [timeLabel sizeToFit];
      timeLabel.textAlignment = UITextAlignmentCenter;
-    timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+    timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     timeLabel.textColor = mycolor;
     [popup addSubview:timeLabel];
     
