@@ -357,6 +357,9 @@
 		296E70F71546BD6A00E88AAA /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 296E70F51546BD6A00E88AAA /* MobileCoreServices.framework */; };
 		296E70F91546BD8B00E88AAA /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 296E70F81546BD8B00E88AAA /* libz.dylib */; };
 		296E71051546C41000E88AAA /* DirectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 296E71041546C41000E88AAA /* DirectionViewController.xib */; };
+		29824BD71551706300916AC4 /* bgshadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 29824BD41551706300916AC4 /* bgshadow.png */; };
+		29824BD81551706300916AC4 /* getdirection.png in Resources */ = {isa = PBXBuildFile; fileRef = 29824BD51551706300916AC4 /* getdirection.png */; };
+		29824BD91551706300916AC4 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 29824BD61551706300916AC4 /* share.png */; };
 		CEE2760E1542E9F100C667D9 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE2760D1542E9F100C667D9 /* Location.m */; };
 		F74371FB1524341E006C74DE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F74371FA1524341E006C74DE /* UIKit.framework */; };
 		F74371FD1524341E006C74DE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F74371FC1524341E006C74DE /* Foundation.framework */; };
@@ -848,6 +851,9 @@
 		296E70F51546BD6A00E88AAA /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		296E70F81546BD8B00E88AAA /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		296E71041546C41000E88AAA /* DirectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DirectionViewController.xib; sourceTree = "<group>"; };
+		29824BD41551706300916AC4 /* bgshadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bgshadow.png; sourceTree = "<group>"; };
+		29824BD51551706300916AC4 /* getdirection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = getdirection.png; sourceTree = "<group>"; };
+		29824BD61551706300916AC4 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
 		CEE2760C1542E9F100C667D9 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		CEE2760D1542E9F100C667D9 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		F74371F61524341E006C74DE /* Ginza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ginza.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1121,6 +1127,9 @@
 		0B8FC4951541CB1C00528D9A /* details */ = {
 			isa = PBXGroup;
 			children = (
+				29824BD41551706300916AC4 /* bgshadow.png */,
+				29824BD51551706300916AC4 /* getdirection.png */,
+				29824BD61551706300916AC4 /* share.png */,
 				0B8FC4961541CB1C00528D9A /* Arrowwhite.png */,
 				0B8FC4971541CB1C00528D9A /* Arrowwhitedown.png */,
 				0B8FC4981541CB1C00528D9A /* Bookmarkicon.png */,
@@ -2035,6 +2044,9 @@
 				293B6E771547C93D001D90E2 /* MapWithRoutesViewController.xib in Resources */,
 				0B669E72154994FC001FF750 /* ListViewController.xib in Resources */,
 				0BDD8678154E65CD0046A106 /* ARViewController.xib in Resources */,
+				29824BD71551706300916AC4 /* bgshadow.png in Resources */,
+				29824BD81551706300916AC4 /* getdirection.png in Resources */,
+				29824BD91551706300916AC4 /* share.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

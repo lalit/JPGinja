@@ -98,4 +98,6 @@ CLLocationManager *locationManager;
 -(double) bearingToLocation:(CLLocation *) destinationLocation;
 -(NSString *) compassOrdinalToLocation:(CLLocation *) nwEndPoint;
 -(IBAction)btnGinzaMenu:(id)sender;
+- (NSString *)calculateDistance : (double) aDistance;
+- (NSString *)calculateTime : (int) aTime;
 @end

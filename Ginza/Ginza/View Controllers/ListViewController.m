@@ -279,8 +279,16 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
         double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
         int time = (me/4000)*15;
-        cell.lblDistance.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
-        // Animate Arrow
+        double dkm=me/1000;
+        if (dkm>5.0) {
+            cell.lblDistance.text=@"この場所までの距離が分かりま せんでした";
+        }
+        else {
+            NSString *formattedTime=[self calculateTime:time];
+            NSString *distance=[self calculateDistance:me];
+            cell.lblDistance.text =[NSString stringWithFormat:@"%@ %@",distance,formattedTime];
+        }
+// Animate Arrow
         double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
         CABasicAnimation *theAnimation;
         theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
@@ -307,7 +315,16 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         CLLocationDistance meters =[currentLocation distanceFromLocation:storeLocation];
         double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
         int time = (me/4000)*15;
-        cell.lblDistance.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
+        double dkm=me/1000;
+        if (dkm>5.0) {
+             cell.lblDistance.text=@"この場所までの距離が分かりま せんでした";
+        }
+        else {
+            NSString *formattedTime=[self calculateTime:time];
+            NSString *distance=[self calculateDistance:me];
+            cell.lblDistance.text =[NSString stringWithFormat:@"%@ %@",distance,formattedTime];
+        }
+        
         // Animate Arrow
         double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
         CABasicAnimation *theAnimation;
@@ -320,7 +337,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     
     cell.offerType = @"list";
     return cell;
-    
     
 }
 
@@ -549,6 +565,31 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     return RADIANS_TO_DEGREES(acosf(aDotB/(magA*magB)));
 }
 
+//Calculate Distance and Time
+- (NSString *)calculateDistance : (double) aDistance {
+    NSString *strDist;
+    double d=aDistance/1000;
+    if (d>1.0) {
+            strDist=[NSString stringWithFormat:@"%.fkm",d];
+    }
+    else {
+            strDist=[NSString stringWithFormat:@"%.fm",aDistance];
+        }
+    return strDist;
+}
+
+- (NSString *) calculateTime: (int) aTime {
+    NSString *strTime;
+    if (aTime>60) {
+        int hours=aTime/60;
+        int minutes=aTime%60;
+        strTime=[NSString stringWithFormat:@"(徒歩%d時間%d分)",hours,minutes];
+    }
+    else {
+        strTime=[NSString stringWithFormat:@"(徒歩%d分)",aTime];
+    }
+    return  strTime;
+}
 
 - (void)viewDidDisappear:(BOOL)animated
 {

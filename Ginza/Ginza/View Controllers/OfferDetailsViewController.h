@@ -43,7 +43,7 @@
 @property(nonatomic,retain)IBOutlet UILabel *lblIsChild;
 @property(nonatomic,retain)IBOutlet UIImageView *imgIsLunch;
 @property(nonatomic,retain)IBOutlet UILabel *lblIsLunch;
-
+@property(nonatomic,retain)IBOutlet UILabel *lblTime;
 @property(nonatomic,retain)IBOutlet UIImageView *imgIsPrivate;
 
 @property(nonatomic,retain)IBOutlet UILabel *lblIsPrivate;
@@ -75,4 +75,5 @@
 - (void)setUILabel:(UILabel *)myLabel withMaxFrame:(CGRect)maxFrame withText:(NSString *)theText usingVerticalAlign:(int)vertAlign;
 - (void) loadWebView;
 -(UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)size;
+- (void) calculateDistanceAndTime;
 @end
