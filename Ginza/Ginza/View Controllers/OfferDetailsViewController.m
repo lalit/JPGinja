@@ -18,7 +18,7 @@
 #import <QuartzCore/QuartzCore.h>
 @implementation OfferDetailsViewController
 @synthesize lblIsChild,lblIsLunch,lblIsPrivate,lblOfferTitle,lblCategoryName,lblDistanceLabel,imgIsChild,imgIsLunch,imgCategory,imgIsPrivate,imgOfferImage,offerId,scroll,webFreeText,storeLocation,offer;
-@synthesize viewOfferDetails,tableView,locationManager,imgDirection,arrowImage,shareVC;
+@synthesize viewOfferDetails,tableView,locationManager,imgDirection,arrowImage,shareVC,lblTime;
 
 @synthesize btnSepecialOffers;
 @synthesize imgOfferdetailsView,bottomView,currentLocation,btnBookMark,compassImageView;
@@ -87,13 +87,13 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     NSLog(@"DetailView Offer:%@",self.offerId);
     lblCategoryName.text = self.offer.category;
     lblOfferTitle.text=self.offer.offer_title;
-    scroll.contentSize = CGSizeMake(320, 670);
+    scroll.contentSize = CGSizeMake(320, 680);
     [[self.webFreeText.subviews objectAtIndex:0] setScrollEnabled:NO];
     self.webFreeText.backgroundColor =[UIColor clearColor];
     [self.webFreeText setOpaque:NO];
     [self loadWebView];
     [self.webFreeText setDelegate:self];
-    
+    [self calculateDistanceAndTime];
     ShopList *merchant = [appDeligate getStoreDataById:offer.store_id];
     Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:merchant.sub_category];
     
@@ -104,7 +104,6 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     path = [path stringByAppendingString:categoryData.image_name];
     
     UIImage *image = [UIImage imageWithContentsOfFile:path];
-    
     
     float actualHeight = 154;//image.size.height;
     float actualWidth = 206;//image.size.width;
@@ -166,15 +165,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     
     [self.imgCategory setImage:[self resizeImage:[UIImage imageWithContentsOfFile:path] toSize:CGSizeMake(39,36)]];
     
-    double Latitude = [merchant.latitude doubleValue];
-    double Longitude = [merchant.longitude doubleValue];
-    self.storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
-    CLLocationDistance meters = [self.currentLocation distanceFromLocation:self.storeLocation];
-    double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
-    int time = (me/4000)*15;
-    self.lblDistanceLabel.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
-   
-    if (merchant.is_child == 0) {
+      if (merchant.is_child == 0) {
         lblIsChild.hidden = YES;
         imgIsChild.hidden =YES;
     }
@@ -188,9 +179,48 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     }
 }
 
+- (void) calculateDistanceAndTime {
+    
+    AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    ShopList *merchant = [appDeligate getStoreDataById:offer.store_id];
+    double Latitude = [merchant.latitude doubleValue];
+    double Longitude = [merchant.longitude doubleValue];
+    self.storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
+    CLLocationDistance meters = [self.currentLocation distanceFromLocation:self.storeLocation];
+    double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
+    int time = (me/4000)*15;
+    double distanceInKm=meters/1000;
+    lblDistanceLabel.text=@"";
+    lblTime.text=@"";
+    if (distanceInKm>5.0) {
+        lblDistanceLabel.text=@"この場所までの距離が分かりま せんでした";
+        lblDistanceLabel.frame=CGRectMake(lblDistanceLabel.frame.origin.x, lblDistanceLabel.frame.origin.y, lblDistanceLabel.frame.size.width+200, lblDistanceLabel.frame.size.height);
+
+    }
+    else {
+        if (time>60) {
+            int hours=time/60;
+            int minutes=time%60;
+            self.lblTime.text=[NSString stringWithFormat:@"(徒歩%d時間%d分)",hours,minutes];
+        }
+        else {
+            self.lblTime.text=[NSString stringWithFormat:@"(徒歩%d分)",time];
+        }
+        
+            lblTime.frame=CGRectMake(lblDistanceLabel.frame.origin.x+30, lblTime.frame.origin.y, lblTime.frame.size.width, lblTime.frame.size.height);
+        if (distanceInKm>1.0) {
+            lblDistanceLabel.text=[NSString stringWithFormat:@"%.fkm",distanceInKm];
+        }
+        else {
+            lblDistanceLabel.text=[NSString stringWithFormat:@"%.fm",meters];
+        }
+    }
+    
+}
 
 -(void)viewWillAppear:(BOOL)animated
 {
+
    
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView
@@ -199,10 +229,15 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     
 }
 - (void) loadWebView {
-    NSString *weViewData =[NSString stringWithFormat:@"<HTML><body style=\"background-color:transparent\"><table><tr><td>%@<hr></td></tr><tr><td>%@</td></tr><tr><td>%@</td></tr></table></HTML>",offer.lead_text,offer.copy_text,offer.free_text];
+    NSString *offerString=offer.lead_text;
+    if([self.offer.offer_type isEqualToString:@"special"]) {
+        offerString=[NSString stringWithFormat:@"★ %@",offer.lead_text];
+    }
+    NSString *weViewData =[NSString stringWithFormat:@"<HTML><body style=\"background-color:transparent\"><table><tr><td><font color=#996633>%@<hr size=0.5 noshade color=#996633></font></td></tr><tr><td>%@</td></tr><tr><td>%@</td></tr></table></HTML>",offerString,offer.copy_text,offer.free_text];
+    
     [self.webFreeText loadHTMLString:weViewData baseURL:nil];
-
 }
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -223,12 +258,12 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     {
         NSLog(@"WebviewHeifgt%lf",self.webFreeText.frame.size.height);
         CGRect rec = self.viewOfferDetails.frame;
-        rec.size.height = mWebViewFlexibleHeight+50;
-        scroll.contentSize = CGSizeMake(320, scroll.contentSize.height+mWebViewFlexibleHeight-50);
+        rec.size.height = mWebViewFlexibleHeight+45;
+        scroll.contentSize = CGSizeMake(320, scroll.contentSize.height+mWebViewFlexibleHeight-45);
         self.viewOfferDetails.frame = rec;
         [self.scroll scrollRectToVisible:self.viewOfferDetails.frame animated:YES];
         CGRect rec1 =  self.bottomView.frame;
-        rec1.origin.y = rec.origin.y + rec.size.height+20;
+        rec1.origin.y = rec.origin.y + rec.size.height;
         self.bottomView.frame = rec1;
         btn.tag =1;
         [self.arrowImage setImage:[UIImage imageNamed:@"Arrowwhitedown.png"]];
@@ -236,17 +271,16 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     {
         CGRect rec = self.viewOfferDetails.frame;
         rec.size.height = 115;
-        scroll.contentSize = CGSizeMake(320, 670);
+        scroll.contentSize = CGSizeMake(320, 680);
         self.viewOfferDetails.frame = rec;
         [self.scroll scrollRectToVisible:self.viewOfferDetails.frame animated:YES];
         CGRect rec1 =  self.bottomView.frame;
-        rec1.origin.y = rec.origin.y + rec.size.height+20;
+        rec1.origin.y = rec.origin.y + rec.size.height;
         self.bottomView.frame = rec1;
         btn.tag=0;
         [self.arrowImage setImage:[UIImage imageNamed:@"Arrowwhite.png"]];
     }
 }
-
 
 -(UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)size
 {
@@ -295,7 +329,10 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row==2) 
         return 60.0;
-    return 45.0;
+    else if (indexPath.row==1)
+       return 36.0;
+    else
+        return 45.0;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView1 cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -315,22 +352,20 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     if (indexPath.row==0) {
         
         UILabel *lblAddress = [[UILabel alloc]init];
-        lblAddress.frame = CGRectMake(0,0,150, 40);
+        lblAddress.frame = CGRectMake(0,0,150, 50);
         lblAddress.textAlignment = UITextAlignmentLeft;
-        lblAddress.font = [UIFont systemFontOfSize:12];
+        lblAddress.font = [UIFont boldSystemFontOfSize:13.0];
         lblAddress.backgroundColor = [UIColor clearColor];
         lblAddress.textColor = [UIColor blackColor];
         lblAddress.text = @"所在地";
-
         [cell addSubview:lblAddress];
-        
         UILabel *lblAddressdetails = [[UILabel alloc]init];
         lblAddressdetails.frame = CGRectMake(80,0,250, 50);
         lblAddressdetails.textAlignment = UITextAlignmentLeft;
         lblAddressdetails.lineBreakMode = UILineBreakModeWordWrap;
         lblAddressdetails.numberOfLines = 3;
         
-        lblAddressdetails.font = [UIFont systemFontOfSize:12];
+        lblAddressdetails.font = [UIFont systemFontOfSize:14];
         lblAddressdetails.backgroundColor = [UIColor clearColor];
         lblAddressdetails.textColor = [UIColor blackColor];
         lblAddressdetails.text = merchant.address;
@@ -341,9 +376,9 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     }
     if (indexPath.row==1) {
         UILabel *lblphone = [[UILabel alloc]init];
-        lblphone.frame = CGRectMake(0,0,150, 40);
+        lblphone.frame = CGRectMake(0,-6,150, 50);
         lblphone.textAlignment = UITextAlignmentLeft;
-        lblphone.font = [UIFont systemFontOfSize:12];
+        lblphone.font = [UIFont boldSystemFontOfSize:13.0];
         lblphone.backgroundColor = [UIColor clearColor];
         lblphone.textColor = [UIColor blackColor];
         lblphone.text = @"電話番号";
@@ -351,19 +386,19 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         [cell addSubview:lblphone];
         
         UILabel *lblphonedetails = [[UILabel alloc]init];
-        lblphonedetails.frame = CGRectMake(80,0,250, 50);
+        lblphonedetails.frame = CGRectMake(80,-6,250, 50);
         lblphonedetails.textAlignment = UITextAlignmentLeft;
         lblphonedetails.lineBreakMode = UILineBreakModeWordWrap;
         lblphonedetails.numberOfLines = 3;
         
-        lblphonedetails.font = [UIFont systemFontOfSize:12];
+        lblphonedetails.font = [UIFont systemFontOfSize:14];
         lblphonedetails.backgroundColor = [UIColor clearColor];
         lblphonedetails.textColor = [UIColor colorWithRed:0.0 green:0.5 blue:1.0 alpha:1.0];
         lblphonedetails.text = merchant.phone;
         [cell addSubview:lblphonedetails];
         UIButton * btnPhoneNumber= [UIButton buttonWithType:UIButtonTypeCustom];
         [btnPhoneNumber addTarget:self action:@selector(clickPhoneNumber:) forControlEvents:UIControlEventTouchUpInside];
-        btnPhoneNumber.frame=CGRectMake(80,0,150, 50);
+        btnPhoneNumber.frame=CGRectMake(80,-6,250, 50);
         [cell addSubview:btnPhoneNumber];
         
         
@@ -371,9 +406,9 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     if (indexPath.row==2) {
 
         UILabel *lbltime = [[UILabel alloc]init];
-        lbltime.frame = CGRectMake(0,0,150, 40);
+        lbltime.frame = CGRectMake(0,0,150, 50);
         lbltime.textAlignment = UITextAlignmentLeft;
-        lbltime.font = [UIFont systemFontOfSize:12];
+        lbltime.font = [UIFont boldSystemFontOfSize:13.0];
         lbltime.backgroundColor = [UIColor clearColor];
         lbltime.textColor = [UIColor blackColor];
         lbltime.text = @"営業時間";
@@ -385,7 +420,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         lbltimedetails.lineBreakMode = UILineBreakModeWordWrap;
         lbltimedetails.numberOfLines = 3;
         
-        lbltimedetails.font = [UIFont systemFontOfSize:12];
+        lbltimedetails.font = [UIFont systemFontOfSize:14];
         lbltimedetails.backgroundColor = [UIColor clearColor];
         lbltimedetails.textColor = [UIColor blackColor];
         lbltimedetails.text = merchant.time;
@@ -399,11 +434,11 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     {
         
         UILabel *lblholiday = [[UILabel alloc]init];
-        lblholiday.frame = CGRectMake(0,0,150, 40);
+        lblholiday.frame = CGRectMake(0,0,150, 50);
         lblholiday.textAlignment = UITextAlignmentLeft;
         
         
-        lblholiday.font = [UIFont systemFontOfSize:12];
+        lblholiday.font = [UIFont boldSystemFontOfSize:13.0];
         
         lblholiday.backgroundColor = [UIColor clearColor];
         lblholiday.textColor = [UIColor blackColor];
@@ -417,7 +452,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         lblholidaydetails.lineBreakMode = UILineBreakModeWordWrap;
         lblholidaydetails.numberOfLines = 3;
         
-        lblholidaydetails.font = [UIFont systemFontOfSize:12];
+        lblholidaydetails.font = [UIFont systemFontOfSize:14];
         lblholidaydetails.backgroundColor = [UIColor clearColor];
         lblholidaydetails.textColor = [UIColor blackColor];
         lblholidaydetails.text = merchant.holiday;
@@ -446,12 +481,13 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 {
     
     self.currentLocation=newLocation;
-    CLLocationDistance meters = [self.currentLocation distanceFromLocation:self.storeLocation];
+    /*CLLocationDistance meters = [self.currentLocation distanceFromLocation:self.storeLocation];
     //4000 mtr = 15 min
     //NSLog(@"meters %d",meters);
     double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
     int time = (me/4000)*15;
-    self.lblDistanceLabel.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];
+    self.lblDistanceLabel.text =[NSString stringWithFormat:@" %.fm (徒歩%d分)",meters,time];*/
+    [self calculateDistanceAndTime];
     [self animateArrowImage];
 }
 
