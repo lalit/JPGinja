@@ -135,7 +135,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     float               northOffest;
     
     int                 radiusChanged;
-    float               currentDistance;
+    
     int                 zoomlevel;
 
     BOOL                isFirstTime;
@@ -268,7 +268,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     
     NSLog(@"ARView");
     isFirstTime =YES;
-    self.currentDistance =150;
+    self.currentDistance =250;
     self.maxtDistance=300;
 	captureView = [[UIView alloc] initWithFrame:self.bounds];
 	captureView.bounds = self.bounds;
@@ -683,7 +683,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	}];
 	
 	// Add subviews in descending Z-order so they overlap properly
-    int zPos = 350;
+   // int zPos = 350;
 	for (NSData *d in [orderedDistances reverseObjectEnumerator]) {
 		const DistanceAndIndex *distanceAndIndex = (const DistanceAndIndex *)d.bytes;
         int p = [[NSString stringWithFormat:@"%f",distanceAndIndex->distance] intValue];

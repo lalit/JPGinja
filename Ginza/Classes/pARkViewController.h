@@ -145,6 +145,7 @@
 -(IBAction)btnHelp:(id)sender;
 -(IBAction)btnHelpClose:(id)sender;
 -(IBAction)btnSettingClose:(id)sender;
+-(IBAction)btmVirtual:(id)sender;
 -(void)updateView;
 -(void)constructCalloutPOI;
 @end

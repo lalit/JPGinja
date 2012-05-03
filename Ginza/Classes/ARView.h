@@ -56,6 +56,7 @@
 #define radianConst M_PI/180.0
 @interface ARView : UIView  <CLLocationManagerDelegate> {
 }
+//@property(nonatomic)float               currentDistance;
 @property(nonatomic,retain)AVCaptureVideoPreviewLayer *captureLayer;
 @property (nonatomic, retain) NSMutableArray *placesOfInterest;
 @property(nonatomic)float currentDistance;

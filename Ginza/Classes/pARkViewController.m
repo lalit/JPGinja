@@ -150,7 +150,7 @@
 
 -(IBAction)sliderChanged:(id)sender
 {
-    NSLog(@"slider changed %d",(int)slider.value);
+    NSLog(@"slider changed %d",(int)sdrRadius.value);
     if ((int)self.sdrRadius.value==4) {
         arView.radius=0;
     }
@@ -253,6 +253,9 @@
  self.navigationController.navigationBar.hidden = YES;   
     NSLog(@"View loading start");
     rotationAngle=0;
+    
+    [self.btnForward addTarget:self action:@selector(draggedOut:withEvent:)forControlEvents:UIControlEventTouchDragInside];
+    
      UIView *tabBar = [self.tabBarController.view.subviews objectAtIndex:1];
     tabbarRect = tabBar.frame;
     [super viewDidLoad];
@@ -348,21 +351,15 @@
     NSLog(@"View loading end");
     
 }
--(IBAction)btnMoveForward:(id)sender
-{
-    arView.currentDistance =arView.currentDistance+1;
-    CGRect rect = arView.captureLayer.frame;
-    rect.size.width = rect.size.width+20;
-    rect.size.height = rect.size.height+20;
-    arView.captureLayer.frame = rect;
-    [arView updateView];
-}
+
 
 -(IBAction)btnMoveReverse:(id)sender
 {
     //ARView *arView = (ARView *)self.view;
-    
-    arView.currentDistance =arView.currentDistance-1;
+    currentDistance = currentDistance-5;
+    arView.currentDistance =currentDistance;
+    UIAlertView *alert =[[UIAlertView alloc]initWithTitle:@"Virtual distance" message:[NSString stringWithFormat: @"Current virtual distance = %f",arView.currentDistance] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+    [alert show];
     CGRect rect = arView.captureLayer.frame;
     rect.size.width = rect.size.width-20;
     rect.size.height = rect.size.height-20;
@@ -730,4 +727,43 @@
     }
     return NO;
 }
+
+
+
+- (void) draggedOut: (UIControl *) c withEvent: (UIEvent *) ev {
+    CGPoint point = [[[ev allTouches] anyObject] locationInView:self.view];
+    
+    NSLog(@"p = %f",point.y-btnForward.frame.origin.y-btnForward.frame.size.height/2-self.actionsView.frame.origin.y);
+    float p =point.y-btnForward.frame.origin.y-btnForward.frame.size.height/2-self.actionsView.frame.origin.y;
+    currentDistance = currentDistance+(-p);
+    arView.currentDistance =currentDistance;
+    UIAlertView *alert =[[UIAlertView alloc]initWithTitle:@"Virtual distance" message:[NSString stringWithFormat: @"Current virtual distance = %f",arView.currentDistance] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+    //[alert show];
+    CGRect rect = arView.captureLayer.frame;
+    rect.size.width = rect.size.width+20;
+    rect.size.height = rect.size.height+20;
+    arView.captureLayer.frame = rect;
+    [arView updateView];
+
+    
+}
+
+-(IBAction)btnMoveForward:(id)sender
+{
+    return;
+    currentDistance = currentDistance+5;
+    arView.currentDistance =currentDistance;
+    UIAlertView *alert =[[UIAlertView alloc]initWithTitle:@"Virtual distance" message:[NSString stringWithFormat: @"Current virtual distance = %f",arView.currentDistance] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+    [alert show];
+    CGRect rect = arView.captureLayer.frame;
+    rect.size.width = rect.size.width+20;
+    rect.size.height = rect.size.height+20;
+    arView.captureLayer.frame = rect;
+    [arView updateView];
+}
+-(IBAction)btmVirtual:(id)sender
+{
+   
+}
+
 @end
