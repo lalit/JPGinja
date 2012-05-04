@@ -44,7 +44,6 @@
 						<int key="NSvFlags">319</int>
 						<string key="NSFrameSize">{320, 460}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="524739077"/>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -58,7 +57,6 @@
 						<int key="NSvFlags">319</int>
 						<string key="NSFrameSize">{328, 42}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="106092148"/>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -72,7 +70,6 @@
 						<int key="NSvFlags">303</int>
 						<string key="NSFrame">{{109, 7}, {136, 22}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="832607631"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -106,7 +103,6 @@
 						<int key="NSvFlags">319</int>
 						<string key="NSFrame">{{5, 3}, {72, 37}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="129584079"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -133,28 +129,12 @@
 							<int key="NSfFlags">16</int>
 						</object>
 					</object>
-					<object class="IBUIImageView" id="562646327">
-						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">319</int>
-						<string key="NSFrame">{{128, 438}, {65, 20}}</string>
-						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
-						<int key="IBUIContentMode">1</int>
-						<array key="IBUIGestureRecognizers" id="0"/>
-						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<object class="NSCustomResource" key="IBUIImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">ginzasubmenubtn.png</string>
-						</object>
-					</object>
 					<object class="IBUIWebView" id="832607631">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{0, 42}, {320, 388}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="562646327"/>
+						<reference key="NSNextKeyView"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MCAwAA</bytes>
@@ -166,7 +146,6 @@
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="147685945"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -207,16 +186,6 @@
 					<int key="connectionID">35</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletCollectionConnection" key="connection">
-						<string key="label">gestureRecognizers</string>
-						<reference key="source" ref="562646327"/>
-						<reference key="destination" ref="246713395"/>
-						<string key="cachedDesigntimeCollectionClassName">NSArray</string>
-						<bool key="addsContentToExistingCollection">YES</bool>
-					</object>
-					<int key="connectionID">29</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">backAction:</string>
 						<reference key="source" ref="147685945"/>
@@ -254,7 +223,7 @@
 				<array key="orderedObjects">
 					<object class="IBObjectRecord">
 						<int key="objectID">0</int>
-						<reference key="object" ref="0"/>
+						<array key="object" id="0"/>
 						<reference key="children" ref="1000"/>
 						<nil key="parent"/>
 					</object>
@@ -262,7 +231,6 @@
 						<int key="objectID">1</int>
 						<reference key="object" ref="191373211"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="562646327"/>
 							<reference ref="147685945"/>
 							<reference ref="524739077"/>
 							<reference ref="129584079"/>
@@ -312,11 +280,6 @@
 						<reference key="object" ref="832607631"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">5</int>
-						<reference key="object" ref="562646327"/>
-						<reference key="parent" ref="191373211"/>
-					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -331,7 +294,6 @@
 				<string key="28.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="33.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
@@ -339,45 +301,7 @@
 			<nil key="sourceID"/>
 			<int key="maxID">35</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">AppDelegate</string>
-					<string key="superclassName">UIResponder</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/AppDelegate.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">GinzaSubMenuDetailsViewController</string>
-					<string key="superclassName">UIViewController</string>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="delegate">AppDelegate</string>
-						<string key="panGesture">UIPanGestureRecognizer</string>
-						<string key="webDetails">UIWebView</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="delegate">
-							<string key="name">delegate</string>
-							<string key="candidateClassName">AppDelegate</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="panGesture">
-							<string key="name">panGesture</string>
-							<string key="candidateClassName">UIPanGestureRecognizer</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="webDetails">
-							<string key="name">webDetails</string>
-							<string key="candidateClassName">UIWebView</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/GinzaSubMenuDetailsViewController.h</string>
-					</object>
-				</object>
-			</array>
-		</object>
+		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
@@ -389,7 +313,6 @@
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="Backbutton.png">{51, 30}</string>
 			<string key="Topbg.png">{320, 47}</string>
-			<string key="ginzasubmenubtn.png">{67, 25}</string>
 			<string key="normailbg.png">{96, 148}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">933</string>

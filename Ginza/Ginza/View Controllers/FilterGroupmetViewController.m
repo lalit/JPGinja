@@ -35,10 +35,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     AppDelegate *deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
-    arrayOfList = [deligate getSubCategories:categoryId];
+    arrayOfList = [[deligate getSubCategories:categoryId]copy];
 
-    
-    selectedArrayListt = [NSMutableArray array];
+    NSLog(@"%@",arrayOfList);
+    selectedArrayListt = [[NSMutableArray alloc]init];
     
    arrayOfImages = [[NSMutableArray alloc]initWithObjects:@"Icon1@2x.png",@"Icon2@2x.png",@"Icon3@2x.png", nil];
     
@@ -108,13 +108,38 @@
        
    
        if (indexPath.row==0) {
-           [deligate.arraySelectedCategories addObject:@"-1"];
+           if([deligate.arraySelectedCategories containsObject:@"-1"])
+           {
+                [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+                  
+           } else {
+              
+               [cell setAccessoryType:UITableViewCellAccessoryNone];
+           }
+           
+           
        }
        if (indexPath.row==1) {
-           [deligate.arraySelectedCategories addObject:@"-2"];
+           if([deligate.arraySelectedCategories containsObject:@"-2"])
+           {
+               [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+               
+           } else {
+               
+               [cell setAccessoryType:UITableViewCellAccessoryNone];
+           }
+
        }
        if (indexPath.row==2) {
-           [deligate.arraySelectedCategories addObject:@"-3"];
+           if([deligate.arraySelectedCategories containsObject:@"-3"])
+           {
+               [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+               
+           } else {
+               
+               [cell setAccessoryType:UITableViewCellAccessoryNone];
+           }
+
        }
     
        UIImageView *imgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:[arrayOfImages objectAtIndex:indexPath.row]]];
@@ -147,11 +172,11 @@
 	} else {
 		[self.selectedArrayListt addObject:indexPath];
 	}
-    
+    AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (indexPath.section==0) {
         NSLog(@"dostuff");
         NSError *error;
-        AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
         NSManagedObjectContext *context =[appDeligate managedObjectContext];
         
         NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -182,7 +207,35 @@
        
    
     if (indexPath.section==1) {
-        
+        if (indexPath.row==0) {
+            if([appDeligate.arraySelectedCategories containsObject:@"-1"])
+            {
+                [appDeligate.arraySelectedCategories removeObject:@"-1"];  
+            } else {
+                [appDeligate.arraySelectedCategories addObject:@"-1"];
+            
+            }
+        }
+            if (indexPath.row==1) {
+                if([appDeligate.arraySelectedCategories containsObject:@"-2"])
+                {
+                    [appDeligate.arraySelectedCategories removeObject:@"-2"];  
+                } else {
+                    [appDeligate.arraySelectedCategories addObject:@"-2"];
+                    
+                }
+            }
+                if (indexPath.row==2) {
+                    if([appDeligate.arraySelectedCategories containsObject:@"-3"])
+                    {
+                        [appDeligate.arraySelectedCategories removeObject:@"-3"];  
+                    } else {
+                        [appDeligate.arraySelectedCategories addObject:@"-3"];
+                        
+                    }
+            
+            
+        }
     }
     
 	[tableView reloadData];

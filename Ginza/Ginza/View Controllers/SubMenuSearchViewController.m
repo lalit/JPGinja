@@ -7,8 +7,8 @@
 //
 
 #import "SubMenuSearchViewController.h"
-#import "DetailViewController.h"
 #import "AppDelegate.h"
+#import "OfferDetailsViewController.h"
 
 @interface SubMenuSearchViewController ()
 
@@ -19,7 +19,7 @@
 @synthesize contentsList;
 @synthesize searchResults;
 @synthesize savedSearchTerm;
-@synthesize detailsViewlist;
+@synthesize  detailsView ;
 @synthesize searchDisplayController;
 @synthesize searchBar,fromViewController;
 
@@ -48,10 +48,10 @@
     
     for (int i=0; i<[dataArray count]; i++) {
         Offer *offer =[dataArray objectAtIndex:i];
-        [array addObject:offer.offer_title];
-        [array addObject:offer.copy_text];
-        [array addObject:offer.lead_text];
-        [array addObject:offer.free_text];
+        [array addObject:[NSString stringWithFormat:@"%@-%@",offer.offer_id, offer.offer_title]];
+        [array addObject:[NSString stringWithFormat:@"%@-%@",offer.offer_id,offer.copy_text]];
+        [array addObject:[NSString stringWithFormat:@"%@-%@",offer.offer_id,offer.lead_text]];
+        [array addObject:[NSString stringWithFormat:@"%@-%@",offer.offer_id,offer.free_text]];
     }
 	[self setContentsList:array];
 	
@@ -199,8 +199,11 @@
     
     
     */
-    
-	[[cell textLabel] setText:contentForThisRow];
+      NSArray *a = [contentForThisRow componentsSeparatedByString:@"-"];
+    if ([a count]==2) {
+        [[cell textLabel] setText:[a objectAtIndex:1]];
+    }
+	
     UIColor *lblColor= [UIColor colorWithRed:0/255.0 green:105/255.0 blue:170/255.0 alpha:1.0];
 
     cell.textLabel.textColor = lblColor;
@@ -236,13 +239,34 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     
     
     
-    if (!self.detailsViewlist)
-    {
-        self.detailsViewlist = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
+    NSInteger row = [indexPath row];
+	NSString *contentForThisRow = nil;
+	
+	if (tableView == [[self searchDisplayController] searchResultsTableView])
+        
+        
+		contentForThisRow = [[self searchResults] objectAtIndex:row];
+    
+    
+    
+    
+    
+    
+	else
+		contentForThisRow = [[self contentsList] objectAtIndex:row];
+    
+    NSArray *a = [contentForThisRow componentsSeparatedByString:@"-"];
+    if ([a count]==2) {
+        if (detailsView==nil) {
+            detailsView =[[OfferDetailsViewController alloc]init];
+        }
+       
+        detailsView.offerId = [a objectAtIndex:0];
+        
+        [self presentModalViewController:detailsView animated:YES];
     }
-   //   NSData *object = [ searchResults:indexPath.row];
-   //  self.detailsViewlist.detailItem = object;
-    [self.navigationController pushViewController:self.detailsViewlist animated:YES];
+    
+    //[self.navigationController pushViewController:self.detailsViewlist animated:YES];
 	
     
     

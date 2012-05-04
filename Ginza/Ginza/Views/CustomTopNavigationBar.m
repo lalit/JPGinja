@@ -63,6 +63,7 @@
 {
     GinzaSubViewController  *infoViewController = [[GinzaSubViewController alloc]init];
     self.viewController.hidesBottomBarWhenPushed = YES;
+    [infoViewController.view.layer setZPosition:700.0f];
     [self.viewController.navigationController pushViewController:infoViewController animated:NO];
     infoViewController.fromViewController = self.viewController;
     CGRect rect = infoViewController.view.frame;
@@ -75,8 +76,7 @@
     CGRect rect1 = infoViewController.view.frame;
     rect1.origin.y = 0;
     infoViewController.view.frame =rect1;
-    
-    [UIView commitAnimations];
+        [UIView commitAnimations];
 
 }
 

@@ -339,7 +339,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     {
         NSMutableArray *offerdataArray  = [mapDataDict objectForKey:key];
         Offer *offer =[offerdataArray objectAtIndex:0];
-        NSLog(@"Callout construction ARView %@",offer.offer_id);
+        NSLog(@"Callout construction ARView %@",offer.id);
         ShopList *merchant = [deligate getStoreDataById:offer.store_id];
         double latitude =[merchant.latitude doubleValue];
         double longitude = [merchant.longitude doubleValue];

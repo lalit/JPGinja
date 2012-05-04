@@ -257,7 +257,7 @@
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Categories" inManagedObjectContext:context];
     [request setEntity:entity];
     
-    NSString *str =[NSString stringWithFormat:@"parent == 0 %@",filterString];
+    NSString *str =[NSString stringWithFormat:@"parent == 0"];// %@",filterString];
     NSPredicate *predicate =
     [NSPredicate predicateWithFormat:str];
     
@@ -319,8 +319,9 @@
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Offer" inManagedObjectContext:context];
     [request setEntity:entity];
    
+    
     NSPredicate *predicate =
-    [NSPredicate predicateWithFormat:@"offer_id == %@  && store_id >0", offer_id];
+    [NSPredicate predicateWithFormat:@"id == %@  && store_id >0", offer_id];
     
     [request setPredicate:predicate];
     
@@ -396,6 +397,7 @@
 
 -(NSMutableArray *)getOfferData
 {
+    
     NSLog(@"Assign offer data start %@",[NSDate date]);
     NSError *error;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -404,18 +406,67 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Offer" inManagedObjectContext:context];
     [request setEntity:entity];
+     NSString *predicateString = @"store_id > 0";
+    if ([isFilterOn intValue]==1) {
+        filterString = [self getFilterString];
+         
+        if ([filterString length]>0) {
+            filterString = [filterString substringToIndex:[filterString length] - 2];
+            NSLog(@"isFilter = %@,%@",isFilterOn,filterString);
+           //predicateString = [NSString stringWithFormat:@"Offer.store_id > 0 && Offer.store_id == ShopList.store_id" ];
+        }
+        
+    }
+    
+    
        NSPredicate *predicate =
-    [NSPredicate predicateWithFormat:@"store_id > 0"];
+    [NSPredicate predicateWithFormat:predicateString];
     
     [request setPredicate:predicate];
     
     NSMutableArray *array = (NSMutableArray *)[managedObjectContext executeFetchRequest:request error:&error];
     self.offerDataArray = array;
-     NSLog(@"Assign offer data end %@",[NSDate date]);
+     NSLog(@"Assign offer data end %d",[array count]);
     return array;
     
 }
 
+-(NSString *)getFilterString
+{
+  NSString *filterString1= [[[NSString alloc]init]retain];
+    
+    NSMutableArray *catArray =  [self getCategories];
+    for (Categories *cat in catArray) {
+        NSLog(@"selected =%@",cat.selected);
+        if ([cat.selected isEqualToString:@"1"]) {
+            filterString1 = [filterString1 stringByAppendingFormat:@"category =%@ ||",cat.category_id ];
+            
+        }
+        else {
+            filterString1 = [filterString1 stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"|| category =%@ ",cat.category_id ] withString: @""];
+        }
+
+    }
+    catArray = [self getSubCategories];
+    for (Categories *cat in catArray) {
+        NSLog(@"selected =%@",cat.selected);
+        if ([cat.selected isEqualToString:@"1"]) {
+            filterString1 = [filterString1 stringByAppendingFormat:@"category =%@ ||",cat.category_id ];
+            
+        }
+        else {
+            filterString1 = [filterString1 stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"|| category =%@ ",cat.category_id ] withString: @""];
+        }
+        
+    }
+
+    
+        
+    //[appDeligate getCategories];
+    NSLog(@"filterString = %@",filterString1);
+    return filterString1;
+
+}
 -(NSMutableArray *)getBookmarkOfferData
 {
     NSError *error;
@@ -1442,8 +1493,28 @@
         Offer *offer =[dataArray objectAtIndex:index];
         NSLog(@"offer = %@",offer.offer_id);
         ShopList *merchant = [self getStoreDataById:offer.store_id];
-        {
+        Categories *cat =[self getCategoryDataById:merchant.category];
+        
+        if ([isFilterOn intValue]==1) {
+            if ([filterString rangeOfString:cat.category_id].location == NSNotFound) {
+                
+            }else
+            {
                 if ([mapDataDict valueForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]]==nil) {
+                    NSMutableArray *offerdataArray =[[NSMutableArray alloc]init ];
+                    [offerdataArray addObject:offer];
+                    [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+                }else
+                {
+                    NSMutableArray *offerdataArray =[mapDataDict objectForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+                    [offerdataArray addObject:offer];
+                    [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+                }
+
+            }
+        }else
+        {
+            if ([mapDataDict valueForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]]==nil) {
                 NSMutableArray *offerdataArray =[[NSMutableArray alloc]init ];
                 [offerdataArray addObject:offer];
                 [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
@@ -1453,7 +1524,7 @@
                 [offerdataArray addObject:offer];
                 [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
             }
-            //NSLog(@"load = %@",[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]);
+
         }
     }
     self.poiDataDictionary = mapDataDict;
@@ -1518,12 +1589,11 @@ NSLog(@"POI end %@",[NSDate date]);
         Offer *offer =[dataArray objectAtIndex:index];
         ShopList *shopData = [self getStoreDataById:offer.store_id];
         Categories *categoryData = (Categories *)[self getCategoryDataById:shopData.sub_category];
+        
         [tmpDict setValue:offer forKey:@"offer"];
         [tmpDict setValue:shopData forKey:@"shop"];
         [tmpDict setValue:categoryData forKey:@"cat"];
         [dataDict setValue:tmpDict forKey:[NSString stringWithFormat:@"%d", index]];
-       
-        
         
     }
     listViewDataArray = dataDict;

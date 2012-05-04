@@ -42,8 +42,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    selectedCategorieList = [NSMutableArray array];
+
+    selectedCategorieList =  [[NSMutableArray alloc]init ];//[[NSMutableArray array]copy];
    
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES);
@@ -65,7 +65,8 @@
 	}
 	
     AppDelegate *deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
-    arrayOfList=[deligate getCategories];
+    arrayOfList= [[deligate getCategories]copy];
+    NSLog(@"%@",arrayOfList);
     
     //45
     CGRect rec = self.tblFilterView.frame;
@@ -128,6 +129,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    NSLog(@"count = %d",[arrayOfList count]);
     return arrayOfList.count;
 }
 
@@ -253,7 +255,7 @@
     if (![context save:&error]) {
         NSLog(@"%@",error);
     }    
-
+    [appDeligate getCategories];
     [self.tblFilterView reloadData];
     
 }

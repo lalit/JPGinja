@@ -51,26 +51,12 @@
 							<string key="NSResourceName">normailbg.png</string>
 						</object>
 					</object>
-					<object class="IBUIImageView" id="149582162">
-						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">319</int>
-						<string key="NSFrame">{{134, 436}, {51, 21}}</string>
-						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSNextKeyView"/>
-						<int key="IBUIContentMode">1</int>
-						<array key="IBUIGestureRecognizers" id="0"/>
-						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<object class="NSCustomResource" key="IBUIImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">Upbuttom.png</string>
-						</object>
-					</object>
 					<object class="IBUITableView" id="273772598">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">319</int>
 						<string key="NSFrame">{{13, 56}, {297, 361}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSNextKeyView" ref="149582162"/>
+						<reference key="NSNextKeyView"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MCAwAA</bytes>
@@ -235,16 +221,6 @@
 					<int key="connectionID">7</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletCollectionConnection" key="connection">
-						<string key="label">gestureRecognizers</string>
-						<reference key="source" ref="149582162"/>
-						<reference key="destination" ref="1003137949"/>
-						<string key="cachedDesigntimeCollectionClassName">NSArray</string>
-						<bool key="addsContentToExistingCollection">YES</bool>
-					</object>
-					<int key="connectionID">25</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="1003137949"/>
@@ -265,7 +241,7 @@
 				<array key="orderedObjects">
 					<object class="IBObjectRecord">
 						<int key="objectID">0</int>
-						<reference key="object" ref="0"/>
+						<array key="object" id="0"/>
 						<reference key="children" ref="1000"/>
 						<nil key="parent"/>
 					</object>
@@ -277,7 +253,6 @@
 							<reference ref="937257805"/>
 							<reference ref="732373817"/>
 							<reference ref="234968872"/>
-							<reference ref="149582162"/>
 							<reference ref="654700174"/>
 						</array>
 						<reference key="parent" ref="0"/>
@@ -314,12 +289,6 @@
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">15</int>
-						<reference key="object" ref="149582162"/>
-						<array class="NSMutableArray" key="children"/>
-						<reference key="parent" ref="191373211"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">16</int>
 						<reference key="object" ref="654700174"/>
 						<reference key="parent" ref="191373211"/>
@@ -338,7 +307,6 @@
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="14.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="15.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="16.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -363,7 +331,6 @@
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="Backbutton.png">{51, 30}</string>
 			<string key="Topbg.png">{320, 47}</string>
-			<string key="Upbuttom.png">{51, 21}</string>
 			<string key="normailbg.png">{96, 148}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">933</string>

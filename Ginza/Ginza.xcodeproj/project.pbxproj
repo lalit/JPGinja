@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		0B27111D1525F05F003BF4F2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B27111C1525F05F003BF4F2 /* AVFoundation.framework */; };
 		0B27111F1525F078003BF4F2 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B27111E1525F078003BF4F2 /* CoreMotion.framework */; };
+		0B549D081553B235009AD163 /* Down.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B549D041553B235009AD163 /* Down.png */; };
+		0B549D091553B235009AD163 /* Down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B549D051553B235009AD163 /* Down@2x.png */; };
+		0B549D0A1553B235009AD163 /* up.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B549D061553B235009AD163 /* up.png */; };
+		0B549D0B1553B235009AD163 /* Up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B549D071553B235009AD163 /* Up@2x.png */; };
+		0B549D0E155403FD009AD163 /* arback.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B549D0D155403FC009AD163 /* arback.png */; };
 		0B6027ED15468D19002BD21F /* CustomTopNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6027EC15468D19002BD21F /* CustomTopNavigationBar.m */; };
 		0B6027F015468D53002BD21F /* CustomTopNavigationBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B6027EF15468D53002BD21F /* CustomTopNavigationBar.xib */; };
 		0B669E72154994FC001FF750 /* ListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B669E71154994FC001FF750 /* ListViewController.xib */; };
@@ -390,6 +395,11 @@
 /* Begin PBXFileReference section */
 		0B27111C1525F05F003BF4F2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0B27111E1525F078003BF4F2 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		0B549D041553B235009AD163 /* Down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Down.png; sourceTree = "<group>"; };
+		0B549D051553B235009AD163 /* Down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Down@2x.png"; sourceTree = "<group>"; };
+		0B549D061553B235009AD163 /* up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = up.png; sourceTree = "<group>"; };
+		0B549D071553B235009AD163 /* Up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Up@2x.png"; sourceTree = "<group>"; };
+		0B549D0D155403FC009AD163 /* arback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arback.png; sourceTree = "<group>"; };
 		0B6027EB15468D19002BD21F /* CustomTopNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTopNavigationBar.h; sourceTree = "<group>"; };
 		0B6027EC15468D19002BD21F /* CustomTopNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTopNavigationBar.m; sourceTree = "<group>"; };
 		0B6027EF15468D53002BD21F /* CustomTopNavigationBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTopNavigationBar.xib; sourceTree = "<group>"; };
@@ -1100,6 +1110,11 @@
 		0B8FC48F1541CB1C00528D9A /* arview */ = {
 			isa = PBXGroup;
 			children = (
+				0B549D041553B235009AD163 /* Down.png */,
+				0B549D0D155403FC009AD163 /* arback.png */,
+				0B549D051553B235009AD163 /* Down@2x.png */,
+				0B549D061553B235009AD163 /* up.png */,
+				0B549D071553B235009AD163 /* Up@2x.png */,
 				0B8FC4901541CB1C00528D9A /* Help.png */,
 				0B8FC4911541CB1C00528D9A /* Help@2x.png */,
 				0B8FC4921541CB1C00528D9A /* Wallthrowicon.png */,
@@ -2047,6 +2062,11 @@
 				29824BD71551706300916AC4 /* bgshadow.png in Resources */,
 				29824BD81551706300916AC4 /* getdirection.png in Resources */,
 				29824BD91551706300916AC4 /* share.png in Resources */,
+				0B549D081553B235009AD163 /* Down.png in Resources */,
+				0B549D091553B235009AD163 /* Down@2x.png in Resources */,
+				0B549D0A1553B235009AD163 /* up.png in Resources */,
+				0B549D0B1553B235009AD163 /* Up@2x.png in Resources */,
+				0B549D0E155403FD009AD163 /* arback.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

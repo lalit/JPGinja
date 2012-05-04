@@ -235,6 +235,7 @@
         //popup.currentLocation = _currentAction;
         NSLog(@"PARENT = %@",deligate.arviewController);
         popup.parentViewController = deligate.arviewController;
+        NSLog(@"custom = %@,%@",offer,offerdataArray);
         [popup prepareCallOutView:offer offerArray:offerdataArray];
         
         PlaceOfInterest *poi1 =[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer];
@@ -398,14 +399,14 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     //[super viewWillAppear:animated];
-   
+   self.actionsView.hidden=NO;
     self.navigationController.navigationBar.hidden= YES;
 	[self.settingView.layer setZPosition:250.0f];
-    
+    //self.viewSetting.hidden=NO;
     arView.radius =50;
            
 	//arView = (ARView *)self.view;
-	[arView start];
+	//[arView start];
     
     //[locationManager startUpdatingHeading];
     //[locationManager startUpdatingLocation];
@@ -453,6 +454,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
+    self.actionsView.hidden=YES;
+   
     //[locationManager stopUpdatingHeading];
     //[locationManager stopUpdatingLocation];
 }
@@ -460,11 +463,13 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
+    self.actionsView.hidden=YES;
+    self.cbar.hidden=YES;
     //[locationManager stopUpdatingHeading];
     //[locationManager stopUpdatingLocation];
     
 	//ARView *arView = (ARView *)self.view;
-	[arView stop];
+	//[arView stop];
     
 }
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation 
@@ -750,7 +755,7 @@
 
 -(IBAction)btnMoveForward:(id)sender
 {
-    return;
+    
     currentDistance = currentDistance+5;
     arView.currentDistance =currentDistance;
     UIAlertView *alert =[[UIAlertView alloc]initWithTitle:@"Virtual distance" message:[NSString stringWithFormat: @"Current virtual distance = %f",arView.currentDistance] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];

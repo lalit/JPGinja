@@ -72,23 +72,27 @@
      popupThumb.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     [popup addSubview:popupThumb];
     
-    offerTitleLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 5, 150, 21)];
+    offerTitleLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 5, 100, 21)];
     offerTitleLabel.backgroundColor =[UIColor clearColor];
     offerTitleLabel.text = categoryData.category_name;
     offerTitleLabel.textColor =[UIColor grayColor];
-    offerTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     
+    offerTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+    offerTitleLabel.adjustsFontSizeToFitWidth = YES;
+    //[offerTitleLabel sizeToFit];
     [popup addSubview:offerTitleLabel];
     
-    desLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 20, 150, 21)];
+    desLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 20, 100, 21)];
     desLabel.backgroundColor =[UIColor clearColor];
     desLabel.text = merchant.store_name;
-    desLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+    desLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight |UIViewAutoresizingFlexibleRightMargin ;
+    desLabel.adjustsFontSizeToFitWidth = YES;
     [popup addSubview:desLabel];
-    txtcp = [[UILabel alloc]initWithFrame:CGRectMake(8, 35, 150, 21)];
+    txtcp = [[UILabel alloc]initWithFrame:CGRectMake(8, 35, 100, 21)];
     txtcp.backgroundColor =[UIColor clearColor];
     txtcp.text = offer.copy_text;
     txtcp.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+    [txtcp sizeToFit];
     [popup addSubview:txtcp];
     double Latitude = [merchant.latitude doubleValue];
     double Longitude = [merchant.longitude doubleValue];
@@ -211,9 +215,9 @@
     OfferDetailsViewController *detail =[[OfferDetailsViewController alloc]init];
    Offer *offer = [offerDataArray objectAtIndex:currentPos];
     
-    detail.offerId = offer.offer_id;
-
-    if (self.parentViewController ==nil) {
+    detail.offerId = offer.id;
+    NSLog(@"self.parentViewController  = %@",self.parentViewController );
+    if (self.parentViewController ==nil || [self.parentViewController isKindOfClass:[self.parentViewController class]]) {
         AppDelegate *deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
         //NSLog(@"parent = %@", deligate.arviewController);
         [deligate.arviewController  presentModalViewController:detail animated:YES];

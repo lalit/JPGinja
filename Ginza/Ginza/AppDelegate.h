@@ -61,6 +61,7 @@
 - (UIImage*)imageWithImage:(UIImage*)sourceImage scaledToSize:(CGSize)newSize;
 -(void)syncData;
 -(void)refreshData;
+-(NSString *)getFilterString;
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) UITabBarController *tabBarController;

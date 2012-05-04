@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DetailViewController.h"
+#import "OfferDetailsViewController.h"
 @interface SubMenuSearchViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
 
 {
@@ -30,7 +30,7 @@
 @property (nonatomic, retain) NSMutableArray *contentsList;
 @property (nonatomic, retain) NSMutableArray *searchResults;
 @property (nonatomic, copy) NSString *savedSearchTerm;
-@property(nonatomic,retain)DetailViewController *detailsViewlist;
+@property(nonatomic,retain) OfferDetailsViewController  *detailsView;
 @property(nonatomic,retain)    UISearchDisplayController *searchDisplayController;
 @property(nonatomic,retain)UIViewController *fromViewController;
 

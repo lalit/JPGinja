@@ -54,7 +54,7 @@
     </entity>
     <elements>
         <element name="Categories" positionX="160" positionY="192" width="128" height="135"/>
-        <element name="Offer" positionX="160" positionY="192" width="128" height="360"/>
+        <element name="Offer" positionX="243" positionY="234" width="128" height="375"/>
         <element name="ShopList" positionX="160" positionY="192" width="128" height="285"/>
     </elements>
 </model>
