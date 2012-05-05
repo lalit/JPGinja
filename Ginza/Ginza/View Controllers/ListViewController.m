@@ -109,7 +109,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     tblListView.delegate = self;
     tblListView.dataSource = self;
     tblListView.sectionIndexMinimumDisplayRowCount = 5;
-     [self updateTopNavigation];
+    
     /*UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer record in list view" message:[NSString stringWithFormat:@"%d",[self.dataArray count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
      [alert1 show];*/
     // tblListView = [[UITableView alloc] initWithFrame:CGRectMake(0 ,55, 320, 480)];
@@ -118,7 +118,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     
     
     //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    
+    [self updateTopNavigation];
     [super viewDidLoad];
    
     
@@ -126,10 +126,10 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 }
 - (void)updateTopNavigation {
     UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
-    cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 10,transView.frame.size.width, 40)];
+    cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0,transView.frame.size.width, 40)];
     cbar.viewController = self;
     cbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [transView addSubview:cbar];
+    [self.view addSubview:cbar];
 }
 
 - (void)viewDidUnload
@@ -153,6 +153,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     [locationManager startUpdatingLocation];
     [locationManager startUpdatingHeading];
     self.navigationController.navigationBarHidden = YES;
+     
     self.cbar.hidden=NO;
 }
 
