@@ -153,7 +153,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     [locationManager startUpdatingLocation];
     [locationManager startUpdatingHeading];
     self.navigationController.navigationBarHidden = YES;
-     
+    [tblListView reloadData];
     self.cbar.hidden=NO;
 }
 
