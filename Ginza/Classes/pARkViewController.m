@@ -364,8 +364,8 @@
     UIAlertView *alert =[[UIAlertView alloc]initWithTitle:@"Virtual distance" message:[NSString stringWithFormat: @"Current virtual distance = %f",arView.currentDistance] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
     [alert show];
     CGRect rect = arView.captureLayer.frame;
-    rect.size.width = rect.size.width-20;
-    rect.size.height = rect.size.height-20;
+    rect.size.width = rect.size.width-40;
+    rect.size.height = rect.size.height-40;
     arView.captureLayer.frame = rect;    
     [arView updateView];
 }
@@ -524,10 +524,15 @@
         
         //self.actionsView.transform = CGAffineTransformIdentity;
         //self.actionsView.transform = CGAffineTransformMakeRotation(M_PI_2);
+        lblDistance.center = CGPointMake(self.tabBarController.tabBar.frame.size.width-40, 60);
+         //self.settingRadar.center = CGPointMake(100, self.view.frame.size.height/2);
+        
+         btnSettings.center = CGPointMake(self.tabBarController.tabBar.frame.size.width-40, 110);
         switch (interfaceOrientation) {
             case UIInterfaceOrientationLandscapeLeft:
                 self.arView.transform = CGAffineTransformMakeRotation(M_PI_2);
                 arView.radarView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+               
                 // 90 degress
                 break;
             case UIInterfaceOrientationLandscapeRight:
@@ -767,8 +772,8 @@
     UIAlertView *alert =[[UIAlertView alloc]initWithTitle:@"Virtual distance" message:[NSString stringWithFormat: @"Current virtual distance = %f",arView.currentDistance] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
     [alert show];
     CGRect rect = arView.captureLayer.frame;
-    rect.size.width = rect.size.width+20;
-    rect.size.height = rect.size.height+20;
+    rect.size.width = rect.size.width+40;
+    rect.size.height = rect.size.height+40;
     arView.captureLayer.frame = rect;
     [arView updateView];
 }

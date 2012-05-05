@@ -20,7 +20,7 @@
     if (self) {
         // Initialization code
         [[NSBundle mainBundle] loadNibNamed:@"CustomTopNavigationBar" owner:self options:nil];
-        toplevelSubView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
+        toplevelSubView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         //self.frame = frame;
         self.toplevelSubView.frame=frame;
         [self addSubview:self.toplevelSubView];

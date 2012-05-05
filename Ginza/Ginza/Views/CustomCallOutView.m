@@ -92,7 +92,7 @@
     txtcp.backgroundColor =[UIColor clearColor];
     txtcp.text = offer.copy_text;
     txtcp.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-    [txtcp sizeToFit];
+    txtcp.adjustsFontSizeToFitWidth = YES;
     [popup addSubview:txtcp];
     double Latitude = [merchant.latitude doubleValue];
     double Longitude = [merchant.longitude doubleValue];
