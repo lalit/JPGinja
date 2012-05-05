@@ -32,7 +32,7 @@ double DegreesToRadians(double degrees) {return degrees * M_PI / 180.0;};
 double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 @implementation ListViewController
 @synthesize tblListView;
-
+@synthesize cbar;
 @synthesize arryListDetails;
 @synthesize arrayOfDistance;
 @synthesize arrayOfLatitude;
@@ -95,14 +95,8 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 #import "CustomTopNavigationBar.h"
 - (void)viewDidLoad
 {
-    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]init];
-    cbar.viewController = self;
-    //cbar.backgroundColor = [UIColor redColor];
-    [self.view addSubview:cbar];
-    //[super viewDidLoad];
     currentPage=1;
     self.navigationController.navigationBar.hidden = YES;
-    
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     self.dataArray = appDeligate.offerDataArray ;
@@ -115,7 +109,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     tblListView.delegate = self;
     tblListView.dataSource = self;
     tblListView.sectionIndexMinimumDisplayRowCount = 5;
-    
+     [self updateTopNavigation];
     /*UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer record in list view" message:[NSString stringWithFormat:@"%d",[self.dataArray count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
      [alert1 show];*/
     // tblListView = [[UITableView alloc] initWithFrame:CGRectMake(0 ,55, 320, 480)];
@@ -126,26 +120,31 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     
     [super viewDidLoad];
-    
+   
     
     
 }
-
-
-
+- (void)updateTopNavigation {
+    UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
+    cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 20,transView.frame.size.width, 40)];
+    cbar.viewController = self;
+    cbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [transView addSubview:cbar];
+}
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+
     AppDelegate *appDeligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
      dataDict =appDeligate.listViewDataArray;
-    
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
     locationManager.distanceFilter =1; // whenever we move
@@ -154,6 +153,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     [locationManager startUpdatingLocation];
     [locationManager startUpdatingHeading];
     self.navigationController.navigationBarHidden = YES;
+    self.cbar.hidden=NO;
 }
 
 
@@ -220,6 +220,8 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     
     
     cell.btnBookMark.tag =indexPath.row-1;
+    cell.imgDirection.hidden=NO;
+    cell.lblDistance.hidden=NO;
     if (indexPath.row>=1) {
         
         NSDictionary *tmpDict = [self.dataDict objectForKey:[NSString stringWithFormat:@"%d",indexPath.row-1]];
@@ -302,13 +304,13 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     if (indexPath.row==0) {
         cell.imgGinzaBackground.image = [UIImage imageNamed:@"Ginzacelllist.png"];
         //cell.btnBookMark.imageView.image = [UIImage imageNamed:@"Bookmarkplus.png"];
-        
         cell.lblTitle.text = @"ダイナースクラフ";
         cell.lblTitle.textColor =[UIColor whiteColor];
         cell.imgDeatils.image = [UIImage imageNamed:@"thumb.png"];
         cell.lblDescription.text = @"銀座ラウンシ";
         cell.lblDescription.textColor =[UIColor whiteColor];
-        
+        cell.imgDirection.hidden=YES;
+        cell.lblDistance.hidden=YES;
         cell.strLatitude = @"35.665756";
         cell.strLongitude = @"139.71179";
         double Latitude = 35.665756;
@@ -593,14 +595,17 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     return  strTime;
 }
 
+- (void)viewDidappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+   
+}
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
     [locationManager stopUpdatingHeading];
     [locationManager stopUpdatingLocation];
-    
-	;
-    
+     self.cbar.hidden=YES;    
 }
 
 

@@ -13,6 +13,7 @@
 #import "OfferDetailsViewController.h"
 @class ListViewCell;
 @class GinzaDetailsViewController;
+@class CustomTopNavigationBar;
 @interface ListViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,CLLocationManagerDelegate>
 {
     UITableView *tblListView;
@@ -54,14 +55,16 @@
     CLLocation *currentLocation ;
     CLHeading  *newHeadingObject;
     //ListViewCell *cell;
-CLLocationManager *locationManager;
+    CLLocationManager *locationManager;
     float mHeading;
+    CustomTopNavigationBar *cbar;
     
 }
 
 @property(nonatomic) int currentPage;
 @property(nonatomic,retain)   OfferDetailsViewController *detailsView; 
 @property(nonatomic,retain) GinzaDetailsViewController *ginzaDetailsView;
+@property(nonatomic,retain)  CustomTopNavigationBar *cbar;
 @property(nonatomic,retain)IBOutlet UILabel *lblEventCount;
 @property(nonatomic,retain)IBOutlet UILabel *lblFilterText;
 @property(nonatomic,retain) NSMutableDictionary *dataDict;
@@ -100,4 +103,5 @@ CLLocationManager *locationManager;
 -(IBAction)btnGinzaMenu:(id)sender;
 - (NSString *)calculateDistance : (double) aDistance;
 - (NSString *)calculateTime : (int) aTime;
+- (void) updateTopNavigation;
 @end

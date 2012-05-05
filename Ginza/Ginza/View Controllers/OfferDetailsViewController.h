@@ -10,6 +10,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "Offer.h"
 @class ShareViewController;
+
 @interface OfferDetailsViewController : UIViewController<UITableViewDelegate,CLLocationManagerDelegate>
 {
     
@@ -22,6 +23,7 @@
     CLHeading  *newHeadingObject;
     NSString *currenDirection;
     NSString *previousDirection;
+    
 }
 @property (nonatomic, retain) ShareViewController *shareVC;
 
@@ -64,7 +66,7 @@
 
 -(IBAction)btnOfferDetailsOpenClose:(id)sender;
 -(IBAction)btnClose:(id)sender;
-
+- (void)updateTopNavigation ;
 - (IBAction)getDirectionButtonPressed:(id)sender;
 - (IBAction)sharedButtonPressed:(id)sender;
 - (void) postFacebook;
