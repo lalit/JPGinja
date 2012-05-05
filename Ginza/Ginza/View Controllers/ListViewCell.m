@@ -21,7 +21,7 @@
 @synthesize locationManager;
 @synthesize lblDistance;
 @synthesize btnBookMark;
-
+@synthesize largeGIconImageView;
 
 @synthesize strLatitude;
 @synthesize strLongitude;
@@ -52,9 +52,6 @@
 }
 
 
-
-
-
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
@@ -80,7 +77,6 @@
 
     }
 
-
-   }
+}
 
 @end

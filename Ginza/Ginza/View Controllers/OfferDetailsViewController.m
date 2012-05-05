@@ -16,7 +16,7 @@
 #import "Location.h"
 #import "ListViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "CustomTopNavigationBar.h"
+
 @implementation OfferDetailsViewController
 @synthesize lblIsChild,lblIsLunch,lblIsPrivate,lblOfferTitle,lblCategoryName,lblDistanceLabel,imgIsChild,imgIsLunch,imgCategory,imgIsPrivate,imgOfferImage,offerId,scroll,webFreeText,storeLocation,offer;
 @synthesize viewOfferDetails,tableView,locationManager,imgDirection,arrowImage,shareVC,lblTime;
@@ -69,7 +69,6 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self updateTopNavigation];
    // [self.view.window setBackgroundColor:[UIColor clearColor]];
     // Do any additional setup after loading the view from its nib.
    // [self.view setAlpha:0.0];
@@ -197,7 +196,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     double distanceInKm=meters/1000;
     lblDistanceLabel.text=@"";
     lblTime.text=@"";
-    if (distanceInKm>5.0) {
+    if (distanceInKm>MIN_DISTANCE) {
         lblDistanceLabel.text=@"この場所までの距離が分かりま せんでした";
         lblDistanceLabel.frame=CGRectMake(lblDistanceLabel.frame.origin.x, lblDistanceLabel.frame.origin.y, lblDistanceLabel.frame.size.width+200, lblDistanceLabel.frame.size.height);
 
@@ -429,7 +428,6 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         lbltimedetails.backgroundColor = [UIColor clearColor];
         lbltimedetails.textColor = [UIColor blackColor];
         lbltimedetails.text = merchant.time;
-         lbltimedetails.text = @"No information available"; 
         [cell addSubview:lbltimedetails];
         
         
@@ -655,18 +653,17 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     
         // Change the mapview frmae
     if (orientation==UIInterfaceOrientationLandscapeLeft||orientation==UIInterfaceOrientationLandscapeRight) {
-        lblIsChild.frame=CGRectMake(imgIsChild.frame.origin.x+28, lblIsChild.frame.origin.y  , lblIsChild.frame.size.width,  lblIsChild.frame.size.height);
+        lblIsChild.frame=CGRectMake(imgIsChild.frame.origin.x+27, lblIsChild.frame.origin.y  , lblIsChild.frame.size.width,  lblIsChild.frame.size.height);
         
-        lblIsLunch.frame=CGRectMake(imgIsLunch.frame.origin.x+27, lblIsLunch.frame.origin.y  , lblIsLunch.frame.size.width,  lblIsLunch.frame.size.height);
-        lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+42, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
+        lblIsLunch.frame=CGRectMake(imgIsLunch.frame.origin.x+26, lblIsLunch.frame.origin.y  , lblIsLunch.frame.size.width,  lblIsLunch.frame.size.height);
+        lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+26, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
     
     }
     else {
         
         lblIsChild.frame=CGRectMake(imgIsChild.frame.origin.x+53, lblIsChild.frame.origin.y  , lblIsChild.frame.size.width,  lblIsChild.frame.size.height);
-        
         lblIsLunch.frame=CGRectMake(imgIsLunch.frame.origin.x+45, lblIsLunch.frame.origin.y  , lblIsLunch.frame.size.width,  lblIsLunch.frame.size.height);
-        lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+71, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
+        lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+48, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
         
         }
         

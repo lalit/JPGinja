@@ -172,14 +172,19 @@
         lbl.font = [UIFont boldSystemFontOfSize:10.0];
         CLLocationCoordinate2D cor = [annotation coordinate];
         NSString *key =[NSString stringWithFormat:@"%f-%f",cor.latitude,cor.longitude];
+        if (cor.latitude==35.67163555 && cor.longitude== 139.763953) {
+            UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(r.x-10, r.y-31, 23, 23)];
+            imageView.image=[UIImage imageNamed:@"mapGIcon.png"];
+            [pinView addSubview:imageView];
+          
+        }
 
-        if ([[NSString stringWithFormat:@"35.671635-139.763952"] isEqualToString:key]) {
-            lbl.text = @"G";
-        }else
+        else
         {
         lbl.text = [NSString stringWithFormat:@"%d",[[self.mapDataDict objectForKey:key] count]];
-        }
         [pinView addSubview:lbl];
+        }
+
         
     } 
 	else {
@@ -275,6 +280,11 @@
         if (distance<1000) {
             [nearestLocations addObject:offerLoc];
         }
+       
+    }
+    if ([nearestLocations count]>0) {
+        CLLocation *ginzaLounge = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.763953];
+        [nearestLocations addObject:ginzaLounge];
     }
     return nearestLocations;
 }
@@ -383,6 +393,8 @@
 {
     
 }
+
+
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self.popup removeFromSuperview];

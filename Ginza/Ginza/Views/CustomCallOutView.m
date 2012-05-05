@@ -59,7 +59,7 @@
     //[popup setBackgroundColor:[UIColor redColor]];
     [popup addSubview:popupbg];
     NSLog(@"image =%@",categoryData.image_name);
-    popupThumb = [[UIImageView alloc]initWithFrame:CGRectMake(8, 50, 80, 60)];
+    popupThumb = [[UIImageView alloc]initWithFrame:CGRectMake(8, 65, 80, 60)];
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     path = [path stringByAppendingString:@"/"];
     path = [path stringByAppendingString:[NSString stringWithFormat:@"80x60_%@",categoryData.image_name]];
@@ -72,27 +72,34 @@
      popupThumb.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     [popup addSubview:popupThumb];
     
-    offerTitleLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 5, 100, 21)];
+    offerTitleLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 5, 135, 21)];
+    offerTitleLabel.lineBreakMode=UILineBreakModeWordWrap;
+    offerTitleLabel.numberOfLines=1;
+    offerTitleLabel.font=[UIFont systemFontOfSize:12.0];
     offerTitleLabel.backgroundColor =[UIColor clearColor];
     offerTitleLabel.text = categoryData.category_name;
     offerTitleLabel.textColor =[UIColor grayColor];
     
     offerTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-    offerTitleLabel.adjustsFontSizeToFitWidth = YES;
+    //offerTitleLabel.adjustsFontSizeToFitWidth = YES;
     //[offerTitleLabel sizeToFit];
     [popup addSubview:offerTitleLabel];
     
-    desLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 20, 100, 21)];
+    desLabel =[[UILabel alloc]initWithFrame:CGRectMake(8, 25, 135, 21)];
     desLabel.backgroundColor =[UIColor clearColor];
     desLabel.text = merchant.store_name;
+    desLabel.lineBreakMode=UILineBreakModeWordWrap;
+    desLabel.numberOfLines=1;
     desLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight |UIViewAutoresizingFlexibleRightMargin ;
-    desLabel.adjustsFontSizeToFitWidth = YES;
+    //desLabel.adjustsFontSizeToFitWidth = YES;
     [popup addSubview:desLabel];
-    txtcp = [[UILabel alloc]initWithFrame:CGRectMake(8, 35, 100, 21)];
+    txtcp = [[UILabel alloc]initWithFrame:CGRectMake(8, 45, 100, 21)];
+    desLabel.lineBreakMode=UILineBreakModeWordWrap;
+    desLabel.numberOfLines=1;
     txtcp.backgroundColor =[UIColor clearColor];
-    txtcp.text = offer.copy_text;
+    //txtcp.text = @"Hello";
     txtcp.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-    txtcp.adjustsFontSizeToFitWidth = YES;
+   // txtcp.adjustsFontSizeToFitWidth = YES;
     [popup addSubview:txtcp];
     double Latitude = [merchant.latitude doubleValue];
     double Longitude = [merchant.longitude doubleValue];
@@ -143,30 +150,43 @@
     
 */
     
-    
-    
-    distanceLabel =[[UILabel alloc]initWithFrame:CGRectMake(100, 90, 64, 21)];
+    distanceLabel =[[UILabel alloc]initWithFrame:CGRectMake(90, 52, 64, 70)];
     distanceLabel.backgroundColor =[UIColor clearColor];
     mycolor= [UIColor colorWithRed:0/255.0 green:105/255.0 blue:170/255.0 alpha:1.0];
     distanceLabel.textColor = mycolor;
-    distanceLabel.font  =[UIFont systemFontOfSize:10.0];
-    distanceLabel.text = [NSString stringWithFormat:@" %.fm",meters];
+    distanceLabel.font  =[UIFont systemFontOfSize:11.0];
+    distanceLabel.lineBreakMode=UILineBreakModeWordWrap;
+    distanceLabel.numberOfLines=3;
+    //distanceLabel.text = [NSString stringWithFormat:@" %.fm",meters];
     distanceLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleTopMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-    distanceLabel.textAlignment = UITextAlignmentCenter;
-    [distanceLabel sizeToFit];
+    distanceLabel.textAlignment = UITextAlignmentLeft;
+    //[distanceLabel sizeToFit];
     [popup addSubview:distanceLabel];
     
-    timeLabel =[[UILabel alloc]initWithFrame:CGRectMake(100, 100, 84, 21)];
+    timeLabel =[[UILabel alloc]initWithFrame:CGRectMake(90, 84, 70, 50)];
     timeLabel.backgroundColor =[UIColor clearColor];
-    timeLabel.text = [NSString stringWithFormat:@"(徒歩%d分)",time];;
-    timeLabel.font  =[UIFont systemFontOfSize:10.0];
-    [timeLabel sizeToFit];
-     timeLabel.textAlignment = UITextAlignmentCenter;
-    timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+    //timeLabel.text = [NSString stringWithFormat:@"(徒歩%d分)",time];;
+    timeLabel.font  =[UIFont systemFontOfSize:11.0];
+    //[timeLabel sizeToFit];
+    timeLabel.lineBreakMode=UILineBreakModeWordWrap;
+    timeLabel.numberOfLines=2;
+     timeLabel.textAlignment = UITextAlignmentLeft;
+   /* timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;*/
     timeLabel.textColor = mycolor;
     [popup addSubview:timeLabel];
     
-    btnBookmark =[[UIButton alloc]initWithFrame:CGRectMake(140, 0, 24, 36)];
+    double dkm=me/1000;
+    if (dkm>MIN_DISTANCE) {
+        distanceLabel.text=@"この場所までの距離が分かりま せんでした";
+    }
+    else {
+        NSString *formattedTime=[self calculateTime:time];
+        NSString *distance=[self calculateDistance:me];
+        distanceLabel.text=distance;
+        timeLabel.text =formattedTime;
+    }
+
+/*   btnBookmark =[[UIButton alloc]initWithFrame:CGRectMake(140, 1, 24, 36)];
     if ([offer.isbookmark isEqualToString:@"1"]) 
         
     {
@@ -180,7 +200,7 @@
     [btnBookmark addTarget:self action:@selector(btnBookMark:) forControlEvents:UIControlEventTouchUpInside];
     btnBookmark.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     [popup addSubview:btnBookmark];
-    
+*/
     
     popupButton = [[UIButton alloc]initWithFrame:CGRectMake(0,30,200,200)];
     [popupButton addTarget:self action:@selector(btnShowDetails:) forControlEvents:UIControlEventTouchUpInside];
@@ -267,12 +287,20 @@
     CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
     double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
     int time = (me/4000)*15;
+    double dkm=me/1000;
+    if (dkm>MIN_DISTANCE) {
+        distanceLabel.text=@"この場所までの距離が分かりま せんでした";
+    }
+    else {
+        NSString *formattedTime=[self calculateTime:time];
+        NSString *distance=[self calculateDistance:me];
+        timeLabel.text =[NSString stringWithFormat:@"%@ %@",distance,formattedTime];
+    }
 
     distanceLabel1.text = [NSString stringWithFormat:@" %@",merchant.latitude];
-     distanceLabel2.text = [NSString stringWithFormat:@" %@",merchant.longitude];
-    distanceLabel.text = [NSString stringWithFormat:@" %.fm",meters];
-
-    timeLabel.text = [NSString stringWithFormat:@"(徒歩%d分)",time];;
+    distanceLabel2.text = [NSString stringWithFormat:@" %@",merchant.longitude];
+    //distanceLabel.text = [NSString stringWithFormat:@" %.fm",meters];
+    //timeLabel.text = [NSString stringWithFormat:@"(徒歩%d分)",time];;
     btnBookmark.tag = [offer.offer_id intValue];
     if ([offer.isbookmark isEqualToString:@"1"]) 
         
@@ -360,6 +388,31 @@
        
     
     
+}
+//Calculate Distance and Time
+- (NSString *)calculateDistance : (double) aDistance {
+    NSString *strDist;
+    double d=aDistance/1000;
+    if (d>1.0) {
+        strDist=[NSString stringWithFormat:@"%.fkm",d];
+    }
+    else {
+        strDist=[NSString stringWithFormat:@"%.fm",aDistance];
+    }
+    return strDist;
+}
+
+- (NSString *) calculateTime: (int) aTime {
+    NSString *strTime;
+    if (aTime>60) {
+        int hours=aTime/60;
+        int minutes=aTime%60;
+        strTime=[NSString stringWithFormat:@"(徒歩%d時間%d分)",hours,minutes];
+    }
+    else {
+        strTime=[NSString stringWithFormat:@"(徒歩%d分)",aTime];
+    }
+    return  strTime;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

@@ -43,16 +43,17 @@
     NSString *strLatitude;
     NSString *strLongitude;
     NSString *offerType;
-    
+    IBOutlet UIImageView *largeGIconImageView;
     
     
 }
-@property(nonatomic,retain)NSString *offerType;
+@property(nonatomic,retain) NSString *offerType;
 @property(nonatomic,retain) IBOutlet UILabel *lblFreeText;
-@property(nonatomic,retain)    UIImageView *imgBookmark;
-@property(nonatomic,retain)    UILabel *lblTitle;
-@property(nonatomic,retain)    UILabel *lblDescription;
-@property(nonatomic,retain)     UIImageView *imgGinzaBackground;
+@property(nonatomic,retain) UIImageView *imgBookmark;
+@property(nonatomic,retain) UILabel *lblTitle;
+@property(nonatomic,retain) UIImageView *largeGIconImageView;
+@property(nonatomic,retain) UILabel *lblDescription;
+@property(nonatomic,retain) UIImageView *imgGinzaBackground;
 
 @property(nonatomic,retain)    UIImageView *imgDeatils;
 @property(nonatomic,retain)    UIImageView *imgDirection;
