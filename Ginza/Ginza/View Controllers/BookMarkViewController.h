@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "CustomTopNavigationBar.h"
 
 
 @class OffersDetailsViewController;
@@ -49,6 +50,7 @@
     
     
 }
+@property(nonatomic,retain)CustomTopNavigationBar *cbar;
 @property(nonatomic, retain)IBOutlet UILabel *lblEventCount;
 @property(nonatomic,retain)CLLocation *currentLocation ;
 @property(nonatomic,retain)NSMutableArray *dataArray;
@@ -87,5 +89,6 @@
 -(IBAction)btnGinzaMenu:(id)sender;
 -(IBAction)GinzafilterViewDown:(id)sender;
 -(IBAction)GinzaSearchView:(id)sender;
+- (void)updateTopNavigation ;
 
 @end

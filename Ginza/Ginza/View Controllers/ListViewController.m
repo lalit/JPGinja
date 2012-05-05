@@ -126,7 +126,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 }
 - (void)updateTopNavigation {
     UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
-    cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 20,transView.frame.size.width, 40)];
+    cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 10,transView.frame.size.width, 40)];
     cbar.viewController = self;
     cbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [transView addSubview:cbar];

@@ -50,7 +50,7 @@
 @synthesize swipeGestureDown;
 @synthesize panGestureforFiter;
 @synthesize panGestureforSearch;
-@synthesize arrayOfImages,lblFilterText,lblEventCount;
+@synthesize arrayOfImages,lblFilterText,lblEventCount,cbar;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -102,7 +102,7 @@
         self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%i", i];
     }
      
-    
+    [self updateTopNavigation];
     
 }
 
@@ -126,6 +126,10 @@
     
 }
 
+-(void)viewDidDisappear:(BOOL)animated
+{
+    cbar.hidden=YES;
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     [self.tblListView reloadData];
@@ -423,5 +427,11 @@
     
 }
 
-
+- (void)updateTopNavigation {
+    UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
+    cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 10,transView.frame.size.width, 40)];
+    cbar.viewController = self;
+    cbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [transView addSubview:cbar];
+}
 @end
