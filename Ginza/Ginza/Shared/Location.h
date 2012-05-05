@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#define MIN_DISTANCE 7.0
 @interface Location : NSObject {
     
     CLLocation *currentLocation;

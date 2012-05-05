@@ -219,7 +219,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     
     //        return cell;
     
-    
+    cell.largeGIconImageView.hidden=YES;
     cell.btnBookMark.tag =indexPath.row-1;
     cell.imgDirection.hidden=NO;
     cell.lblDistance.hidden=NO;
@@ -285,7 +285,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
         int time = (me/4000)*15;
         double dkm=me/1000;
-        if (dkm>5.0) {
+        if (dkm>MIN_DISTANCE) {
             cell.lblDistance.text=@"この場所までの距離が分かりま せんでした";
         }
         else {
@@ -304,6 +304,8 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     
     if (indexPath.row==0) {
         cell.imgGinzaBackground.image = [UIImage imageNamed:@"Ginzacelllist.png"];
+        
+        cell.largeGIconImageView.hidden=NO;
         //cell.btnBookMark.imageView.image = [UIImage imageNamed:@"Bookmarkplus.png"];
         cell.lblTitle.text = @"ダイナースクラフ";
         cell.lblTitle.textColor =[UIColor whiteColor];
@@ -321,7 +323,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
         int time = (me/4000)*15;
         double dkm=me/1000;
-        if (dkm>5.0) {
+        if (dkm>MIN_DISTANCE) {
              cell.lblDistance.text=@"この場所までの距離が分かりま せんでした";
         }
         else {

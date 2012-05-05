@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "Offer.h"
-
+#import "Location.h"
 @interface CustomCallOutView : UIView
 {
     int currentPos;
@@ -43,4 +43,6 @@
 -(IBAction)btnPrevious:(id)sender;
 -(IBAction)btnBookMark:(id)sender;
 -(IBAction)btnShowDetails:(id)sender;
+- (NSString *) calculateTime: (int) aTime;
+- (NSString *)calculateDistance : (double) aDistance;
 @end

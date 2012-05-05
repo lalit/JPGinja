@@ -135,7 +135,7 @@
 								<string key="NSFrame">{{98, 30}, {211, 23}}</string>
 								<reference key="NSSuperview" ref="628752312"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="585810815"/>
+								<reference key="NSNextKeyView" ref="189049851"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">7</int>
@@ -169,9 +169,10 @@
 							<object class="IBUILabel" id="744921651">
 								<reference key="NSNextResponder" ref="628752312"/>
 								<int key="NSvFlags">289</int>
-								<string key="NSFrame">{{159, 69}, {156, 25}}</string>
+								<string key="NSFrame">{{161, 70}, {156, 25}}</string>
 								<reference key="NSSuperview" ref="628752312"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">7</int>
@@ -198,7 +199,7 @@
 							<object class="IBUILabel" id="278392328">
 								<reference key="NSNextResponder" ref="628752312"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{97, 47}, {201, 25}}</string>
+								<string key="NSFrame">{{97, 46}, {201, 25}}</string>
 								<reference key="NSSuperview" ref="628752312"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="345322735"/>
@@ -218,6 +219,22 @@
 								<int key="IBUILineBreakMode">0</int>
 								<reference key="IBUIFontDescription" ref="638115690"/>
 								<reference key="IBUIFont" ref="354858421"/>
+							</object>
+							<object class="IBUIImageView" id="189049851">
+								<reference key="NSNextResponder" ref="628752312"/>
+								<int key="NSvFlags">289</int>
+								<string key="NSFrame">{{203.5, 8.5}, {72, 54}}</string>
+								<reference key="NSSuperview" ref="628752312"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="585810815"/>
+								<string key="NSReuseIdentifierKey">_NS:567</string>
+								<int key="IBUIContentMode">4</int>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">Giconlarge.png</string>
+								</object>
 							</object>
 						</array>
 						<string key="NSFrameSize">{320, 99}</string>
@@ -315,6 +332,14 @@
 					<int key="connectionID">27</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">largeGIconImageView</string>
+						<reference key="source" ref="828942991"/>
+						<reference key="destination" ref="189049851"/>
+					</object>
+					<int key="connectionID">30</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">btnBookmark:</string>
 						<reference key="source" ref="436995966"/>
@@ -352,8 +377,9 @@
 							<reference ref="436995966"/>
 							<reference ref="585810815"/>
 							<reference ref="345322735"/>
-							<reference ref="278392328"/>
 							<reference ref="83155022"/>
+							<reference ref="189049851"/>
+							<reference ref="278392328"/>
 							<reference ref="744921651"/>
 						</array>
 						<reference key="parent" ref="0"/>
@@ -398,6 +424,11 @@
 						<reference key="object" ref="278392328"/>
 						<reference key="parent" ref="828942991"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">29</int>
+						<reference key="object" ref="189049851"/>
+						<reference key="parent" ref="828942991"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -412,6 +443,7 @@
 				<string key="23.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="23.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="29.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="3.CustomClassName">ListViewCell</string>
 				<string key="3.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -421,7 +453,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">27</int>
+			<int key="maxID">30</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -445,6 +477,7 @@
 						<string key="imgDeatils">UIImageView</string>
 						<string key="imgDirection">UIImageView</string>
 						<string key="imgGinzaBackground">UIImageView</string>
+						<string key="largeGIconImageView">UIImageView</string>
 						<string key="lblDescription">UILabel</string>
 						<string key="lblDistance">UILabel</string>
 						<string key="lblFreeText">UILabel</string>
@@ -470,6 +503,10 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="imgGinzaBackground">
 							<string key="name">imgGinzaBackground</string>
+							<string key="candidateClassName">UIImageView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="largeGIconImageView">
+							<string key="name">largeGIconImageView</string>
 							<string key="candidateClassName">UIImageView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="lblDescription">
@@ -511,6 +548,7 @@
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="Arrow.png">{8, 12}</string>
 			<string key="Bookmarkplus.png">{32, 39}</string>
+			<string key="Giconlarge.png">{72, 54}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">933</string>
 	</data>
