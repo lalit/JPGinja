@@ -16,6 +16,7 @@
 #import "Location.h"
 #import "ListViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "CustomTopNavigationBar.h"
 @implementation OfferDetailsViewController
 @synthesize lblIsChild,lblIsLunch,lblIsPrivate,lblOfferTitle,lblCategoryName,lblDistanceLabel,imgIsChild,imgIsLunch,imgCategory,imgIsPrivate,imgOfferImage,offerId,scroll,webFreeText,storeLocation,offer;
 @synthesize viewOfferDetails,tableView,locationManager,imgDirection,arrowImage,shareVC,lblTime;
@@ -68,8 +69,10 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self updateTopNavigation];
+   // [self.view.window setBackgroundColor:[UIColor clearColor]];
     // Do any additional setup after loading the view from its nib.
-    
+   // [self.view setAlpha:0.0];
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
     locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
@@ -179,6 +182,8 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     }
 }
 
+
+
 - (void) calculateDistanceAndTime {
     
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -207,13 +212,14 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
             self.lblTime.text=[NSString stringWithFormat:@"(徒歩%d分)",time];
         }
         
-            lblTime.frame=CGRectMake(lblDistanceLabel.frame.origin.x+30, lblTime.frame.origin.y, lblTime.frame.size.width, lblTime.frame.size.height);
+           
         if (distanceInKm>1.0) {
             lblDistanceLabel.text=[NSString stringWithFormat:@"%.fkm",distanceInKm];
         }
         else {
             lblDistanceLabel.text=[NSString stringWithFormat:@"%.fm",meters];
         }
+         lblTime.frame=CGRectMake(lblDistanceLabel.frame.origin.x+36, lblTime.frame.origin.y, lblTime.frame.size.width, lblTime.frame.size.height);
     }
     
 }
@@ -233,7 +239,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     if([self.offer.offer_type isEqualToString:@"special"]) {
         offerString=[NSString stringWithFormat:@"★ %@",offer.lead_text];
     }
-    NSString *weViewData =[NSString stringWithFormat:@"<HTML><body style=\"background-color:transparent\"><table><tr><td><font color=#996633>%@<hr size=0.5 noshade color=#996633></font></td></tr><tr><td>%@</td></tr><tr><td>%@</td></tr></table></HTML>",offerString,offer.copy_text,offer.free_text];
+    NSString *weViewData =[NSString stringWithFormat:@"<HTML><body style=\"background-color:transparent\"><table><tr><td><font color=#8B5A00><b>%@</b><hr size=0.5 noshade color=#996633></font></td></tr><tr><td>%@</td></tr><tr><td>%@</td></tr></table></HTML>",offerString,offer.copy_text,offer.free_text];
     
     [self.webFreeText loadHTMLString:weViewData baseURL:nil];
 }
@@ -350,7 +356,6 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     if (indexPath.row==0) {
-        
         UILabel *lblAddress = [[UILabel alloc]init];
         lblAddress.frame = CGRectMake(0,0,150, 50);
         lblAddress.textAlignment = UITextAlignmentLeft;
@@ -406,7 +411,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     if (indexPath.row==2) {
 
         UILabel *lbltime = [[UILabel alloc]init];
-        lbltime.frame = CGRectMake(0,0,150, 50);
+        lbltime.frame = CGRectMake(0,-8,150, 50);
         lbltime.textAlignment = UITextAlignmentLeft;
         lbltime.font = [UIFont boldSystemFontOfSize:13.0];
         lbltime.backgroundColor = [UIColor clearColor];
@@ -415,7 +420,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         [cell addSubview:lbltime];
         
         UILabel *lbltimedetails = [[UILabel alloc]init];
-        lbltimedetails.frame = CGRectMake(80,0,250, 50);
+        lbltimedetails.frame = CGRectMake(80,-8,250, 50);
         lbltimedetails.textAlignment = UITextAlignmentLeft;
         lbltimedetails.lineBreakMode = UILineBreakModeWordWrap;
         lbltimedetails.numberOfLines = 3;
@@ -424,6 +429,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         lbltimedetails.backgroundColor = [UIColor clearColor];
         lbltimedetails.textColor = [UIColor blackColor];
         lbltimedetails.text = merchant.time;
+         lbltimedetails.text = @"No information available"; 
         [cell addSubview:lbltimedetails];
         
         
@@ -645,5 +651,27 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     NSString *phoneNumber = [@"tel://" stringByAppendingString:merchant.phone];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
 }
+-(void)willRotateToInterfaceOrientation: (UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration {
+    
+        // Change the mapview frmae
+    if (orientation==UIInterfaceOrientationLandscapeLeft||orientation==UIInterfaceOrientationLandscapeRight) {
+        lblIsChild.frame=CGRectMake(imgIsChild.frame.origin.x+28, lblIsChild.frame.origin.y  , lblIsChild.frame.size.width,  lblIsChild.frame.size.height);
+        
+        lblIsLunch.frame=CGRectMake(imgIsLunch.frame.origin.x+27, lblIsLunch.frame.origin.y  , lblIsLunch.frame.size.width,  lblIsLunch.frame.size.height);
+        lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+42, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
+    
+    }
+    else {
+        
+        lblIsChild.frame=CGRectMake(imgIsChild.frame.origin.x+53, lblIsChild.frame.origin.y  , lblIsChild.frame.size.width,  lblIsChild.frame.size.height);
+        
+        lblIsLunch.frame=CGRectMake(imgIsLunch.frame.origin.x+45, lblIsLunch.frame.origin.y  , lblIsLunch.frame.size.width,  lblIsLunch.frame.size.height);
+        lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+71, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
+        
+        }
+        
+    }
 
+       
+    
 @end

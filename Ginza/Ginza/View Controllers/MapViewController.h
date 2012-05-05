@@ -10,7 +10,7 @@
 #import <MapKit/MapKit.h>
 #import "CustomCallOutView.h"
 #import "AppDelegate.h"
-
+@class CustomTopNavigationBar;
 #define METERS_PER_MILE 1609.344
 @interface TransparentToolbar : UIToolbar
 @end
@@ -24,9 +24,10 @@
     
     CLLocationManager* locationManager;
     CLLocation* location;
+    CustomTopNavigationBar *cbar;
 
 }
- 
+ @property (nonatomic, retain)  CustomTopNavigationBar *cbar;
 @property (nonatomic, retain) IBOutlet CustomCallOutView *popup;
 @property (nonatomic, retain) AppDelegate *deligate;
 @property (nonatomic, retain) IBOutlet UILabel *offerCountLabel;
@@ -46,6 +47,7 @@
 -(IBAction)btnFindUserLocation:(id)sender;
 - (void)plotOfferPositions:(NSString *)responseString;
 -(IBAction)btnGinzaMenu:(id)sender;
+- (void)updateTopNavigation;
 @end
 
 

@@ -32,6 +32,7 @@
 @synthesize deligate;
 @synthesize locationManager;
 @synthesize location;
+@synthesize cbar;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -49,10 +50,7 @@
 {
     [super viewDidLoad];
     
-    CustomTopNavigationBar *cbar = [[CustomTopNavigationBar alloc]init];
-    cbar.viewController = self;
-    [self.view addSubview:cbar];
-    
+    [self updateTopNavigation];
     
     self.deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
     self.lblEventCount.text =[NSString stringWithFormat:@"%d",[self.deligate.ginzaEvents count]];
@@ -108,7 +106,13 @@
     
 }
 
-
+- (void)updateTopNavigation {
+    UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
+    cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 20,transView.frame.size.width, 40)];
+    cbar.viewController = self;
+    cbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [transView addSubview:cbar];
+}
 
 - (void) initializeLocationManager {
     self.locationManager = [[CLLocationManager alloc] init ];
@@ -130,7 +134,7 @@
 - (void)viewWillAppear:(BOOL)animated 
 {  
  [self plotOfferPositions:@"all"];
-
+  self.cbar.hidden=NO;
 }
 
 - (void)viewDidUnload
@@ -408,6 +412,11 @@
     infoViewController.view.frame =rect1;
     
     [UIView commitAnimations];
+}
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+     self.cbar.hidden=YES;
 }
 
 @end
