@@ -99,6 +99,8 @@
         //[arView bringSubviewToFront:btnSettings];
         [arView start];
         NSLog(@"init");
+        lblDistance.text=@"50";
+        lblDistance.hidden=YES;
     }
     return self;
 }
@@ -235,7 +237,7 @@
         //popup.currentLocation = _currentAction;
         NSLog(@"PARENT = %@",deligate.arviewController);
         popup.parentViewController = deligate.arviewController;
-        NSLog(@"custom = %@,%@",offer,offerdataArray);
+        //NSLog(@"custom = %@,%@",offer,offerdataArray);
         [popup prepareCallOutView:offer offerArray:offerdataArray];
         
         PlaceOfInterest *poi1 =[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer];
@@ -403,39 +405,42 @@
     self.navigationController.navigationBar.hidden= YES;
 	[self.settingView.layer setZPosition:250.0f];
     //self.viewSetting.hidden=NO;
-    arView.radius =50;
+    //arView.radius =50;
            
 	//arView = (ARView *)self.view;
 	//[arView start];
     
     //[locationManager startUpdatingHeading];
     //[locationManager startUpdatingLocation];
+    //if ([self.placesOfInterest count]==0) {
+    [self constructCalloutPOI];
+    //}
+    [arView updateView];
+    [arView.radar setNeedsDisplay];
+    [arView.radarView setNeedsDisplay];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     
-    NSLog(@"%d",[self.tabBarController.view.subviews count]);
+    //NSLog(@"%d",[self.tabBarController.view.subviews count]);
     //if (cbar ==nil) 
     {
         UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
+        cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 8, transView.frame.size.width, 40)];
         
-        cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 40)];
         cbar.viewController = self;
-        cbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        cbar.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
         [transView addSubview:cbar];
-        /*CGRect rect = self.actionsView.frame;
-        rect.origin.y = self.view.frame.size.height-rect.size.height;
-        self.actionsView.frame = rect;
-        [self.actionsView.layer setZPosition:200.0f];*/
         [transView addSubview:self.actionsView];
-        
         [transView addSubview:btnSettings];
         [transView addSubview:lblDistance];
+        lblDistance.hidden=NO;
     }
 
     
-    CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: 35.671635 longitude:139.763952];
+    //CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: 35.671635 longitude:139.763952];
    // double distance = [currentLocation distanceFromLocation: offerLoc];
     
     //distance =500;
@@ -684,7 +689,7 @@
 
 -(IBAction)btnARViewClicked:(id)sender
 {
-    
+    actionsView.hidden=YES;
     viewSetting.frame = self.view.frame;
     CGRect rect = viewSetting.frame;
     rect.origin.y=20;
@@ -720,6 +725,7 @@
 {
     //[arView stop];
     //[arView start];
+    actionsView.hidden=NO;
     [arView updateView];
     [self.viewSetting removeFromSuperview];
     

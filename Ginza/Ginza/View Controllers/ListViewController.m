@@ -143,6 +143,8 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    AppDelegate *appDeligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
+     dataDict =appDeligate.listViewDataArray;
     
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
@@ -366,7 +368,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         self.detailsView =[[OfferDetailsViewController alloc]init];
         Offer *offer =[dataArray objectAtIndex:indexPath.row-1];
         
-        detailsView.offerId = offer.offer_id;
+        detailsView.offerId = offer.id;
         
         [self presentModalViewController:detailsView animated:YES];
         

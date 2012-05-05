@@ -244,11 +244,11 @@
     if ([cat.selected isEqualToString:@"1"]) {
         cat.selected =@"0";
          [btn setImage:[UIImage imageNamed:@"Arrow.png"] forState:UIControlStateNormal];
-        [appDeligate.filterString stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"&& category_id =%@ ",cat.category_id ] withString: @""];
+        //[appDeligate.filterString stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"&& category_id =%@ ",cat.category_id ] withString: @""];
     }
     else {
         cat.selected =@"1";
-        [appDeligate.filterString stringByAppendingFormat:@"category_id =%@ &",cat.category_id ];
+        //[appDeligate.filterString stringByAppendingFormat:@"category_id =%@ &",cat.category_id ];
          [btn setImage:[UIImage imageNamed:@"Arrow@2x.png"] forState:UIControlStateNormal];
     }
     
@@ -286,6 +286,9 @@
 -(IBAction)btnSubMenuClose:(id)sender
 {
     
+    AppDelegate *deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
+    [deligate getPointOfInterestItems];
+    [deligate getListViewData];
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationCurveEaseOut animations:^(void) {
         //CGRect frame = self.view.frame;
