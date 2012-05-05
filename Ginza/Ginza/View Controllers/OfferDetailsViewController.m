@@ -656,14 +656,14 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         lblIsChild.frame=CGRectMake(imgIsChild.frame.origin.x+27, lblIsChild.frame.origin.y  , lblIsChild.frame.size.width,  lblIsChild.frame.size.height);
         
         lblIsLunch.frame=CGRectMake(imgIsLunch.frame.origin.x+26, lblIsLunch.frame.origin.y  , lblIsLunch.frame.size.width,  lblIsLunch.frame.size.height);
-        lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+42, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
+        lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+26, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
     
     }
     else {
         
         lblIsChild.frame=CGRectMake(imgIsChild.frame.origin.x+53, lblIsChild.frame.origin.y  , lblIsChild.frame.size.width,  lblIsChild.frame.size.height);
         lblIsLunch.frame=CGRectMake(imgIsLunch.frame.origin.x+45, lblIsLunch.frame.origin.y  , lblIsLunch.frame.size.width,  lblIsLunch.frame.size.height);
-        lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+71, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
+        lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+48, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
         
         }
         
