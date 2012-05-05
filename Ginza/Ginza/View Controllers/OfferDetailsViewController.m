@@ -69,7 +69,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //[self updateTopNavigation];
+    [self updateTopNavigation];
    // [self.view.window setBackgroundColor:[UIColor clearColor]];
     // Do any additional setup after loading the view from its nib.
    // [self.view setAlpha:0.0];
