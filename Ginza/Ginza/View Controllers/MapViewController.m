@@ -322,6 +322,12 @@
         [mapView addAnnotation:annotation];
     }
     
+    if ([mapDataDict count]) {
+            CLLocation *ginzaLounge = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.763953];
+            AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
+            annotation.coordinate =ginzaLounge.coordinate;
+            [mapView addAnnotation:annotation];
+    }
     
 }
 
