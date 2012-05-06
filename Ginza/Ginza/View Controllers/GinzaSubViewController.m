@@ -11,6 +11,7 @@
 #import "ApplayCardViewController.h"
 #import "AboutViewController.h"
 #import "ContactViewController.h"
+#import "GinzaDetailsViewController.h"
 @interface GinzaSubViewController ()
 
 @end
@@ -117,10 +118,14 @@
     }
 
     if (indexPath.row==4) {
-        GinzaSubMenuListViewController *ginzaDetails = [[GinzaSubMenuListViewController alloc] initWithNibName:@"GinzaSubMenuListViewController" bundle:nil];
+        /*GinzaSubMenuListViewController *ginzaDetails = [[GinzaSubMenuListViewController alloc] initWithNibName:@"GinzaSubMenuListViewController" bundle:nil];
         ginzaDetails.type = @"services";
         
-        [self.navigationController pushViewController:ginzaDetails animated:YES]; 
+        [self.navigationController pushViewController:ginzaDetails animated:YES]; */
+        
+         GinzaDetailsViewController *ginzaDetailsView =[[GinzaDetailsViewController alloc]init];
+        
+        [self presentModalViewController:ginzaDetailsView animated:YES];
         
         
         

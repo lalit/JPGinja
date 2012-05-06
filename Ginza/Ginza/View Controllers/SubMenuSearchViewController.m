@@ -48,10 +48,14 @@
     
     for (int i=0; i<[dataArray count]; i++) {
         Offer *offer =[dataArray objectAtIndex:i];
-        [array addObject:[NSString stringWithFormat:@"%@-%@",offer.offer_id, offer.offer_title]];
-        [array addObject:[NSString stringWithFormat:@"%@-%@",offer.offer_id,offer.copy_text]];
-        [array addObject:[NSString stringWithFormat:@"%@-%@",offer.offer_id,offer.lead_text]];
-        [array addObject:[NSString stringWithFormat:@"%@-%@",offer.offer_id,offer.free_text]];
+        ShopList *merchant = [deligate getStoreDataById:offer.store_id];
+        if (merchant!=nil) {
+            [array addObject:[NSString stringWithFormat:@"%@-%@",offer.id, merchant.store_name]];
+
+        }
+               //[array addObject:[NSString stringWithFormat:@"%@-%@",offer.id,offer.copy_text]];
+        //[array addObject:[NSString stringWithFormat:@"%@-%@",offer.id,offer.lead_text]];
+        //[array addObject:[NSString stringWithFormat:@"%@-%@",offer.id,offer.free_text]];
     }
 	[self setContentsList:array];
 	
@@ -74,8 +78,6 @@
            
     }
     
-    
-    
     searchDisplayController.searchBar.showsCancelButton = NO;
     [searchDisplayController.searchBar setShowsCancelButton:NO animated:NO];
     searchDisplayController.searchBar.frame = CGRectMake(30, 0, 217, 44);
@@ -91,12 +93,13 @@
     searchDisplayController.searchBar.frame = CGRectMake(30, 0, 217, 44);
 
 	[[self tblSearchView] reloadData];
-	
+	self.tblSearchView.hidden=NO;
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    self.tblSearchView.hidden=YES;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -167,8 +170,10 @@
     
     
 	else
+    {
 		contentForThisRow = [[self contentsList] objectAtIndex:row];
-	
+    contentForThisRow=@"";
+	}
 	static NSString *CellIdentifier = @"CellIdentifier";
 	
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -334,6 +339,9 @@ shouldReloadTableForSearchString:(NSString *)searchString
    
     
     searchDisplayController.searchBar.frame = CGRectMake(30, 0, 217, 44);
+    [self handleSearchForTerm:searchText];
+    [self.tblSearchView reloadData];
+    
     
 }
 
@@ -406,6 +414,7 @@ shouldReloadTableForSearchString:(NSString *)searchString
                          } completion:^(BOOL finished) {
                              self.fromViewController.hidesBottomBarWhenPushed =NO;
                              [self.navigationController popViewControllerAnimated:NO];
+                             self.fromViewController.navigationController.navigationBarHidden=YES;
                              //[self.view removeFromSuperview];
                          }];
                          
@@ -426,7 +435,7 @@ shouldReloadTableForSearchString:(NSString *)searchString
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return YES;
+    return NO;
 }
 
 
