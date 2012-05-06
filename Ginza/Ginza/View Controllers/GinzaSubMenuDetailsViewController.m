@@ -39,7 +39,7 @@
     [self.webDetails setOpaque:NO];
      NSString *url = [NSString stringWithFormat:@"%@/%@png",eventImageURL,[event.image_name substringToIndex:[event.image_name length] - 3]];
     NSLog(@"image URL = %@",url);
-    NSString *data =[NSString stringWithFormat:@"<HTML><body style=\"background-color:transparent\"><table><tr><td>%@</td></tr><tr><td><b>%@</b></td><td><img src = \"%@\" width = 60 height = 80/></td></tr><tr><td>%@</td></tr><tr><td>%@</td></tr></table></HTML>",event.offer_title,event.copy_text,url,event.lead_text,event.free_text];
+    NSString *data =[NSString stringWithFormat:@"<HTML><meta name=\"viewport\" content=\"width=device-width\" /><body style=\"background-color:transparent\"><table><tr  span =2><td colspan=2>%@</td></tr><tr><td><b>%@</b></td><td><img src = \"%@\" width = 60 height = 80/></td></tr><tr><td colspan =2>%@</td></tr><tr><td colspan =2>%@</td></tr></table></HTML>",event.offer_title,event.copy_text,url,event.lead_text,event.free_text];
     [self.webDetails loadHTMLString:data baseURL:nil];
 
     

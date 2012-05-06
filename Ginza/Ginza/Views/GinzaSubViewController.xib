@@ -55,7 +55,7 @@
 					</object>
 					<object class="IBUITableView" id="606081764">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">319</int>
+						<int key="NSvFlags">282</int>
 						<string key="NSFrame">{{14, 199}, {292, 220}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
@@ -77,7 +77,7 @@
 					</object>
 					<object class="IBUIImageView" id="997829343">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">290</int>
+						<int key="NSvFlags">314</int>
 						<string key="NSFrame">{{77, 82}, {166, 109}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
@@ -163,7 +163,7 @@
 					</object>
 					<object class="IBUIButton" id="794379540">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">269</int>
 						<string key="NSFrame">{{135, 427}, {51, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
@@ -379,12 +379,17 @@
 					<string key="className">GinzaSubViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="fromViewController">UIViewController</string>
 						<string key="tapGesture">UITapGestureRecognizer</string>
 						<string key="tblView">UITableView</string>
 						<string key="viewGinza">UIView</string>
 						<string key="viewList">UIView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="fromViewController">
+							<string key="name">fromViewController</string>
+							<string key="candidateClassName">UIViewController</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="tapGesture">
 							<string key="name">tapGesture</string>
 							<string key="candidateClassName">UITapGestureRecognizer</string>

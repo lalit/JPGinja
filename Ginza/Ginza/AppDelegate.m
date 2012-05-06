@@ -25,6 +25,7 @@
 @synthesize window = _window;
 @synthesize tabBarController = _tabBarController;
 @synthesize managedObjectModel,managedObjectContext,persistentStoreCoordinator,filterString,arraySelectedCategories,arraySelectedSubCategories,splashView,isFilterOn,arrayStoreIds,bookmarkviewController,lastmerchantsynceddate,offerDataArray,poiDataDictionary,offerType,listViewDataArray,ginzaEvents,isSyncON,arviewController;
+@synthesize subCategoriesArray;
 
 //test
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -221,8 +222,8 @@
 -(NSMutableArray *)getSubCategories
 {
     NSError* error;
-    AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSManagedObjectContext *context =[appDeligate managedObjectContext];
+   
+    NSManagedObjectContext *context =managedObjectContext;
     
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Categories" inManagedObjectContext:context];
@@ -241,7 +242,8 @@
             [self.arraySelectedCategories addObject:cat.category_id];
         }
         
-    }    
+    }   
+    self.subCategoriesArray=array;
     return array;
 }
 
@@ -257,7 +259,7 @@
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Categories" inManagedObjectContext:context];
     [request setEntity:entity];
     
-    NSString *str =[NSString stringWithFormat:@"parent == 0"];// %@",filterString];
+    NSString *str =[NSString stringWithFormat:@"parent == '0'"];// %@",filterString];
     NSPredicate *predicate =
     [NSPredicate predicateWithFormat:str];
     
@@ -437,8 +439,13 @@
     
     NSMutableArray *catArray =  [self getCategories];
     for (Categories *cat in catArray) {
-        NSLog(@"selected =%@",cat.selected);
+        NSLog(@"parent =%@",cat.parent);
+        NSString *value;
+        if ([cat.parent isEqualToString:@"0"]) {
+            //value = [NSString stringWithFormat:@"%@-%@",cat.parent];
+        }
         if ([cat.selected isEqualToString:@"1"]) {
+            
             filterString1 = [filterString1 stringByAppendingFormat:@"category =%@ ||",cat.category_id ];
             
         }
@@ -451,11 +458,11 @@
     for (Categories *cat in catArray) {
         NSLog(@"selected =%@",cat.selected);
         if ([cat.selected isEqualToString:@"1"]) {
-            filterString1 = [filterString1 stringByAppendingFormat:@"category =%@ ||",cat.category_id ];
+            filterString1 = [filterString1 stringByAppendingFormat:@"%@-%@ ||",cat.parent, cat.category_id ];
             
         }
         else {
-            filterString1 = [filterString1 stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"|| category =%@ ",cat.category_id ] withString: @""];
+            filterString1 = [filterString1 stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"|| %@-%@ ",cat.parent, cat.category_id ] withString: @""];
         }
         
     }
@@ -618,6 +625,21 @@
     
     int g=0;
     
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); //1
+    NSString *documentsDirectory = [paths objectAtIndex:0]; //2
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"filtersetting.plist"]; //3
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    if (![fileManager fileExistsAtPath: path]) //4
+    {
+        NSString *bundle = [[NSBundle mainBundle] pathForResource:@"filtersetting" ofType:@"plist"]; //5
+        
+        [fileManager copyItemAtPath:bundle toPath: path error:&error]; //6
+    }
+
+    
     //for (int j=0; j<2; j++)
     {
         for (int i=0; i<[dataArray count]; i++) {
@@ -630,7 +652,7 @@
                 
                 NSLog(@"Offer data %d",i);
                 if (i==40) {
-                    return;
+                    //return;
                 }
                 
                 datas = [NSEntityDescription insertNewObjectForEntityForName:@"Offer" inManagedObjectContext:context];
@@ -658,35 +680,17 @@
                 if (![managedObjectContext save:&error]) {
                     NSLog(@"%@", [error userInfo]);
                 }
-                
-                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); //1
-                NSString *documentsDirectory = [paths objectAtIndex:0]; //2
-                NSString *path = [documentsDirectory stringByAppendingPathComponent:@"filtersetting.plist"]; //3
-                
-                NSFileManager *fileManager = [NSFileManager defaultManager];
-                
-                if (![fileManager fileExistsAtPath: path]) //4
-                {
-                    NSString *bundle = [[NSBundle mainBundle] pathForResource:@"filtersetting" ofType:@"plist"]; //5
-                    
-                    [fileManager copyItemAtPath:bundle toPath: path error:&error]; //6
-                }
-                
-                
-                NSMutableDictionary *data = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
-                               [data setObject:lastSyncedDate forKey:@"lastsynceddate"];
-                
-                [data writeToFile: path atomically:YES];
-
                
-            }    
+            }   
+            
+            NSMutableDictionary *data1 = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
+            [data1 setObject:lastSyncedDate forKey:@"lastsynceddate"];
+            
+            [data1 writeToFile: path atomically:YES];
             
         }
     }
-    UIAlertView *alert2 = [[UIAlertView alloc]initWithTitle:@"Total No of offer taken from DB" message:[NSString stringWithFormat:@"%d",c] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    //[alert2 show];
-    
-
+   
 }
 
 -(void)storeMerchantData:(NSString *)store_id
@@ -1509,7 +1513,8 @@
         }*/
 
         if ([isFilterOn intValue]==1) {
-            if ([filterString rangeOfString:cat.category_id].location == NSNotFound) {
+            NSString *cretiria= [NSString stringWithFormat:@"%@-%@",cat.parent, cat.category_id ];
+            if ([filterString rangeOfString:cretiria].location == NSNotFound) {
                 
             }else
             {
@@ -1608,7 +1613,8 @@ NSLog(@"POI end %@",[NSDate date]);
         Categories *categoryData = (Categories *)[self getCategoryDataById:shopData.sub_category];
 
         if ([isFilterOn intValue]==1) {
-            if ([filterString rangeOfString:categoryData.category_id].location == NSNotFound) {
+            NSString *cretiria= [NSString stringWithFormat:@"%@-%@",categoryData.parent, categoryData.category_id ];
+            if ([filterString rangeOfString:cretiria].location == NSNotFound) {
                 
             }else
             {

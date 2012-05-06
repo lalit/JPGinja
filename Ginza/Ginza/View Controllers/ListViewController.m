@@ -181,7 +181,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //NSLog(@"count %d",[self.dataDict count]);
-    return  [self.dataDict count];//currentPage+10+2;//[self.dataDict count]+1;
+    return  [self.dataDict count]+1;//currentPage+10+2;//[self.dataDict count]+1;
     
 }
 

@@ -41,5 +41,6 @@
 @property(nonatomic,retain)IBOutlet     UISwitch *btnswitch;
 -(IBAction)btnSwitchChanged:(id)sender;
 -(IBAction)btnSubMenuClose:(id)sender;
+-(void)selectOrDeselectSubCategories:(NSString *)parent isSelected:(NSString *)isSelected;
 
 @end

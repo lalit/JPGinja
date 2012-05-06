@@ -16,6 +16,7 @@
 #import "Location.h"
 #import "ListViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Categories.h"
 
 @implementation OfferDetailsViewController
 @synthesize lblIsChild,lblIsLunch,lblIsPrivate,lblOfferTitle,lblCategoryName,lblDistanceLabel,imgIsChild,imgIsLunch,imgCategory,imgIsPrivate,imgOfferImage,offerId,scroll,webFreeText,storeLocation,offer;
@@ -81,14 +82,24 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     [locationManager startUpdatingHeading];
     
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+   
+    NSLog(@"%@", self.offerId);
     self.offer =  [appDeligate getOfferDataById:self.offerId];
+    ShopList *shopData = [appDeligate getStoreDataById:offer.store_id];
+    Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:shopData.sub_category];
+    
     NSLog(@"Title:%@",self.offer.offer_title);
     NSLog(@"Category:%@",self.offer.category);
     NSLog(@"Lead Text:%@",offer.lead_text);
     NSLog(@"Copy Text:%@",offer.copy_text);
     NSLog(@"DetailView Offer:%@",self.offerId);
-    lblCategoryName.text = self.offer.category;
-    lblOfferTitle.text=self.offer.offer_title;
+    lblCategoryName.text = categoryData.category_name;
+    if ([self.offer.category length]<=0) {
+        lblOfferTitle.text=shopData.store_name;
+    }else
+    {
+        lblOfferTitle.text=self.offer.offer_title;
+    }
     scroll.contentSize = CGSizeMake(320, 680);
     [[self.webFreeText.subviews objectAtIndex:0] setScrollEnabled:NO];
     self.webFreeText.backgroundColor =[UIColor clearColor];
@@ -97,7 +108,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     [self.webFreeText setDelegate:self];
     [self calculateDistanceAndTime];
     ShopList *merchant = [appDeligate getStoreDataById:offer.store_id];
-    Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:merchant.sub_category];
+   // Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:merchant.sub_category];
     
     //Get Shop Location
     

@@ -42,6 +42,7 @@
 @property(nonatomic,retain)NSMutableDictionary *poiDataDictionary;
 @property(nonatomic,retain)NSMutableDictionary *listViewDataArray;
 @property(nonatomic, retain)NSString *lastSyncedDate;
+@property(nonatomic,retain)NSMutableArray *subCategoriesArray;
 - (NSString *)applicationDocumentsDirectory;
 -(NSMutableArray *)getOfferData;
 -(ShopList *)getStoreDataById:(NSString *)storeid;

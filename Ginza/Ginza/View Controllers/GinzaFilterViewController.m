@@ -240,13 +240,15 @@
     NSMutableArray *offers = (NSMutableArray *)[context executeFetchRequest:request error:&error];
     
    Categories *cat =[offers objectAtIndex:btn.tag];
-    NSLog(@"selected =%@",cat.selected);
+    NSLog(@"selected =%@",cat.category_id);
     if ([cat.selected isEqualToString:@"1"]) {
         cat.selected =@"0";
+        [self selectOrDeselectSubCategories:cat.category_id isSelected:@"0"];
          [btn setImage:[UIImage imageNamed:@"Arrow.png"] forState:UIControlStateNormal];
         //[appDeligate.filterString stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"&& category_id =%@ ",cat.category_id ] withString: @""];
     }
     else {
+        [self selectOrDeselectSubCategories:cat.category_id isSelected:@"1"];
         cat.selected =@"1";
         //[appDeligate.filterString stringByAppendingFormat:@"category_id =%@ &",cat.category_id ];
          [btn setImage:[UIImage imageNamed:@"Arrow@2x.png"] forState:UIControlStateNormal];
@@ -258,6 +260,37 @@
     [appDeligate getCategories];
     [self.tblFilterView reloadData];
     
+}
+
+-(void)selectOrDeselectSubCategories:(NSString *)parent isSelected:(NSString *)isSelected
+{
+    AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//NSMutableArray *subCatArray = [appDeligate subCategoriesArray];
+        NSError *error;
+        
+        NSManagedObjectContext *context =[appDeligate managedObjectContext];
+        
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Categories" inManagedObjectContext:context];
+        [request setEntity:entity];
+        NSPredicate *predicate =
+        [NSPredicate predicateWithFormat:@"parent == %@",parent];
+        
+        [request setPredicate:predicate];
+    NSMutableArray *subCatArray = (NSMutableArray *)[context executeFetchRequest:request error:&error];
+
+    
+    for (Categories *subCat in subCatArray) {
+       
+        subCat.selected =isSelected;
+
+        
+        if (![context save:&error]) {
+            NSLog(@"%@",error);
+        }    
+
+    }
+       
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
