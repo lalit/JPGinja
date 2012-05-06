@@ -153,8 +153,8 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     [locationManager startUpdatingLocation];
     [locationManager startUpdatingHeading];
     self.navigationController.navigationBarHidden = YES;
-     
     self.cbar.hidden=NO;
+    [tblListView reloadData]; 
 }
 
 
@@ -223,6 +223,8 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     cell.btnBookMark.tag =indexPath.row-1;
     cell.imgDirection.hidden=NO;
     cell.lblDistance.hidden=NO;
+     UIColor *greenCo=[UIColor colorWithRed:0/255.0 green:105/255.0 blue:170/255.0 alpha:1.0];
+    cell.lblDistance.textColor=greenCo;
     if (indexPath.row>=1) {
         
         NSDictionary *tmpDict = [self.dataDict objectForKey:[NSString stringWithFormat:@"%d",indexPath.row-1]];
@@ -276,8 +278,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         cell.strLatitude = shopData.latitude;
         cell.strLongitude = shopData.longitude;
         cell.imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
-        
-        
         double Latitude = [shopData.latitude doubleValue];
         double Longitude = [shopData.longitude doubleValue];
         CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
@@ -304,16 +304,13 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     
     if (indexPath.row==0) {
         cell.imgGinzaBackground.image = [UIImage imageNamed:@"Ginzacelllist.png"];
-        
         cell.largeGIconImageView.hidden=NO;
-        //cell.btnBookMark.imageView.image = [UIImage imageNamed:@"Bookmarkplus.png"];
         cell.lblTitle.text = @"ダイナースクラフ";
         cell.lblTitle.textColor =[UIColor whiteColor];
         cell.imgDeatils.image = [UIImage imageNamed:@"thumb.png"];
         cell.lblDescription.text = @"銀座ラウンシ";
         cell.lblDescription.textColor =[UIColor whiteColor];
-        cell.imgDirection.hidden=YES;
-        cell.lblDistance.hidden=YES;
+        cell.lblDistance.textColor=[UIColor grayColor];
         cell.strLatitude = @"35.665756";
         cell.strLongitude = @"139.71179";
         double Latitude = 35.665756;
