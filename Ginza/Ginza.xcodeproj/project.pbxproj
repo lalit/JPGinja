@@ -19,6 +19,7 @@
 		0B669E72154994FC001FF750 /* ListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B669E71154994FC001FF750 /* ListViewController.xib */; };
 		0B8A79CE1554D1BF001FF3A9 /* arrow_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B8A79CC1554D1BF001FF3A9 /* arrow_down.png */; };
 		0B8A79CF1554D1BF001FF3A9 /* arrow_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B8A79CD1554D1BF001FF3A9 /* arrow_up.png */; };
+		0B8A79F01556BDA0001FF3A9 /* mapG.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B8A79EF1556BDA0001FF3A9 /* mapG.png */; };
 		0B8AC9521535131D00317F83 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8AC9511535131D00317F83 /* SystemConfiguration.framework */; };
 		0B8AC95415354E4700317F83 /* filtersetting.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B8AC95315354E4700317F83 /* filtersetting.plist */; };
 		0B8B57F7153D22370080063A /* btnVirtualWalk.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B8B57F6153D22360080063A /* btnVirtualWalk.png */; };
@@ -408,6 +409,7 @@
 		0B669E71154994FC001FF750 /* ListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListViewController.xib; sourceTree = "<group>"; };
 		0B8A79CC1554D1BF001FF3A9 /* arrow_down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_down.png; sourceTree = "<group>"; };
 		0B8A79CD1554D1BF001FF3A9 /* arrow_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_up.png; sourceTree = "<group>"; };
+		0B8A79EF1556BDA0001FF3A9 /* mapG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mapG.png; sourceTree = "<group>"; };
 		0B8AC9511535131D00317F83 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0B8AC95315354E4700317F83 /* filtersetting.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = filtersetting.plist; sourceTree = "<group>"; };
 		0B8B57F6153D22360080063A /* btnVirtualWalk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnVirtualWalk.png; sourceTree = "<group>"; };
@@ -1231,6 +1233,7 @@
 		0B8FC4DA1541CB1C00528D9A /* map */ = {
 			isa = PBXGroup;
 			children = (
+				0B8A79EF1556BDA0001FF3A9 /* mapG.png */,
 				29AE1B0C15555F37001C214A /* mapGicon.png */,
 				29AE1AE21554FB10001C214A /* maparrow.png */,
 				0B8FC4DB1541CB1C00528D9A /* annodation.png */,
@@ -2073,6 +2076,7 @@
 				29AE1AE31554FB10001C214A /* maparrow.png in Resources */,
 				29AE1AFE15552EEC001C214A /* Giconlarge.png in Resources */,
 				29AE1B0D15555F37001C214A /* mapGicon.png in Resources */,
+				0B8A79F01556BDA0001FF3A9 /* mapG.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
