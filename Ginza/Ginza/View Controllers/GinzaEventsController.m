@@ -7,6 +7,7 @@
 //
 
 #import "GinzaEventsController.h"
+#import "Constants .h"
 
 @implementation GinzaEventsController
 

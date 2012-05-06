@@ -1330,6 +1330,7 @@
                 [datas setValue:[data objectForKey:@"category_name"] forKey:@"category_name"];
                 [datas setValue:[data objectForKey:@"parent" ] forKey:@"parent"]; 
                 [datas setValue:[data objectForKey:@"image_name" ] forKey:@"image_name"]; 
+                [datas setValue:@"1" forKey:@"selected"]; 
                 
                 NSString *imgurl =[NSString stringWithFormat:@"%@/%@",categoryImageURL,[data objectForKey:@"image_name" ]];
                 

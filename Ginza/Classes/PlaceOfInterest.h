@@ -55,6 +55,7 @@
 @property (nonatomic, retain) UIView *view;
 @property (nonatomic, retain) CLLocation *location;
 @property (nonatomic, retain)  NSString *offer_id;
+@property (nonatomic)float *distance;
 
 + (PlaceOfInterest *)placeOfInterestWithView:(UIView *)view at:(CLLocation *)location;
 + (PlaceOfInterest *)placeOfInterestWithView:(UIView *)view at:(CLLocation *)location  offerdata:(Offer *)offer;

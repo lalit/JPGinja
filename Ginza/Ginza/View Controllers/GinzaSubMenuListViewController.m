@@ -12,6 +12,7 @@
 #import "GinzaSubViewController.h"
 #import "ListViewController.h"
 #import "Offer.h"
+#import "Constants .h"
 
 @interface GinzaSubMenuListViewController ()
 
@@ -127,7 +128,13 @@
     cell.lblOfferTitle.text = offer.offer_title;
     cell.lblCopyText.text = offer.copy_text;
    // cell.imgShopImage.image = [UIImage imageNamed:offer.image_name];
-    //NSLog(@"%@",offer.image_name);
+    
+    NSString *url = [NSString stringWithFormat:@"%@/%@png",eventImageURL,[offer.image_name substringToIndex:[offer.image_name length] - 3]];
+    NSURL * imageURL = [NSURL URLWithString:url];
+    NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+    UIImage * image = [UIImage imageWithData:imageData];
+    cell.imgShopImage.image = image;
+    NSLog(@"image url = %@/%@",eventImageURL, offer.image_name);
 
     return cell;
 }

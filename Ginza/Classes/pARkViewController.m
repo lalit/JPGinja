@@ -91,14 +91,8 @@
         arView = (ARView *)self.view;
         arView.parentActionView = self.actionsView;
         arView.parentViewController= self;
-        //btnSettings = [UIButton buttonWithType:UIButtonTypeRoundedRect];        
-        //[btnSettings addTarget:self action:@selector(btnARViewClicked:) forControlEvents:UIControlEventTouchUpInside];
-        //btnSettings.frame = CGRectMake(80.0, 210.0, 100.0,100.0);
         [btnSettings.layer setZPosition:205.0f];
-        //[self.view addSubview:btnSettings];
-        //[arView bringSubviewToFront:btnSettings];
         [arView start];
-        NSLog(@"init");
         lblDistance.text=@"50";
         lblDistance.hidden=YES;
     }
@@ -109,18 +103,6 @@
     didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"AR update location");
-   // currentLocation = newLocation;
-    Location *loc = [[Location sharedInstance]init];
-    
-   // loc.currentLocation=currentLocation;
-    //if (radiusChanged == 1) {
-    //
-    radiusChanged=0;
-    //}
-    
-    //
-    
     if (isFirstTime) {
         [self updateView];
         self.isFirstTime=NO;
@@ -135,7 +117,6 @@
     float x = acceleration.x;
     float y = acceleration.y;
     float z = acceleration.z;
-    //NSLog(@"%f,%f,%f",x,y,z);
     if (self.tabBarController.selectedIndex==0) {
         if (z>=-0.9) {
             //self.tabBarController.selectedIndex =0;
@@ -152,7 +133,8 @@
 
 -(IBAction)sliderChanged:(id)sender
 {
-    NSLog(@"slider changed %d",(int)sdrRadius.value);
+    NSLog(@"slider changed %f",sdrRadius.value);
+    //return;
     if ((int)self.sdrRadius.value==4) {
         arView.radius=0;
     }
@@ -181,14 +163,10 @@
     int i=0;
     NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
     for (PlaceOfInterest *poi in self.placesOfInterest) {
-        //NSLog(@"UPdate view POI %@",[NSDate date]);
         CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
         CLLocation *pointBLocation = poi.location;  
         
         float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
-        
-        //NSLog(@"distanceMeters = %f,%f,%f",distanceMeters,currentDistance,radius);
-        //radius=250;
         if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
             
             if (distanceMeters<radius) {
@@ -342,9 +320,9 @@
     
     //radar setting
     int radarRadius = 75;
-    self.settingRadar = [[Radar alloc]initWithFrame:CGRectMake(50,150, radarRadius*2, radarRadius*2)];	
+    self.settingRadar = [[Radar alloc]initWithFrame:CGRectMake(50,100, radarRadius*2, radarRadius*2)];	
     self.settingRadar.RADIUS = radarRadius;
-    self.settingRadarViewPort = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50+radarRadius/2,150+radarRadius/2, radarRadius*2, radarRadius*2)];
+    self.settingRadarViewPort = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50+radarRadius/2,100+radarRadius/2, radarRadius*2, radarRadius*2)];
     self.settingRadarViewPort.RADIUS =radarRadius;
     [self.viewSetting addSubview:self.settingRadar];
     [self.viewSetting addSubview:self.settingRadarViewPort];
@@ -470,6 +448,7 @@
 	[super viewDidDisappear:animated];
     self.actionsView.hidden=YES;
     self.cbar.hidden=YES;
+    self.lblDistance.hidden = YES;
     //[locationManager stopUpdatingHeading];
     //[locationManager stopUpdatingLocation];
     
@@ -524,7 +503,7 @@
         
         //self.actionsView.transform = CGAffineTransformIdentity;
         //self.actionsView.transform = CGAffineTransformMakeRotation(M_PI_2);
-        lblDistance.center = CGPointMake(self.tabBarController.tabBar.frame.size.width-40, 60);
+        lblDistance.center = CGPointMake(self.tabBarController.tabBar.frame.size.width-40, 65);
          //self.settingRadar.center = CGPointMake(100, self.view.frame.size.height/2);
         
          btnSettings.center = CGPointMake(self.tabBarController.tabBar.frame.size.width-40, 110);

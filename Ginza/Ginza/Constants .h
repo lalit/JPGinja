@@ -11,5 +11,6 @@
 
 #define dataURL  @"http://staging.citiworldprivileges.com/mobile/ginza-promotions"
 #define categoryImageURL @"http://staging.citiworldprivileges.com/data/images/jp_ginza_categories/iPhone"
+#define eventImageURL @"http://staging.citiworldprivileges.com/data/images/jp_ginza_promotions/iPhone"
 #endif
 //changes
