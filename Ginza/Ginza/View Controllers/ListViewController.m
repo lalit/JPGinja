@@ -305,12 +305,13 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     if (indexPath.row==0) {
         cell.imgGinzaBackground.image = [UIImage imageNamed:@"Ginzacelllist.png"];
         cell.largeGIconImageView.hidden=NO;
+        cell.imgDirection.image= [UIImage imageNamed:@"Arrowgray.png"];
         cell.lblTitle.text = @"ダイナースクラフ";
         cell.lblTitle.textColor =[UIColor whiteColor];
         cell.imgDeatils.image = [UIImage imageNamed:@"thumb.png"];
         cell.lblDescription.text = @"銀座ラウンシ";
         cell.lblDescription.textColor =[UIColor whiteColor];
-        cell.lblDistance.textColor=[UIColor grayColor];
+        cell.lblDistance.textColor=[UIColor darkGrayColor];
         cell.strLatitude = @"35.665756";
         cell.strLongitude = @"139.71179";
         double Latitude = 35.665756;

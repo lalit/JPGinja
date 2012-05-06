@@ -8,10 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+@class ShareViewController;
 @interface GinzaDetailsViewController : UIViewController<UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,CLLocationManagerDelegate>
 {
     UITableView *tblView;
+    CLLocation *currentLocation;
 }
+@property (nonatomic, retain)    CLLocation *currentLocation;
+@property (nonatomic, retain) CLLocation *storeLocation; 
+@property (nonatomic, retain) ShareViewController *shareVC;
 @property(nonatomic, retain)CLLocationManager * locationManager ;
 @property(nonatomic,retain)UILabel *lblTitle;
 @property(nonatomic,retain)UILabel *lblsubTitle;
@@ -26,9 +31,12 @@
 @property(nonatomic,retain)IBOutlet UIWebView *webView;
 
 @property(nonatomic,retain)NSString *offerId;
-
-
-
-
-
+- (IBAction)getDirectionButtonPressed:(id)sender;
+- (IBAction)sharedButtonPressed:(id)sender;
+- (void) postFacebook;
+- (void) postTwitter;
+- (void) sendEmail;
+-(NSString *)shareKitMessage;
+- (void) calculateDistanceAndTime;
+- (void)clickPhoneNumber:(id) sender;
 @end
