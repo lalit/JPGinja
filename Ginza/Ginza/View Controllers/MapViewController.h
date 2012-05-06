@@ -27,6 +27,7 @@
     CustomTopNavigationBar *cbar;
 
 }
+@property (nonatomic, retain)   CLLocation *currentLocation;
  @property (nonatomic, retain)  CustomTopNavigationBar *cbar;
 @property (nonatomic, retain) IBOutlet CustomCallOutView *popup;
 @property (nonatomic, retain) AppDelegate *deligate;

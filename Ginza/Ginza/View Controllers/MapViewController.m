@@ -33,7 +33,7 @@
 @synthesize locationManager;
 @synthesize location;
 @synthesize cbar;
-
+@synthesize currentLocation;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -59,8 +59,6 @@
     }
 
     self.navigationController.navigationBarHidden = YES;
-
-    
     MKUserTrackingBarButtonItem *buttonItem = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapView];
     [self.mapToolbar setItems:[NSArray arrayWithObject:buttonItem] animated:YES];
     CGRect rect = CGRectMake(0, 0, 1, 1);
@@ -70,7 +68,6 @@
     CGContextFillRect(context, rect);
     UIImage *transparentImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
     [self.mapToolbar setBackgroundImage:transparentImage forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addPin:)];
@@ -174,13 +171,13 @@
         NSString *key =[NSString stringWithFormat:@"%f-%f",cor.latitude,cor.longitude];
         if (cor.latitude==35.67163555 && cor.longitude== 139.763953) {
             UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(r.x-10, r.y-31, 23, 23)];
-            imageView.image=[UIImage imageNamed:@"mapGIcon.png"];
+            imageView.image=[UIImage imageNamed:@"mapG.png"];
             [pinView addSubview:imageView];
-          
         }
 
-        else
-        {
+        else if (cor.latitude!=  self.currentLocation.coordinate.latitude && cor.longitude!=   self.currentLocation.coordinate.longitude) {
+            
+        
         lbl.text = [NSString stringWithFormat:@"%d",[[self.mapDataDict objectForKey:key] count]];
         [pinView addSubview:lbl];
         }
@@ -188,7 +185,7 @@
         
     } 
 	else {
-		[mapView.userLocation setTitle:@"I am here"];
+		[mapView.userLocation setTitle:@"Current Location"];
 	}
 	return pinView;
 }
@@ -239,10 +236,17 @@
             annotation.coordinate =coordinate;
             [mapView addAnnotation:annotation];
         }
+        if ([mapDataDict count]) {
+            CLLocation *ginzaLounge = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.763953];
+            AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
+            annotation.coordinate =ginzaLounge.coordinate;
+            [mapView addAnnotation:annotation];
+        }
 
     }
     else
     {
+        
         
        /* CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
         MKCoordinateRegion region;
@@ -260,12 +264,8 @@
 
 - (NSArray *)nearestGinzhaLocationsWithinOneKilometers {
     CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
-    //currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
     int k=0;
     NSMutableArray *nearestLocations=[[NSMutableArray alloc]init];
-   // CLLocation *offerLoc = [[CLLocation alloc] initWithLatitude: 35.671635 longitude:139.763952];
-       // [nearestLocations addObject:offerLoc];
-
     for (id key in mapDataDict)
     {
         NSArray *latlong = [key componentsSeparatedByString:@"-"];
@@ -333,15 +333,22 @@
 
 -(IBAction)btnModeChanged:(id)sender
 {
-    BOOL ios5 = [mapView respondsToSelector:@selector(setUserTrackingMode:animated:)];
-    if(ios5)
-    {        
-        [mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
-    }
-    else
-    {
-        // Do it the version 4.0 way
-    }
+       [mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
+        self.currentLocation=[[Location sharedInstance] currentLocation];
+        MKCoordinateRegion region;
+        NSArray *existingpoints = mapView.annotations;
+        if ([existingpoints count] > 0)
+            [mapView removeAnnotations:existingpoints];
+        CLLocationCoordinate2D locationCor;
+        locationCor.latitude =   self.currentLocation.coordinate.latitude;
+        locationCor.longitude =   self.currentLocation.coordinate.longitude;
+        region.center = locationCor;
+        region.span.longitudeDelta = 0.02;
+        region.span.latitudeDelta = 0.02;
+        [mapView setRegion:region animated:YES]; 
+        AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
+        annotation.coordinate =  self.currentLocation.coordinate;
+        [mapView addAnnotation:annotation];
 }
 
 
