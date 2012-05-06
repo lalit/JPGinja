@@ -1498,7 +1498,7 @@
     
     for (int index=0; index<[dataArray count]; index++) {
         Offer *offer =[dataArray objectAtIndex:index];
-        NSLog(@"offer = %@",offer.offer_id);
+        
         ShopList *merchant = [self getStoreDataById:offer.store_id];
         Categories *cat =[self getCategoryDataById:merchant.sub_category];
         /*if ([mapDataDict valueForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]]==nil) {
@@ -1519,14 +1519,14 @@
             }else
             {
                 if ([mapDataDict valueForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]]==nil) {
-                    NSMutableArray *offerdataArray =[[NSMutableArray alloc]init ];
-                    [offerdataArray addObject:offer];
-                    [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+                    NSMutableArray *offerdataArrayLocal =[[NSMutableArray alloc]init ];
+                    [offerdataArrayLocal addObject:offer];
+                    [mapDataDict setValue:offerdataArrayLocal forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
                 }else
                 {
-                    NSMutableArray *offerdataArray =[mapDataDict objectForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
-                    [offerdataArray addObject:offer];
-                    [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+                    NSMutableArray *offerdataArrayLocal =[mapDataDict objectForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+                    [offerdataArrayLocal addObject:offer];
+                    [mapDataDict setValue:offerdataArrayLocal forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
                 }
 
             }
@@ -1535,14 +1535,14 @@
         {
             NSLog(@"is filter off");
             if ([mapDataDict valueForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]]==nil) {
-                NSMutableArray *offerdataArray =[[NSMutableArray alloc]init ];
-                [offerdataArray addObject:offer];
-                [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+                NSMutableArray *offerdataArrayLocal =[[NSMutableArray alloc]init ];
+                [offerdataArrayLocal addObject:offer];
+                [mapDataDict setValue:offerdataArrayLocal forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
             }else
             {
-                NSMutableArray *offerdataArray =[mapDataDict objectForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
-                [offerdataArray addObject:offer];
-                [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+                NSMutableArray *offerdataArrayLocal =[mapDataDict objectForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+                [offerdataArrayLocal addObject:offer];
+                [mapDataDict setValue:offerdataArrayLocal forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
             }
 
         }

@@ -186,7 +186,7 @@
 -(void)constructCalloutPOI
 {
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
+    [deligate getPointOfInterestItems];
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
     placesOfInterest = [[NSMutableArray alloc]init];
     NSLog(@"UPdate view loop start1 %@",[NSDate date]);
@@ -195,7 +195,7 @@
     {
         NSMutableArray *offerdataArray  = [mapDataDict objectForKey:key];
         Offer *offer =[offerdataArray objectAtIndex:0];
-        NSLog(@"Callout construction %@",offer.offer_id);
+        NSLog(@"Callout construction %d",i);
         ShopList *merchant = [deligate getStoreDataById:offer.store_id];
         double latitude =[merchant.latitude doubleValue];
         double longitude = [merchant.longitude doubleValue];
@@ -213,7 +213,7 @@
         
         CustomCallOutView *popup =[[CustomCallOutView alloc]init];
         //popup.currentLocation = _currentAction;
-        NSLog(@"PARENT = %@",deligate.arviewController);
+        //NSLog(@"PARENT = %@",deligate.arviewController);
         popup.parentViewController = deligate.arviewController;
         //NSLog(@"custom = %@,%@",offer,offerdataArray);
         [popup prepareCallOutView:offer offerArray:offerdataArray];
@@ -378,6 +378,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    
     //[super viewWillAppear:animated];
    self.actionsView.hidden=NO;
     self.navigationController.navigationBar.hidden= YES;

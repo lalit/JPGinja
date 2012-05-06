@@ -329,7 +329,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 -(void)constructCalloutPOI
 {
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
+    [deligate getPointOfInterestItems];
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
     placesOfInterest = [[[NSMutableArray alloc]init]retain];
     self.poiData =[[[NSMutableArray alloc]init]retain];
@@ -339,7 +339,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     {
         NSMutableArray *offerdataArray  = [mapDataDict objectForKey:key];
         Offer *offer =[offerdataArray objectAtIndex:0];
-        NSLog(@"Callout construction ARView %@",offer.id);
+        NSLog(@"Callout construction ARView %d",i++);
         ShopList *merchant = [deligate getStoreDataById:offer.store_id];
         double latitude =[merchant.latitude doubleValue];
         double longitude = [merchant.longitude doubleValue];
@@ -377,7 +377,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 -(void)updateView
 {
-    NSLog(@"Update view");
+    NSLog(@"Update view %d",[poiData count]);
     int i =0;
     //int radius=0;
     if ([self.poiData count]==0) {

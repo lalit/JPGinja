@@ -58,7 +58,7 @@
     popup.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     //[popup setBackgroundColor:[UIColor redColor]];
     [popup addSubview:popupbg];
-    NSLog(@"image =%@",categoryData.image_name);
+   // NSLog(@"image =%@",categoryData.image_name);
     popupThumb = [[UIImageView alloc]initWithFrame:CGRectMake(8, 65, 80, 60)];
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     path = [path stringByAppendingString:@"/"];
