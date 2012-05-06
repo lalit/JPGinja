@@ -9,13 +9,14 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "CustomTopNavigationBar.h"
+#import "Location.h"
 
 
 @class OffersDetailsViewController;
 @class ListViewCell;
 
 
-@interface BookMarkViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
+@interface BookMarkViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,CLLocationManagerDelegate>
 {
     
     
@@ -46,6 +47,12 @@
     UIImageView *imgViewditection;
     CLLocationManager *locationManager;
     CLLocation *currentLocation ;
+    
+    CLHeading  *newHeadingObject;
+    float mHeading;
+    NSString *currenDirection;
+    NSString *previousDirection;
+    
     //ListViewCell *cell;
     
     
@@ -90,5 +97,7 @@
 -(IBAction)GinzafilterViewDown:(id)sender;
 -(IBAction)GinzaSearchView:(id)sender;
 - (void)updateTopNavigation ;
+- (NSString *)calculateDistance : (double) aDistance;
+- (NSString *)calculateTime : (int) aTime;
 
 @end

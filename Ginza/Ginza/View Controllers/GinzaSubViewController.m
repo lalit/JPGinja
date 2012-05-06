@@ -40,7 +40,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    self.arrayOflist = [NSMutableArray arrayWithObjects:@"イベントのご案内",@"カード適用",@"このアプリについて ",@"お問い合わせ",@"銀座ラウンジのサービスについて", nil];
+    self.arrayOflist = [NSMutableArray arrayWithObjects:@"イベントのご案内",@"カード適用",@"このアプリについて ",@"銀座ラウンジのサービスについて", nil];//,@"お問い合わせ"
     
     [self.view addSubview:viewGinza];
     
@@ -117,7 +117,7 @@
     
     }
 
-    if (indexPath.row==4) {
+    if (indexPath.row==3) {
         /*GinzaSubMenuListViewController *ginzaDetails = [[GinzaSubMenuListViewController alloc] initWithNibName:@"GinzaSubMenuListViewController" bundle:nil];
         ginzaDetails.type = @"services";
         
@@ -149,13 +149,13 @@
         
     }
    
-    if (indexPath.row==3) {
+    /*if (indexPath.row==3) {
         ContactViewController *contactViewController = [[ContactViewController alloc] initWithNibName:@"ContactViewController" bundle:nil];
         
         
         [self.navigationController pushViewController:contactViewController animated:YES];    
         
-    }
+    }*/
     
 }
 

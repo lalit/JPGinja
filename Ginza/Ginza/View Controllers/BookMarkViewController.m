@@ -25,7 +25,9 @@
 #import "CustomTopNavigationBar.h"
 
 
-
+#define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
+//double DegreesToRadians(double degrees) {return degrees * M_PI / 180.0;};
+//double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 @interface BookMarkViewController ()
 
 @end
@@ -51,6 +53,30 @@
 @synthesize panGestureforFiter;
 @synthesize panGestureforSearch;
 @synthesize arrayOfImages,lblFilterText,lblEventCount,cbar;
+
+
+
+-(double) bearingToLocation:(CLLocation *) destinationLocation {
+    
+    double lat1 = DegreesToRadians(currentLocation.coordinate.latitude);
+    double lon1 = DegreesToRadians(currentLocation.coordinate.longitude);
+    
+    double lat2 = DegreesToRadians(destinationLocation.coordinate.latitude);
+    double lon2 = DegreesToRadians(destinationLocation.coordinate.longitude);
+    
+    double dLon = lon2 - lon1;
+    
+    double y = sin(dLon) * cos(lat2);
+    double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
+    double radiansBearing = atan2(y, x);
+    if(radiansBearing < 0.0)
+        radiansBearing += 2*M_PI;
+    
+    
+    return DegreesToRadians(radiansBearing);
+}
+
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -123,12 +149,22 @@
     
     cbar.hidden=NO;
 
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.distanceFilter =1; // whenever we move
+    locationManager.headingFilter = 5;
+    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters; // 100 m
+    [locationManager startUpdatingLocation];
+    [locationManager startUpdatingHeading];
+
     
 }
 
 -(void)viewDidDisappear:(BOOL)animated
 {
     cbar.hidden=YES;
+    [locationManager stopUpdatingHeading];
+    [locationManager stopUpdatingLocation];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -243,7 +279,7 @@
                 [cell.imgDeatils setImage:img];
             }
             
- 
+        cell.largeGIconImageView.hidden=YES;
         cell.lblDescription.text = shopData.store_name;
         cell.lblDescription.font = [UIFont systemFontOfSize:12];
 
@@ -261,6 +297,31 @@
         }
         cell.strLatitude = shopData.latitude;
         cell.strLongitude = shopData.longitude;
+        
+        double Latitude = [shopData.latitude doubleValue];
+        double Longitude = [shopData.longitude doubleValue];
+        Latitude = 35.665756;
+        Longitude = 139.7117;
+        CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
+        CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
+        double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
+        int time = (me/4000)*15;
+        double dkm=me/1000;
+        if (dkm>MIN_DISTANCE) {
+            cell.lblDistance.text=@"この場所までの距離が分かりま せんでした";
+        }
+        else {
+            NSString *formattedTime=[self calculateTime:time];
+            NSString *distance=[self calculateDistance:me];
+            cell.lblDistance.text =[NSString stringWithFormat:@"%@ %@",distance,formattedTime];
+        }
+        // Animate Arrow
+        double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
+        CABasicAnimation *theAnimation;
+        theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+        theAnimation.duration = 0.5f;    
+        [cell.imgDirection.layer addAnimation:theAnimation forKey:@"animateMyRotation"];
+        cell.imgDirection.transform = CGAffineTransformMakeRotation(radians);
     }
     
      //[cell initlocation];
@@ -274,6 +335,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+    [locationManager stopUpdatingLocation];
+    [locationManager stopUpdatingHeading];
         
         OfferDetailsViewController *detail =[[OfferDetailsViewController alloc]init];
         Offer *offer =[dataArray objectAtIndex:indexPath.row];
@@ -434,4 +497,174 @@
     cbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:cbar];
 }
+
+#pragma mark CLLocation Delegates methods
+-(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    currentLocation =  [newLocation retain];   
+    //currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+    
+    
+    //NSLog(@"didUpdateToLocation");
+    [tblListView reloadData];
+    
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading 
+{
+    // UITableViewCell *cell =  (UITableViewCell *)[tblListView cellForRowAtIndexPath:[NSIndexPath indexPathWithIndex:2]];
+    
+    
+    //  NSLog(@"update heading....");
+    
+    //  newHeadingObject = [[CLHeading alloc]init];
+    newHeadingObject = newHeading;
+    mHeading = newHeadingObject.magneticHeading;
+    
+    //imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
+    
+    
+    
+    if ((mHeading >= 339) || (mHeading <= 22)) {
+        //  NSLog(@"User Headingaa ......->N");
+        currenDirection = @"N";
+        
+    }else if ((mHeading > 23) && (mHeading <= 68)) {
+        currenDirection = @"NE";
+        // NSLog(@"User Heading ......->NE");
+    }else if ((mHeading > 69) && (mHeading <= 113)) {
+        currenDirection = @"E";
+        // NSLog(@"User Heading ......->E");
+    }else if ((mHeading > 114) && (mHeading <= 158)) {
+        currenDirection = @"SE";
+        // NSLog(@"User Heading ......->SE");
+    }else if ((mHeading > 159) && (mHeading <= 203)) {
+        currenDirection = @"S";
+        //  NSLog(@"User Heading ......->S");
+    }else if ((mHeading > 204) && (mHeading <= 248)) {
+        currenDirection = @"SW";
+        //  NSLog(@"User Heading ......->SW");
+    }else if ((mHeading > 249) && (mHeading <= 293)) {
+        currenDirection = @"W";
+        ///  NSLog(@"User Heading ......->W");
+    }else if ((mHeading > 294) && (mHeading <= 338)) {
+        
+        //NSLog(@"User Heading ......->NW");
+        currenDirection = @"NW";
+    }
+    
+    
+    if ([currenDirection isEqualToString:previousDirection ]){
+        
+    }
+    else {
+        NSLog(@"Table Reload Called");
+        [tblListView reloadData];
+        previousDirection = currenDirection;
+    }
+    
+}
+
+
+
+-(float) calculateUserAngle:(CLLocationCoordinate2D)user lat:(float)lat lon:(float)lang {
+    float   locLat = lat;
+    float  locLon = lang;
+    
+    NSLog(@"%f ; %f", locLat, locLon);
+    
+    float pLat;
+    float pLon;
+    
+    if(locLat > user.latitude && locLon > user.longitude) {
+        // north east
+        
+        pLat = user.latitude;
+        pLon = locLon;
+        
+        degrees = 0;
+    }
+    else if(locLat > user.latitude && locLon < user.longitude) {
+        // south east
+        
+        pLat = locLat;
+        pLon = user.longitude;
+        
+        degrees = 45;
+    }
+    else if(locLat < user.latitude && locLon < user.longitude) {
+        // south west
+        
+        pLat = locLat;
+        pLon = user.latitude;
+        
+        degrees = 180;
+    }
+    else if(locLat < user.latitude && locLon > user.longitude) {
+        // north west
+        
+        pLat = locLat;
+        pLon = user.longitude;
+        
+        degrees = 225;
+    }
+    
+    // Vector QP (from user to point)
+    float vQPlat = pLat - user.latitude;
+    float vQPlon = pLon - user.longitude;
+    
+    // Vector QL (from user to location)
+    float vQLlat = locLat - user.latitude;
+    float vQLlon = locLon - user.longitude;
+    
+    // degrees between QP and QL
+    float cosDegrees = (vQPlat * vQLlat + vQPlon * vQLlon) / sqrt((vQPlat*vQPlat + vQPlon*vQPlon) * (vQLlat*vQLlat + vQLlon*vQLlon));
+    // NSLog(@"Rotate:%f",degrees);
+    
+    
+    return degrees = degrees + acos(cosDegrees);
+    
+}
+
+
+-(float) bearingBetweenStartLocation:(CLLocation *)startLocation andEndLocation:(CLLocation *)endLocation{
+    
+    CLLocation *northPoint = [[CLLocation alloc] initWithLatitude:(startLocation.coordinate.latitude)+.01 longitude:endLocation.coordinate.longitude] ;
+    float magA = [northPoint distanceFromLocation:startLocation];
+    float magB = [endLocation distanceFromLocation:startLocation];
+    CLLocation *startLat = [[CLLocation alloc] initWithLatitude:startLocation.coordinate.latitude longitude:0] ;
+    CLLocation *endLat = [[CLLocation alloc] initWithLatitude:endLocation.coordinate.latitude longitude:0] ;
+    float aDotB = magA*[endLat distanceFromLocation:startLat];
+    
+    //NSLog(@"RADIANS_TO_DEGREES:%f",RADIANS_TO_DEGREES(acosf(aDotB/(magA*magB))));
+    return RADIANS_TO_DEGREES(acosf(aDotB/(magA*magB)));
+}
+
+//Calculate Distance and Time
+- (NSString *)calculateDistance : (double) aDistance {
+    NSString *strDist;
+    double d=aDistance/1000;
+    if (d>1.0) {
+        strDist=[NSString stringWithFormat:@"%.fkm",d];
+    }
+    else {
+        strDist=[NSString stringWithFormat:@"%.fm",aDistance];
+    }
+    return strDist;
+}
+
+- (NSString *) calculateTime: (int) aTime {
+    NSString *strTime;
+    if (aTime>60) {
+        int hours=aTime/60;
+        int minutes=aTime%60;
+        strTime=[NSString stringWithFormat:@"(徒歩%d時間%d分)",hours,minutes];
+    }
+    else {
+        strTime=[NSString stringWithFormat:@"(徒歩%d分)",aTime];
+    }
+    return  strTime;
+}
+
+
 @end

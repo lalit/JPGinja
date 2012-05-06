@@ -333,7 +333,6 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
     placesOfInterest = [[[NSMutableArray alloc]init]retain];
     self.poiData =[[[NSMutableArray alloc]init]retain];
-    NSLog(@"UPdate view loop start1 %@",[NSDate date]);
     int i=0;
     for (id key in mapDataDict)
     {
@@ -343,17 +342,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         ShopList *merchant = [deligate getStoreDataById:offer.store_id];
         double latitude =[merchant.latitude doubleValue];
         double longitude = [merchant.longitude doubleValue];
-        
-        //For testing
-        //CLLocation *pointALocation = currentLocation;
-        //CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
-        //CLLocation *pointBLocation = [[CLLocation alloc] initWithLatitude:[merchant.latitude doubleValue] longitude:[merchant.longitude doubleValue]];  
-        
-        // float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
-        //radius=250;
-        //if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
-        
-        //if (distanceMeters<radius) {
+
         
         CustomCallOutView *popup =[[CustomCallOutView alloc]init];
         popup.currentLocation = [[Location sharedInstance]currentLocation];
@@ -377,12 +366,13 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 -(void)updateView
 {
-    NSLog(@"Update view %d",[poiData count]);
+    
     int i =0;
     //int radius=0;
     if ([self.poiData count]==0) {
         [self constructCalloutPOI];
     }
+    NSLog(@"Update view %d",[self.poiData count]);
     self.placesOfInterest = [self.poiData copy];
     NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
     for (PlaceOfInterest *poi in self.placesOfInterest) {

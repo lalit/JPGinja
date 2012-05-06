@@ -81,7 +81,7 @@
     offerTitleLabel.textColor =[UIColor grayColor];
     
     offerTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-    //offerTitleLabel.adjustsFontSizeToFitWidth = YES;
+    offerTitleLabel.adjustsFontSizeToFitWidth = YES;
     //[offerTitleLabel sizeToFit];
     [popup addSubview:offerTitleLabel];
     
@@ -91,7 +91,7 @@
     desLabel.lineBreakMode=UILineBreakModeWordWrap;
     desLabel.numberOfLines=1;
     desLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight |UIViewAutoresizingFlexibleRightMargin ;
-    //desLabel.adjustsFontSizeToFitWidth = YES;
+    desLabel.adjustsFontSizeToFitWidth = YES;
     [popup addSubview:desLabel];
     txtcp = [[UILabel alloc]initWithFrame:CGRectMake(8, 45, 100, 21)];
     desLabel.lineBreakMode=UILineBreakModeWordWrap;
@@ -99,7 +99,7 @@
     txtcp.backgroundColor =[UIColor clearColor];
     //txtcp.text = @"Hello";
     txtcp.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-   // txtcp.adjustsFontSizeToFitWidth = YES;
+    txtcp.adjustsFontSizeToFitWidth = YES;
     [popup addSubview:txtcp];
     double Latitude = [merchant.latitude doubleValue];
     double Longitude = [merchant.longitude doubleValue];

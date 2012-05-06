@@ -85,8 +85,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"AR", @"AR");
-        self.tabBarItem.image = [UIImage imageNamed:@"CameraIcon.png"];
-        self.navigationController.navigationBar.hidden = YES; 
+        self.tabBarItem.image = [UIImage imageNamed:@"Camera"];
+        //self.navigationController.navigationBar.hidden = YES; 
 
         arView = (ARView *)self.view;
         arView.parentActionView = self.actionsView;

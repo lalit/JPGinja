@@ -314,6 +314,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         cell.lblDistance.textColor=[UIColor darkGrayColor];
         cell.strLatitude = @"35.665756";
         cell.strLongitude = @"139.71179";
+        cell.btnBookMark.hidden=YES;//as per bala request
         double Latitude = 35.665756;
         double Longitude = 139.7117;
         CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
@@ -357,7 +358,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         [locationManager stopUpdatingLocation];
         [locationManager stopUpdatingHeading];
         self.ginzaDetailsView =[[GinzaDetailsViewController alloc]init];
-        
         [self presentModalViewController:ginzaDetailsView animated:YES];
         
         
