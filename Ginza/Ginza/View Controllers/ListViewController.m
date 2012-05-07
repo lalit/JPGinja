@@ -575,7 +575,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     NSString *strDist;
     double d=aDistance/1000;
     if (d>1.0) {
-            strDist=[NSString stringWithFormat:@"%.fkm",d];
+            strDist=[NSString stringWithFormat:@"%.1fkm",d];
     }
     else {
             strDist=[NSString stringWithFormat:@"%.fm",aDistance];

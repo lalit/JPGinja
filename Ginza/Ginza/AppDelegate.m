@@ -1626,7 +1626,8 @@ NSLog(@"POI end %@",[NSDate date]);
                 [tmpDict setValue:offer forKey:@"offer"];
                 [tmpDict setValue:shopData forKey:@"shop"];
                 [tmpDict setValue:categoryData forKey:@"cat"];
-                [dataDict setValue:tmpDict forKey:[NSString stringWithFormat:@"%d", rowIndex++]];                
+                [dataDict setValue:tmpDict forKey:[NSString stringWithFormat:@"%d", rowIndex++]];
+                [tmpDict release];
             }
         }else
         {
@@ -1638,7 +1639,8 @@ NSLog(@"POI end %@",[NSDate date]);
             [tmpDict setValue:offer forKey:@"offer"];
             [tmpDict setValue:shopData forKey:@"shop"];
             [tmpDict setValue:categoryData forKey:@"cat"];
-            [dataDict setValue:tmpDict forKey:[NSString stringWithFormat:@"%d", rowIndex++]];            
+            [dataDict setValue:tmpDict forKey:[NSString stringWithFormat:@"%d", rowIndex++]];   
+            [tmpDict release];
         }
 
         

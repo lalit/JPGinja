@@ -90,7 +90,7 @@
     desLabel.text = merchant.store_name;
     desLabel.lineBreakMode=UILineBreakModeWordWrap;
     desLabel.numberOfLines=1;
-    desLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight |UIViewAutoresizingFlexibleRightMargin ;
+    desLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     desLabel.adjustsFontSizeToFitWidth = YES;
     [popup addSubview:desLabel];
     txtcp = [[UILabel alloc]initWithFrame:CGRectMake(8, 45, 100, 21)];
@@ -98,7 +98,7 @@
     desLabel.numberOfLines=1;
     txtcp.backgroundColor =[UIColor clearColor];
     //txtcp.text = @"Hello";
-    txtcp.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+    txtcp.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     txtcp.adjustsFontSizeToFitWidth = YES;
     [popup addSubview:txtcp];
     double Latitude = [merchant.latitude doubleValue];
@@ -150,7 +150,7 @@
     
 */
     
-    distanceLabel =[[UILabel alloc]initWithFrame:CGRectMake(90, 52, 64, 70)];
+    distanceLabel =[[UILabel alloc]initWithFrame:CGRectMake(105, 52, 64, 70)];
     distanceLabel.backgroundColor =[UIColor clearColor];
     mycolor= [UIColor colorWithRed:0/255.0 green:105/255.0 blue:170/255.0 alpha:1.0];
     distanceLabel.textColor = mycolor;
@@ -160,10 +160,11 @@
     //distanceLabel.text = [NSString stringWithFormat:@" %.fm",meters];
     distanceLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleTopMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     distanceLabel.textAlignment = UITextAlignmentLeft;
+    distanceLabel.adjustsFontSizeToFitWidth = YES;
     //[distanceLabel sizeToFit];
     [popup addSubview:distanceLabel];
     
-    timeLabel =[[UILabel alloc]initWithFrame:CGRectMake(90, 84, 70, 50)];
+    timeLabel =[[UILabel alloc]initWithFrame:CGRectMake(105, 84, 60, 50)];
     timeLabel.backgroundColor =[UIColor clearColor];
     //timeLabel.text = [NSString stringWithFormat:@"(徒歩%d分)",time];;
     timeLabel.font  =[UIFont systemFontOfSize:11.0];
@@ -171,15 +172,23 @@
     timeLabel.lineBreakMode=UILineBreakModeWordWrap;
     timeLabel.numberOfLines=2;
      timeLabel.textAlignment = UITextAlignmentLeft;
-   /* timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;*/
+    timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     timeLabel.textColor = mycolor;
+    timeLabel.adjustsFontSizeToFitWidth=YES;
     [popup addSubview:timeLabel];
     
     double dkm=me/1000;
     if (dkm>MIN_DISTANCE) {
+        distanceLabel.numberOfLines=3;
         distanceLabel.text=@"この場所までの距離が分かりま せんでした";
+        NSString *formattedTime=[self calculateTime:time];
+        NSString *distance=[self calculateDistance:me];
+        //distanceLabel.numberOfLines=1;
+        //distanceLabel.text=distance;
+        //timeLabel.text =formattedTime;
     }
     else {
+        distanceLabel.numberOfLines=1;
         NSString *formattedTime=[self calculateTime:time];
         NSString *distance=[self calculateDistance:me];
         distanceLabel.text=distance;
@@ -211,12 +220,12 @@
         self.btnNext =[[UIButton alloc]initWithFrame:CGRectMake(popup.frame.size.width-19-10, popup.frame.size.height/2 -32, 38, 38)];
         [self.btnNext setImage:[UIImage imageNamed:@"nextbtn.png"] forState:UIControlStateNormal];          
         [self.btnNext addTarget:self action:@selector(btnNext:) forControlEvents:UIControlEventTouchUpInside];
-        self.btnNext.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+        self.btnNext.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin |UIViewAutoresizingFlexibleRightMargin| UIViewAutoresizingFlexibleBottomMargin |UIViewAutoresizingFlexibleTopMargin|  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
         [popup addSubview:self.btnNext];
         self.btnPrevious =[[UIButton alloc]initWithFrame:CGRectMake(-19, popup.frame.size.height/2-32, 38, 38)];
         [self.btnPrevious setImage:[UIImage imageNamed:@"previousBtn.png"] forState:UIControlStateNormal];          
         [self.btnPrevious addTarget:self action:@selector(btnPrevious:) forControlEvents:UIControlEventTouchUpInside];
-        self.btnPrevious.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin |  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+        self.btnPrevious.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin |UIViewAutoresizingFlexibleRightMargin| UIViewAutoresizingFlexibleBottomMargin |UIViewAutoresizingFlexibleTopMargin|  UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
         [popup addSubview:self.btnPrevious];
         self.btnPrevious.hidden=YES;
     }
@@ -293,8 +302,8 @@
     }
     else {
         NSString *formattedTime=[self calculateTime:time];
-        NSString *distance=[self calculateDistance:me];
-        timeLabel.text =[NSString stringWithFormat:@"%@ %@",distance,formattedTime];
+        //NSString *distance=[self calculateDistance:me];
+        timeLabel.text =[NSString stringWithFormat:@"%@",formattedTime];
     }
 
     distanceLabel1.text = [NSString stringWithFormat:@" %@",merchant.latitude];

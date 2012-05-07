@@ -44,7 +44,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         radiansBearing += 2*M_PI;
     
     
-    return DegreesToRadians(radiansBearing);
+    return DegreesToRadians1(radiansBearing);
 }
 
 
@@ -224,7 +224,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         
            
         if (distanceInKm>1.0) {
-            lblDistanceLabel.text=[NSString stringWithFormat:@"%.fkm",distanceInKm];
+            lblDistanceLabel.text=[NSString stringWithFormat:@"%.1fkm",distanceInKm];
         }
         else {
             lblDistanceLabel.text=[NSString stringWithFormat:@"%.fm",meters];
@@ -508,7 +508,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 
 -(void) animateArrowImage {
     
-    double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360;
+    double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
     CABasicAnimation *theAnimation;
     theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
     theAnimation.duration = 0.5f;    
@@ -564,7 +564,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         
     }
     else {
-        NSLog(@"Table Reload Called");
+        NSLog(@"offer details animate image Called");
         previousDirection = currenDirection;
         [self animateArrowImage];
     }

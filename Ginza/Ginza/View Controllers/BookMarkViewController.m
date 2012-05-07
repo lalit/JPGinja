@@ -55,14 +55,15 @@
 @synthesize arrayOfImages,lblFilterText,lblEventCount,cbar;
 
 
-
+double DegreesToRadians2(double degrees) {return degrees * M_PI / 180.0;};
+double RadiansToDegrees2(double radians) {return radians * 180.0/M_PI;};
 -(double) bearingToLocation:(CLLocation *) destinationLocation {
     
-    double lat1 = DegreesToRadians(currentLocation.coordinate.latitude);
-    double lon1 = DegreesToRadians(currentLocation.coordinate.longitude);
+    double lat1 = DegreesToRadians2(currentLocation.coordinate.latitude);
+    double lon1 = DegreesToRadians2(currentLocation.coordinate.longitude);
     
-    double lat2 = DegreesToRadians(destinationLocation.coordinate.latitude);
-    double lon2 = DegreesToRadians(destinationLocation.coordinate.longitude);
+    double lat2 = DegreesToRadians2(destinationLocation.coordinate.latitude);
+    double lon2 = DegreesToRadians2(destinationLocation.coordinate.longitude);
     
     double dLon = lon2 - lon1;
     
@@ -73,7 +74,7 @@
         radiansBearing += 2*M_PI;
     
     
-    return DegreesToRadians(radiansBearing);
+    return DegreesToRadians2(radiansBearing);
 }
 
 
@@ -341,7 +342,7 @@
         OfferDetailsViewController *detail =[[OfferDetailsViewController alloc]init];
         Offer *offer =[dataArray objectAtIndex:indexPath.row];
         
-        detail.offerId = offer.offer_id;
+        detail.offerId = offer.id;
         [self presentModalViewController:detail animated:YES];
         
 
@@ -356,7 +357,7 @@
     
     //GinzaSubViewController *infoViewController = [[GinzaSubViewController alloc]initWithNibName:@"GinzaSubViewController" bundle:nil];
     
-    GinzaSubViewController *infoViewController = [[GinzaSubViewController alloc]init];
+    GinzaSubViewController *infoViewController = [[[GinzaSubViewController alloc]init]autorelease];
     
     infoViewController.view.frame = CGRectMake(0,-320,320,480);
     
@@ -645,7 +646,7 @@
     NSString *strDist;
     double d=aDistance/1000;
     if (d>1.0) {
-        strDist=[NSString stringWithFormat:@"%.fkm",d];
+        strDist=[NSString stringWithFormat:@"%.1fkm",d];
     }
     else {
         strDist=[NSString stringWithFormat:@"%.fm",aDistance];

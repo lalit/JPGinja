@@ -114,8 +114,8 @@
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
 {
     
-    float x = acceleration.x;
-    float y = acceleration.y;
+    //float x = acceleration.x;
+    //float y = acceleration.y;
     float z = acceleration.z;
     if (self.tabBarController.selectedIndex==0) {
         if (z>=-0.9) {
@@ -163,7 +163,7 @@
     int i=0;
     NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
     for (PlaceOfInterest *poi in self.placesOfInterest) {
-        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        CLLocation *pointALocation = [[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295]autorelease];
         CLLocation *pointBLocation = poi.location;  
         
         float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
@@ -178,6 +178,7 @@
         
     }
     self.settingRadarViewPort.placesOfInterest = placesOfInterestTemp;
+    [placesOfInterestTemp release];
     [self.settingRadarViewPort setNeedsDisplay];
 }
 
@@ -218,8 +219,9 @@
         //NSLog(@"custom = %@,%@",offer,offerdataArray);
         [popup prepareCallOutView:offer offerArray:offerdataArray];
         
-        PlaceOfInterest *poi1 =[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer];
+        PlaceOfInterest *poi1 =[[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer]autorelease];
         [self.placesOfInterest insertObject:poi1 atIndex:i++];
+        
         //}
         
         //}
