@@ -25,6 +25,8 @@
 @synthesize lblDistance;
 @synthesize shareVC;
 @synthesize offerId;
+@synthesize btnShare;
+@synthesize btnGetDirection;
 
 @synthesize webView;
 @synthesize lblTitle;
@@ -91,7 +93,7 @@
         NSString *strTime=@"";
         
         if (distanceInKm>1.0) {
-            result=[NSString stringWithFormat:@"%.fkm",distanceInKm];
+            result=[NSString stringWithFormat:@"%.1fkm",distanceInKm];
         }
         else {
             result=[NSString stringWithFormat:@"%.fm",meters];
@@ -347,4 +349,21 @@ return  4;
     NSString *phoneNumber = [@"tel://" stringByAppendingString:@"0120-953-816"];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
 }
+
+-(void)willRotateToInterfaceOrientation: (UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration {
+    
+    // Change the mapview frmae
+    if (orientation==UIInterfaceOrientationLandscapeLeft||orientation==UIInterfaceOrientationLandscapeRight) {
+        btnGetDirection.frame=CGRectMake(100, 160, btnGetDirection.frame.size.width, btnGetDirection.frame.size.height);
+        btnShare.frame=CGRectMake(161, 161, btnShare.frame.size.width, btnShare.frame.size.height);
+        
+    }
+    else {
+        btnGetDirection.frame=CGRectMake(17, 160, btnGetDirection.frame.size.width, btnGetDirection.frame.size.height);
+        btnShare.frame=CGRectMake(350, 161, btnShare.frame.size.width, btnShare.frame.size.height);
+    }
+    
+}
+
+
 @end
