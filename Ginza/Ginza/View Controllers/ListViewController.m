@@ -98,7 +98,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     currentPage=1;
     self.navigationController.navigationBar.hidden = YES;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
+    self.detailsView =[[OfferDetailsViewController alloc]init];
     self.dataArray = appDeligate.offerDataArray ;
     self.lblEventCount.hidden =NO;
     self.lblEventCount.text =[NSString stringWithFormat:@"%d",[appDeligate.ginzaEvents count]];
@@ -295,6 +295,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         }
 // Animate Arrow
         double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
+        self.detailsView.radians=radians;
         CABasicAnimation *theAnimation;
         theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
         theAnimation.duration = 0.5f;    
@@ -333,6 +334,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         
         // Animate Arrow
         double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
+        self.detailsView.radians=radians;
         CABasicAnimation *theAnimation;
         theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
         theAnimation.duration = 0.5f;    
@@ -352,7 +354,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     [locationManager stopUpdatingLocation];
     [locationManager stopUpdatingHeading];
     
-    
     if(indexPath.row == 0)
     {
         [locationManager stopUpdatingLocation];
@@ -360,19 +361,14 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         self.ginzaDetailsView =[[GinzaDetailsViewController alloc]init];
         [self presentModalViewController:ginzaDetailsView animated:YES];
         
-        
-        
     }
     
     else
     {
         [locationManager stopUpdatingLocation];
         [locationManager stopUpdatingHeading];
-        self.detailsView =[[OfferDetailsViewController alloc]init];
         Offer *offer =[dataArray objectAtIndex:indexPath.row-1];
-        
         detailsView.offerId = offer.id;
-        
         [self presentModalViewController:detailsView animated:YES];
         
         
@@ -565,8 +561,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     CLLocation *startLat = [[CLLocation alloc] initWithLatitude:startLocation.coordinate.latitude longitude:0] ;
     CLLocation *endLat = [[CLLocation alloc] initWithLatitude:endLocation.coordinate.latitude longitude:0] ;
     float aDotB = magA*[endLat distanceFromLocation:startLat];
-    
-    //NSLog(@"RADIANS_TO_DEGREES:%f",RADIANS_TO_DEGREES(acosf(aDotB/(magA*magB))));
     return RADIANS_TO_DEGREES(acosf(aDotB/(magA*magB)));
 }
 
@@ -575,7 +569,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     NSString *strDist;
     double d=aDistance/1000;
     if (d>1.0) {
-            strDist=[NSString stringWithFormat:@"%.fkm",d];
+            strDist=[NSString stringWithFormat:@"%.1fkm",d];
     }
     else {
             strDist=[NSString stringWithFormat:@"%.fm",aDistance];

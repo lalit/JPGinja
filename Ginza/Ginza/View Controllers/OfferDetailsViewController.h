@@ -17,18 +17,20 @@
     float degrees;
 
     //Added by MobiQuest team
-
     float mHeading;
     float mWebViewFlexibleHeight;
     CLHeading  *newHeadingObject;
     NSString *currenDirection;
     NSString *previousDirection;
+    double radians;
     
 }
 @property (nonatomic, retain) ShareViewController *shareVC;
-
-@property(nonatomic, retain)Offer *offer;
+@property(nonatomic)Offer *offer;
+@property (nonatomic) double radians;
 @property(nonatomic, retain)IBOutlet UIButton *btnBookMark;
+@property(nonatomic, retain)IBOutlet UIButton *btnShare;
+@property(nonatomic, retain)IBOutlet UIButton *btnGetDirection;
 @property(nonatomic, retain)IBOutlet UIImageView *arrowImage;
 @property(nonatomic, retain)CLLocation *storeLocation;
 @property(nonatomic, retain)CLLocationManager * locationManager ;

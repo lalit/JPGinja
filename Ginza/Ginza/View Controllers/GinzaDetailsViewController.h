@@ -22,6 +22,8 @@
 @property(nonatomic,retain)UILabel *lblsubTitle;
 @property(nonatomic,retain)IBOutlet UIScrollView *scrollView;
 @property(nonatomic,retain)IBOutlet UITableView *tblView;
+@property(nonatomic, retain)IBOutlet UIButton *btnShare;
+@property(nonatomic, retain)IBOutlet UIButton *btnGetDirection;
 
 
 @property(nonatomic,retain)IBOutlet UILabel *lblOfferTitle;

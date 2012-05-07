@@ -21,8 +21,11 @@
 @implementation OfferDetailsViewController
 @synthesize lblIsChild,lblIsLunch,lblIsPrivate,lblOfferTitle,lblCategoryName,lblDistanceLabel,imgIsChild,imgIsLunch,imgCategory,imgIsPrivate,imgOfferImage,offerId,scroll,webFreeText,storeLocation,offer;
 @synthesize viewOfferDetails,tableView,locationManager,imgDirection,arrowImage,shareVC,lblTime;
-
+@synthesize radians;
 @synthesize btnSepecialOffers;
+@synthesize btnShare;
+@synthesize btnGetDirection;
+
 @synthesize imgOfferdetailsView,bottomView,currentLocation,btnBookMark,compassImageView;
 
 double DegreesToRadians1(double degrees) {return degrees * M_PI / 180.0;};
@@ -224,7 +227,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         
            
         if (distanceInKm>1.0) {
-            lblDistanceLabel.text=[NSString stringWithFormat:@"%.fkm",distanceInKm];
+            lblDistanceLabel.text=[NSString stringWithFormat:@"%.1fkm",distanceInKm];
         }
         else {
             lblDistanceLabel.text=[NSString stringWithFormat:@"%.fm",meters];
@@ -236,8 +239,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 
 -(void)viewWillAppear:(BOOL)animated
 {
-
-   
+    [self animateArrowImage];   
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
@@ -508,12 +510,12 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 
 -(void) animateArrowImage {
     
-    double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360;
+    //double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360;
     CABasicAnimation *theAnimation;
     theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
     theAnimation.duration = 0.5f;    
     [self.compassImageView.layer addAnimation:theAnimation forKey:@"animateMyRotation"];
-    self.compassImageView.transform = CGAffineTransformMakeRotation(radians);
+    self.compassImageView.transform = CGAffineTransformMakeRotation(self.radians);
     [self.view setNeedsDisplay];
 }
 
@@ -668,6 +670,8 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         
         lblIsLunch.frame=CGRectMake(imgIsLunch.frame.origin.x+26, lblIsLunch.frame.origin.y  , lblIsLunch.frame.size.width,  lblIsLunch.frame.size.height);
         lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+26, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
+        btnGetDirection.frame=CGRectMake(100, 298, btnGetDirection.frame.size.width, btnGetDirection.frame.size.height);
+        btnShare.frame=CGRectMake(167, 299, btnShare.frame.size.width, btnShare.frame.size.height);
     
     }
     else {
@@ -675,10 +679,14 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
         lblIsChild.frame=CGRectMake(imgIsChild.frame.origin.x+53, lblIsChild.frame.origin.y  , lblIsChild.frame.size.width,  lblIsChild.frame.size.height);
         lblIsLunch.frame=CGRectMake(imgIsLunch.frame.origin.x+45, lblIsLunch.frame.origin.y  , lblIsLunch.frame.size.width,  lblIsLunch.frame.size.height);
         lblIsPrivate.frame=CGRectMake(imgIsPrivate.frame.origin.x+48, lblIsPrivate.frame.origin.y  , lblIsPrivate.frame.size.width,  lblIsPrivate.frame.size.height);
+        btnGetDirection.frame=CGRectMake(20, 298, btnGetDirection.frame.size.width, btnGetDirection.frame.size.height);
+        btnShare.frame=CGRectMake(343, 299, btnShare.frame.size.width, btnShare.frame.size.height);
         
         }
         
     }
+
+
 
        
     
