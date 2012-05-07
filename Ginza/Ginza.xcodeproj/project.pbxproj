@@ -22,6 +22,7 @@
 		0B8A79F01556BDA0001FF3A9 /* mapG.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B8A79EF1556BDA0001FF3A9 /* mapG.png */; };
 		0B8A79F31556EBB3001FF3A9 /* CameraIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B8A79F21556EBB2001FF3A9 /* CameraIcon.png */; };
 		0B8A79F51556EE22001FF3A9 /* CameraIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B8A79F41556EE22001FF3A9 /* CameraIcon@2x.png */; };
+		0B8A79F71557D9A0001FF3A9 /* Arrowgray.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B8A79F61557D99F001FF3A9 /* Arrowgray.png */; };
 		0B8AC9521535131D00317F83 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8AC9511535131D00317F83 /* SystemConfiguration.framework */; };
 		0B8AC95415354E4700317F83 /* filtersetting.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B8AC95315354E4700317F83 /* filtersetting.plist */; };
 		0B8B57F7153D22370080063A /* btnVirtualWalk.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B8B57F6153D22360080063A /* btnVirtualWalk.png */; };
@@ -414,6 +415,7 @@
 		0B8A79EF1556BDA0001FF3A9 /* mapG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mapG.png; sourceTree = "<group>"; };
 		0B8A79F21556EBB2001FF3A9 /* CameraIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CameraIcon.png; sourceTree = "<group>"; };
 		0B8A79F41556EE22001FF3A9 /* CameraIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CameraIcon@2x.png"; sourceTree = "<group>"; };
+		0B8A79F61557D99F001FF3A9 /* Arrowgray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Arrowgray.png; sourceTree = "<group>"; };
 		0B8AC9511535131D00317F83 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0B8AC95315354E4700317F83 /* filtersetting.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = filtersetting.plist; sourceTree = "<group>"; };
 		0B8B57F6153D22360080063A /* btnVirtualWalk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnVirtualWalk.png; sourceTree = "<group>"; };
@@ -1215,6 +1217,7 @@
 		0B8FC4C81541CB1C00528D9A /* listView */ = {
 			isa = PBXGroup;
 			children = (
+				0B8A79F61557D99F001FF3A9 /* Arrowgray.png */,
 				29AE1AFD15552EEC001C214A /* Giconlarge.png */,
 				0B8FC4C91541CB1C00528D9A /* Arrow.png */,
 				0B8FC4CB1541CB1C00528D9A /* Bookmarkminus.png */,
@@ -2085,6 +2088,7 @@
 				0B8A79F01556BDA0001FF3A9 /* mapG.png in Resources */,
 				0B8A79F31556EBB3001FF3A9 /* CameraIcon.png in Resources */,
 				0B8A79F51556EE22001FF3A9 /* CameraIcon@2x.png in Resources */,
+				0B8A79F71557D9A0001FF3A9 /* Arrowgray.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

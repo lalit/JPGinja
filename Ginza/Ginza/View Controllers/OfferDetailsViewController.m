@@ -510,6 +510,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 
 -(void) animateArrowImage {
     
+    
     double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
     //double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360;
     CABasicAnimation *theAnimation;
