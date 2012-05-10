@@ -329,7 +329,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 -(void)constructCalloutPOI
 {
     AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    [deligate getPointOfInterestItems];
+    //[deligate getPointOfInterestItems];
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
     placesOfInterest = [[[NSMutableArray alloc]init]retain];
     self.poiData =[[[NSMutableArray alloc]init]retain];
@@ -342,25 +342,19 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         ShopList *merchant = [deligate getStoreDataById:offer.store_id];
         double latitude =[merchant.latitude doubleValue];
         double longitude = [merchant.longitude doubleValue];
-
         
         CustomCallOutView *popup =[[CustomCallOutView alloc]init];
         popup.currentLocation = [[Location sharedInstance]currentLocation];
+        popup.currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        float distance = [popup.currentLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude]];
         
         popup.parentViewController = deligate.arviewController;
         [popup prepareCallOutView:offer offerArray:offerdataArray];
         
-        PlaceOfInterest *poi1 =[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer];
-        //[self.placesOfInterest insertObject:poi1 atIndex:i++];
+        PlaceOfInterest *poi1 =[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer distance:distance];
         [self.poiData addObject:poi1];
-        
-        //}
-        
-        //}
     }
     self.placesOfInterest = [[self.poiData copy]retain];
-    NSLog(@"UPdate view loop end %@",[NSDate date]);   
-   
 }
 
 
@@ -377,10 +371,10 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
     for (PlaceOfInterest *poi in self.placesOfInterest) {
         //NSLog(@"UPdate view POI %@",[NSDate date]);
-        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
-        CLLocation *pointBLocation = poi.location;  
+        //CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        //CLLocation *pointBLocation = poi.location;  
         
-        float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
+        float distanceMeters = poi.distance;//[pointALocation distanceFromLocation:pointBLocation];
         distanceMeters = distanceMeters -currentDistance;
         //NSLog(@"distanceMeters = %f,%f,%f",distanceMeters,currentDistance,radius);
         //radius=250;
@@ -393,6 +387,8 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         }
         
     }
+    radarView.currentDistance = currentDistance;
+    [radarView setNeedsDisplay];
     radar.placesOfInterest = placesOfInterestTemp;
     [radar setNeedsDisplay];
     
@@ -677,19 +673,15 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	for (NSData *d in [orderedDistances reverseObjectEnumerator]) {
 		const DistanceAndIndex *distanceAndIndex = (const DistanceAndIndex *)d.bytes;
         int p = [[NSString stringWithFormat:@"%f",distanceAndIndex->distance] intValue];
-        NSLog(@"%d,%d",p,distanceAndIndex->index);
+        NSLog(@"poi distance = %d,%d",p,distanceAndIndex->index);
 		PlaceOfInterest *poi = (PlaceOfInterest *)[placesOfInterest objectAtIndex:distanceAndIndex->index];	
-        //poi.view.hidden = YES;
+     poi.view.hidden = YES;
        [poi.view.layer setZPosition:1000-p];
        
        [self addSubview:poi.view];
-        [self bringSubviewToFront:self.parentActionView];
-        [poi.view sendSubviewToBack:self.parentActionView];
-        //[self.parentActionView addSubview:poi.view];
-        //[self insertSubview:poi.view aboveSubview:self.parentActionView];
-        //[poi.view bringSubviewToFront:self.parentActionView];
-      
-		
+        NSLog(@"Sub View added");
+        //[self bringSubviewToFront:self.parentActionView];
+        //[poi.view sendSubviewToBack:self.parentActionView];
 	}	
     [radar setNeedsDisplay];
     [radarView setNeedsDisplay];
@@ -855,7 +847,9 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     location = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
     if (isFirstTime) {
         
-        [self constructCalloutPOI];
+        if ([self.poiData count]==0) {
+            [self constructCalloutPOI];
+        }
         [self createRadar];
         isFirstTime = NO;
     }

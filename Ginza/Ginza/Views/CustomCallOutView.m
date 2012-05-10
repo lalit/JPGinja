@@ -40,15 +40,21 @@
 -(UIView *)prepareCallOutView:(Offer *)offer offerArray:(NSMutableArray *)offerdataArray
 {
     
+    
     offerDataArray= offerdataArray;
     currentOffer =offer;
+    [self performSelectorInBackground:@selector(constructUI) withObject:nil];
+    return nil;
+}
+-(void)constructUI
+{
     AppDelegate *deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
-    ShopList *merchant = [deligate getStoreDataById:offer.store_id];
+    ShopList *merchant = [deligate getStoreDataById:currentOffer.store_id];
     Categories *categoryData = (Categories *)[deligate getCategoryDataById:merchant.sub_category];
 
     UIView *popup = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 172 , 163)];
     [popup setContentMode:UIViewContentModeScaleToFill];
-    if ([offer.offer_type isEqualToString:@"special"]) {
+    if ([currentOffer.offer_type isEqualToString:@"special"]) {
          popupbg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"spbg.png"]];
     }else
     {
@@ -105,8 +111,8 @@
     double Longitude = [merchant.longitude doubleValue];
     
     CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
-    
-    
+    currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];;
+   // NSLog(@"current =%@,%@",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude);
     CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
     double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
     int time = (me/4000)*15;
@@ -216,7 +222,7 @@
     [popup addSubview:popupButton];
 
     
-    if ([offerdataArray count]>1) {
+    if ([offerDataArray count]>1) {
         self.btnNext =[[UIButton alloc]initWithFrame:CGRectMake(popup.frame.size.width-19-10, popup.frame.size.height/2 -32, 38, 38)];
         [self.btnNext setImage:[UIImage imageNamed:@"nextbtn.png"] forState:UIControlStateNormal];          
         [self.btnNext addTarget:self action:@selector(btnNext:) forControlEvents:UIControlEventTouchUpInside];

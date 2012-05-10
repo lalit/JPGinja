@@ -34,9 +34,10 @@
         CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
         currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;        
         float heading = [self getHeadingFromCoordinate:currentLocation toCoordinate:poi.location];
+        float distance = [currentLocation distanceFromLocation:poi.location];
         //NSLog(@"heading = %f",heading);
         
-        float radius = self.RADIUS-10;
+        float radius = (self.RADIUS/1000)*distance;
         float x0 = 0.0; 
         float y0 = 0.0;
         
@@ -51,9 +52,9 @@
         NSLog(@"distance = %f,%f,%f",x1,y1,self.RADIUS);
         
         CGContextMoveToPoint(contextRef, self.RADIUS, self.RADIUS);
+         CGContextSetFillColorWithColor(contextRef, [UIColor whiteColor].CGColor);
         CGContextFillEllipseInRect(contextRef, CGRectMake(x1+30,y1+30, 2, 2));
-        //CGContextFillRect(contextRef, CGRectMake(0, 0, self.frame.size.width, self.frame.size.height));
-        CGContextFillEllipseInRect(contextRef, CGRectMake(29, 29,5,5));
+       
         AppDelegate *deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
         deligate.arviewController.lblMessage.hidden=YES;
 

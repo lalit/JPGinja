@@ -58,15 +58,9 @@
 #import "CustomCallOutView.h"
 #import "Location.h"
 #import "CustomTopNavigationBar.h"
+#import "Constants .h"
 
 @implementation pARkViewController
-
-//#define SYNTHESIZE_SINGLETON_FOR_CLASS(pARkViewController);
-
-
-#define DEGREES_TO_RADIANS (M_PI/180.0)
-#define degreesToRadianX(x) (M_PI * (x) / 180.0)
-
 @synthesize rotateImg,compassImg,trueNorth;
 @synthesize compassDif,compassFault,calibrateBtn,lblFilterText,slider,settingView,btnClose,lblDistance,btnSettings,orientation,lblEventCount,placesOfInterest,btnVMMode,btnBack,btnHelp,helpView,btnForward,btnReverse,virtualwalkArrow,waitingMessage,arView,lblMessage,cbar,actionsView;
 @synthesize lblRadius,viewSetting,sdrRadius,settingRadar,settingRadarViewPort,viewScale,isFirstTime,actionViewLandScape;
@@ -103,6 +97,8 @@
     didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation
 {
+    NSLog(@"pARK View update location started");
+    [Location sharedInstance].currentLocation=newLocation;
     if (isFirstTime) {
         [self updateView];
         self.isFirstTime=NO;
@@ -131,56 +127,6 @@
 
 
 
--(IBAction)sliderChanged:(id)sender
-{
-    NSLog(@"slider changed %f",sdrRadius.value);
-    //return;
-    if ((int)self.sdrRadius.value==4) {
-        arView.radius=0;
-    }
-    if ((int)self.sdrRadius.value==3) {
-        arView.radius=50;
-    }
-    if ((int)self.sdrRadius.value==2) {
-        arView.radius=200;
-    }
-    if ((int)self.sdrRadius.value==1) {
-        arView.radius=500;
-    }
-    if ((int)self.sdrRadius.value==0) {
-        arView.radius=1000;
-    }
-    NSLog(@"radius = %f",arView.radius);
-    radius = arView.radius;
-    self.lblDistance.text =[NSString stringWithFormat:@"%.f",arView.radius];
-    self.lblRadius.text =[NSString stringWithFormat:@"%.f",arView.radius];
-    [self.lblDistance sizeToFit];
-    
-    
-    if ([self.placesOfInterest count]==0) {
-        [self constructCalloutPOI];
-    }
-    int i=0;
-    NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
-    for (PlaceOfInterest *poi in self.placesOfInterest) {
-        CLLocation *pointALocation = [[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295]autorelease];
-        CLLocation *pointBLocation = poi.location;  
-        
-        float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
-        if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
-            
-            if (distanceMeters<radius) {
-                NSLog(@"radius POI insert = %f",radius);
-                [placesOfInterestTemp insertObject:poi atIndex:i++];
-            }
-            
-        }
-        
-    }
-    self.settingRadarViewPort.placesOfInterest = placesOfInterestTemp;
-    [placesOfInterestTemp release];
-    [self.settingRadarViewPort setNeedsDisplay];
-}
 
 
 
@@ -203,10 +149,10 @@
         
         //For testing
         //CLLocation *pointALocation = currentLocation;
-        //CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
-        //CLLocation *pointBLocation = [[CLLocation alloc] initWithLatitude:[merchant.latitude doubleValue] longitude:[merchant.longitude doubleValue]];  
+        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        CLLocation *pointBLocation = [[CLLocation alloc] initWithLatitude:[merchant.latitude doubleValue] longitude:[merchant.longitude doubleValue]];  
         
-        // float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
+         float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
         //radius=250;
         //if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
         
@@ -219,7 +165,7 @@
         //NSLog(@"custom = %@,%@",offer,offerdataArray);
         [popup prepareCallOutView:offer offerArray:offerdataArray];
         
-        PlaceOfInterest *poi1 =[[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer]autorelease];
+        PlaceOfInterest *poi1 =[[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer distance:distanceMeters]autorelease];
         [self.placesOfInterest insertObject:poi1 atIndex:i++];
         
         //}
@@ -233,122 +179,15 @@
 
 - (void)viewDidLoad
 {
- self.navigationController.navigationBar.hidden = YES;   
-    NSLog(@"View loading start");
-    rotationAngle=0;
+    [self rotateSlider];
+    [self drawSettingRadarView];
+    return;
     
-    [self.btnForward addTarget:self action:@selector(draggedOut:withEvent:)forControlEvents:UIControlEventTouchDragInside];
-    
-     UIView *tabBar = [self.tabBarController.view.subviews objectAtIndex:1];
-    tabbarRect = tabBar.frame;
-    [super viewDidLoad];
-    [self.actionsView.layer setZPosition:101.0f];
-    //[[UIAccelerometer sharedAccelerometer] setDelegate: self ];
-    //[[UIAccelerometer sharedAccelerometer] setUpdateInterval:2.0f];
-    
-    //self.waitingMessage = [[UIAlertView alloc]initWithTitle:@"Message" message:@"Please wait loading data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    //[self.waitingMessage  show];
     currentDistance = 150;
-    zoomlevel=1;
-   // [self updateView];
-    self.sdrRadius.transform= CGAffineTransformRotate(self.slider.transform, 90 * M_PI /180);
-    
-	
-    AppDelegate *deligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    
-   
-    
-    self.lblEventCount.text =[NSString stringWithFormat:@"%d",[deligate.ginzaEvents count]];
-    if ([deligate.ginzaEvents count]<=0) {
-        self.lblEventCount.hidden =YES;
-    }
-    
-    
-    NSString *filterCatString =@"";
-    deligate.arraySelectedCategories =[[NSMutableArray alloc]init ];
-    [deligate getCategories];
-    [deligate getSubCategories];
-    
-    for (int index=0; index<[deligate.arraySelectedCategories count]; index++) {
-        
-        Categories *c =(Categories *)[deligate getCategoryDataById:[deligate.arraySelectedCategories objectAtIndex:index]];
-        filterCatString =[filterCatString stringByAppendingFormat:@"%@,",c.category_name];
-    }
-    self.lblFilterText.text = filterCatString;
-    
-    self.navigationController.navigationBarHidden = YES;
-    
-    
-    
-	arView = (ARView *)self.view;
-	
-       [arView bringSubviewToFront:btnSettings];
-    self.slider = [[UISlider alloc] initWithFrame:CGRectMake(self.view.frame.size.width-100, 200, 120, 25)];
-	[self.slider addTarget:self action:@selector(sliderChanged:)     forControlEvents:UIControlEventValueChanged];
-    self.slider.transform = CGAffineTransformRotate(self.slider.transform, 90 * M_PI /180);
-    
-
-	//self.slider.backgroundColor = [UIColor clearColor];
-	//self.slider.value = 0;
-	//[self.slider setMaximumValue:4];
-    //[self.slider setValue:4];
-    self.settingView = [[UIView alloc]initWithFrame:self.view.frame];
-    CGRect rect = self.settingView.frame;
-    rect.origin.y = 20;
-    self.settingView.frame = rect;
-    self.settingView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    self.settingView.backgroundColor =[UIColor blackColor];
-    // self.settingView.alpha = 0.8;
-    btnClose = [[UIButton alloc]initWithFrame:CGRectMake(self.view.frame.size.width-100, 0, 100, 37)];
-    [btnClose setTitle:@"閉じる" forState:UIControlStateNormal];
-    [btnClose addTarget:self action:@selector(btnClose:) forControlEvents:UIControlEventTouchUpInside];
-    [self.settingView addSubview:btnClose];
-    
-    //[self.settingView addSubview:self.slider];
-    [arView addSubview:self.settingView];
-    self.settingView.hidden=YES;
-    
-    
-    
-    self.isFirstTime = YES;
-    
-    //[self radarSpecificSettings];
-    self.slider.value = 3;
-    radius=50;
-    //self.lblDistance.text = [NSString stringWithFormat:@"%d m",30];
-    self.orientation = UIInterfaceOrientationPortrait;
-    
-    
-    //radar setting
-    int radarRadius = 75;
-    self.settingRadar = [[Radar alloc]initWithFrame:CGRectMake(50,100, radarRadius*2, radarRadius*2)];	
-    self.settingRadar.RADIUS = radarRadius;
-    self.settingRadarViewPort = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50+radarRadius/2,100+radarRadius/2, radarRadius*2, radarRadius*2)];
-    self.settingRadarViewPort.RADIUS =radarRadius;
-    [self.viewSetting addSubview:self.settingRadar];
-    [self.viewSetting addSubview:self.settingRadarViewPort];
-    
-    [self constructCalloutPOI];
-    //[arView start];
-    NSLog(@"View loading end");
-    
 }
 
 
--(IBAction)btnMoveReverse:(id)sender
-{
-    //ARView *arView = (ARView *)self.view;
-    currentDistance = currentDistance-5;
-    arView.currentDistance =currentDistance;
-    UIAlertView *alert =[[UIAlertView alloc]initWithTitle:@"Virtual distance" message:[NSString stringWithFormat: @"Current virtual distance = %f",arView.currentDistance] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-    [alert show];
-    CGRect rect = arView.captureLayer.frame;
-    rect.size.width = rect.size.width-40;
-    rect.size.height = rect.size.height-40;
-    arView.captureLayer.frame = rect;    
-    [arView updateView];
-}
+
 -(IBAction)btnClose:(id)sender
 {
 
@@ -381,21 +220,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     
-    //[super viewWillAppear:animated];
    self.actionsView.hidden=NO;
     self.navigationController.navigationBar.hidden= YES;
 	[self.settingView.layer setZPosition:250.0f];
-    //self.viewSetting.hidden=NO;
-    //arView.radius =50;
-           
-	//arView = (ARView *)self.view;
-	//[arView start];
-    
-    //[locationManager startUpdatingHeading];
-    //[locationManager startUpdatingLocation];
-    //if ([self.placesOfInterest count]==0) {
-    [self constructCalloutPOI];
-    //}
+    if ([self.placesOfInterest count]==0) {
+        [self constructCalloutPOI];
+    }
     [arView updateView];
     [arView.radar setNeedsDisplay];
     [arView.radarView setNeedsDisplay];
@@ -654,15 +484,7 @@
 }
 
 
--(IBAction)btnHelp:(id)sender
-{
-    [self.view addSubview:self.helpView];
-    
-}
--(IBAction)btnHelpClose:(id)sender
-{
-    [self.helpView removeFromSuperview];
-}
+
 
 -(IBAction)btnPrevious:(id)sender
 {
@@ -674,30 +496,99 @@
 }
 
 
--(IBAction)btnARViewClicked:(id)sender
+
+
+#pragma Virtual walk
+//Virtual walk move forward increase the current position by increment of 5 and zoom in cameraview by 40 pixel
+-(IBAction)btnMoveForward:(id)sender
 {
-    actionsView.hidden=YES;
-    viewSetting.frame = self.view.frame;
-    CGRect rect = viewSetting.frame;
-    rect.origin.y=20;
-    viewSetting.frame=rect;
-    UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
-    [transView addSubview:self.viewSetting];
+    
+    currentDistance = currentDistance+5;
+    arView.currentDistance =currentDistance;
+    CGRect rect = arView.captureLayer.frame;
+    rect.size.width = rect.size.width+40;
+    rect.size.height = rect.size.height+40;
+    arView.captureLayer.frame = rect;
+    [arView updateView];
+}
+
+//Virtual walk move reverse decrease the current position by decrement of 5 and zoom out cameraview by 40 pixel
+-(IBAction)btnMoveReverse:(id)sender
+{
+    currentDistance = currentDistance-5;
+    arView.currentDistance =currentDistance;
+    CGRect rect = arView.captureLayer.frame;
+    rect.size.width = rect.size.width-40;
+    rect.size.height = rect.size.height-40;
+    arView.captureLayer.frame = rect;    
+    [arView updateView];
+}
+#pragma radius Setting view
+//Rotate radius setting slider to vertical
+-(void)rotateSlider
+{
+     self.sdrRadius.transform= CGAffineTransformRotate(self.slider.transform, 90 * M_PI /180);
+}
+//Initialize and draw radar, radarViewport
+-(void)drawSettingRadarView
+{
+    self.settingRadar = [[Radar alloc]initWithFrame:CGRectMake(50,100, settingRadarRadius*2, settingRadarRadius*2)];	
+    self.settingRadar.RADIUS = settingRadarRadius;
+    self.settingRadarViewPort = [[RadarViewPortView alloc]initWithFrame:CGRectMake(50+settingRadarRadius/2,100+settingRadarRadius/2, settingRadarRadius*2, settingRadarRadius*2)];
+    self.settingRadarViewPort.RADIUS =settingRadarRadius;
+    [self.viewSetting addSubview:self.settingRadar];
+    [self.viewSetting addSubview:self.settingRadarViewPort];
+}
+
+//Close button action on setting view
+-(IBAction)btnSettingClose:(id)sender
+{
+    actionsView.hidden=NO; //Hide setting view
+    arView.radar.hidden=NO;
+    arView.radarView.hidden=NO;
+    [arView updateView]; // refresh POI's
+    [self.viewSetting removeFromSuperview];
+    
+}
+
+
+//Change the distance recreate POI's 
+-(IBAction)sliderChanged:(id)sender
+{
+    if ((int)self.sdrRadius.value==4) {
+        arView.radius=0;
+    }
+    if ((int)self.sdrRadius.value==3) {
+        arView.radius=50;
+    }
+    if ((int)self.sdrRadius.value==2) {
+        arView.radius=200;
+    }
+    if ((int)self.sdrRadius.value==1) {
+        arView.radius=500;
+    }
+    if ((int)self.sdrRadius.value==0) {
+        arView.radius=1000;
+    }
+    radius = arView.radius;
+    self.lblDistance.text =[NSString stringWithFormat:@"%.f",arView.radius];
+    self.lblRadius.text =[NSString stringWithFormat:@"%.f",arView.radius];
+    [self.lblDistance sizeToFit];
+    
+    
+    if ([self.placesOfInterest count]==0) {
+        [self constructCalloutPOI];
+    }
     int i=0;
     NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
     for (PlaceOfInterest *poi in self.placesOfInterest) {
-        //NSLog(@"UPdate view POI %@",[NSDate date]);
-        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        CLLocation *pointALocation = [[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295]autorelease];
         CLLocation *pointBLocation = poi.location;  
         
         float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
-        
-        //NSLog(@"distanceMeters = %f,%f,%f",distanceMeters,currentDistance,radius);
-        //radius=250;
         if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
             
             if (distanceMeters<radius) {
-                NSLog(@"radius POI insert = %f",radius);
                 [placesOfInterestTemp insertObject:poi atIndex:i++];
             }
             
@@ -705,63 +596,58 @@
         
     }
     self.settingRadarViewPort.placesOfInterest = placesOfInterestTemp;
+    [placesOfInterestTemp release];
     [self.settingRadarViewPort setNeedsDisplay];
 }
 
--(IBAction)btnSettingClose:(id)sender
+//Open setting view construct radar points accoding to distance selection
+-(IBAction)btnARViewClicked:(id)sender
 {
-    //[arView stop];
-    //[arView start];
-    actionsView.hidden=NO;
-    [arView updateView];
-    [self.viewSetting removeFromSuperview];
-    
-   }
-
--(BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    for (UIView *view in self.view.subviews) {
-        if ([view pointInside:[self.view convertPoint:point toView:view] withEvent:event])
-            return YES;
-    }
-    return NO;
-}
-
-
-
-- (void) draggedOut: (UIControl *) c withEvent: (UIEvent *) ev {
-    CGPoint point = [[[ev allTouches] anyObject] locationInView:self.view];
-    
-    NSLog(@"p = %f",point.y-btnForward.frame.origin.y-btnForward.frame.size.height/2-self.actionsView.frame.origin.y);
-    float p =point.y-btnForward.frame.origin.y-btnForward.frame.size.height/2-self.actionsView.frame.origin.y;
-    currentDistance = currentDistance+(-p);
-    arView.currentDistance =currentDistance;
-    UIAlertView *alert =[[UIAlertView alloc]initWithTitle:@"Virtual distance" message:[NSString stringWithFormat: @"Current virtual distance = %f",arView.currentDistance] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-    //[alert show];
-    CGRect rect = arView.captureLayer.frame;
-    rect.size.width = rect.size.width+20;
-    rect.size.height = rect.size.height+20;
-    arView.captureLayer.frame = rect;
-    [arView updateView];
-
-    
-}
-
--(IBAction)btnMoveForward:(id)sender
-{
-    
-    currentDistance = currentDistance+5;
-    arView.currentDistance =currentDistance;
-    UIAlertView *alert =[[UIAlertView alloc]initWithTitle:@"Virtual distance" message:[NSString stringWithFormat: @"Current virtual distance = %f",arView.currentDistance] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-    [alert show];
-    CGRect rect = arView.captureLayer.frame;
-    rect.size.width = rect.size.width+40;
-    rect.size.height = rect.size.height+40;
-    arView.captureLayer.frame = rect;
-    [arView updateView];
-}
--(IBAction)btmVirtual:(id)sender
-{
+    actionsView.hidden=YES;
+    viewSetting.frame = self.view.frame;
+    arView.radar.hidden=YES;
+    arView.radarView.hidden=YES;
+    CGRect rect = viewSetting.frame;
+    rect.origin.y=20;
+    viewSetting.frame=rect;
+    UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
+    [transView addSubview:self.viewSetting];
    
+    /*
+     // Not needed radar view holds last state always
+     int i=0;
+    NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
+    for (PlaceOfInterest *poi in self.placesOfInterest) {
+        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        CLLocation *pointBLocation = poi.location;  
+        
+        float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
+        if (distanceMeters >= currentDistance ) {
+            
+            if (distanceMeters<radius) {
+                [placesOfInterestTemp insertObject:poi atIndex:i++];
+            }
+            
+        }
+        
+    }
+    //self.settingRadarViewPort.placesOfInterest = placesOfInterestTemp;
+    //[self.settingRadarViewPort setNeedsDisplay];*/
 }
-
+#pragma Help related
+//Open help layer
+-(IBAction)btnHelp:(id)sender
+{
+    [self.view addSubview:self.helpView];
+    self.btnHelp.hidden =YES;
+    self.actionsView.hidden=YES;
+    
+}
+//Close help layer
+-(IBAction)btnHelpClose:(id)sender
+{
+    [self.helpView removeFromSuperview];
+    self.btnHelp.hidden =NO;
+    self.actionsView.hidden=NO;
+}
 @end

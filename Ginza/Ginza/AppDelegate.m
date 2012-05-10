@@ -63,7 +63,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.arraySelectedCategories =[[NSMutableArray alloc]init ];
     filterString =@"";
-    
+    filterString = [self getFilterString];
     [self getOfferData];
     self.poiDataDictionary = [self getPointOfInterestItems];
     [self getListViewData];
@@ -80,32 +80,10 @@
     
     else
     {
-        // splashView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-        //UIActivityIndicatorView *myIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        //myIndicator.center = CGPointMake(160, 240);
-        //myIndicator.hidesWhenStopped = NO;
-        
-        //splashView.image = [UIImage imageNamed:@"Default.png"];
-        //[self.window addSubview:splashView];
-        //[self.window addSubview:myIndicator];
-        //[self.window bringSubviewToFront:splashView];
-        //[self.window bringSubviewToFront:myIndicator];
-        //[myIndicator startAnimating];
-        
-        //dispatch_async(kBgQueue, ^{
-        //[self fetchCategoryData];
-        //       
-        // NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://staging.citiworldprivileges.com/mobile/ginza-promotions/shop-list/?created_on=2012-03-02"]];
-        //[self performSelectorOnMainThread:@selector(fetchedData:) 
-        //                 withObject:data waitUntilDone:NO];
-       
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"Data Fetch started %@",[NSDate date]);
         @try {
             [self fetchOfferData:lastSyncedDate];
-            
-            //[self performSelectorInBackground:@selector(fetchOfferData:) withObject:lastSyncedDate];
             NSLog(@"fetch offers");
             
         }
@@ -117,8 +95,6 @@
         
         @try {
             [self fetchCategoryData];
-            
-            //[self performSelectorInBackground:@selector(fetchCategoryData) withObject:nil];
             NSLog(@"fetch categories");
         }
         @catch (NSException *exception) {
@@ -143,9 +119,7 @@
 
     
     UINavigationController *navigation1 = [[UINavigationController alloc]initWithRootViewController:self.arviewController];
-    
-    
-   // UIViewController *listviewController = [[ListViewController alloc] initWithNibName:@"ListViewController" bundle:nil];
+
     
     UIViewController* listviewController = [[ListViewController alloc] 
                                       initWithNibName:@"ListViewController" bundle:nil];
@@ -171,7 +145,7 @@
     self.tabBarController = [[UITabBarController alloc] init];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:navigation1, navigation2,navigation3,navigation4, nil];
     
-    //self.tabBarController.viewControllers = [NSArray arrayWithObjects: navigation2,navigation3, nil];
+    //self.tabBarController.viewControllers = [NSArray arrayWithObjects: navigation1,navigation2, nil];
     
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
@@ -1493,7 +1467,7 @@
     
     NSLog(@"POI start %@",[NSDate date]);
     NSMutableArray *dataArray = self.offerDataArray;
-    filterString = [self getFilterString];
+    
     NSMutableDictionary *mapDataDict = [[NSMutableDictionary alloc]init ];
     
     for (int index=0; index<[dataArray count]; index++) {
@@ -1602,7 +1576,7 @@ NSLog(@"POI end %@",[NSDate date]);
 
 -(NSMutableDictionary *)getListViewData
 {
-    filterString = [self getFilterString];
+    
     NSArray *dataArray = self.offerDataArray;
     NSMutableDictionary *dataDict =[[NSMutableDictionary alloc]init];
     int rowIndex=0;

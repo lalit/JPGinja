@@ -148,4 +148,6 @@
 -(IBAction)btmVirtual:(id)sender;
 -(void)updateView;
 -(void)constructCalloutPOI;
+-(void)rotateSlider;
+-(void)drawSettingRadarView;
 @end

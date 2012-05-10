@@ -12,6 +12,7 @@
 @property (nonatomic,retain) NSArray * pois;
 @property (nonatomic, readonly) float range;
 @property (nonatomic) float radius;
-@property(nonatomic)  float RADIUS;
+@property (nonatomic) float RADIUS;
+@property (nonatomic) float currentDistance;
 
 @end

@@ -45,4 +45,5 @@
 -(IBAction)btnShowDetails:(id)sender;
 - (NSString *) calculateTime: (int) aTime;
 - (NSString *)calculateDistance : (double) aDistance;
+-(void)constructUI;
 @end

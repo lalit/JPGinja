@@ -51,7 +51,7 @@
 @implementation PlaceOfInterest
 
 @synthesize view;
-@synthesize location,offer_id;
+@synthesize location,offer_id,distance;
 
 - (id)init
 {
@@ -64,12 +64,13 @@
     return self;
 }
 
-+ (PlaceOfInterest *)placeOfInterestWithView:(UIView *)view at:(CLLocation *)location  offerdata:(Offer *)offer
++ (PlaceOfInterest *)placeOfInterestWithView:(UIView *)view at:(CLLocation *)location  offerdata:(Offer *)offer  distance:(float) distance
 {
     PlaceOfInterest *poi = [[PlaceOfInterest alloc] init] ;
 	poi.view = view;//customView.view;//view;
     poi.location = location;
     poi.offer_id = offer.offer_id;
+    poi.distance = distance;
 	return poi;
 }
 + (PlaceOfInterest *)placeOfInterestWithView:(UIView *)view at:(CLLocation *)location
