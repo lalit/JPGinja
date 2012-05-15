@@ -2452,8 +2452,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rage  Communications Private Limited";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/include/libxml2",
@@ -2476,8 +2476,8 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "B42A3065-E9D6-456B-A6E0-5B908C2DD809";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B42A3065-E9D6-456B-A6E0-5B908C2DD809";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2486,8 +2486,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rage  Communications Private Limited";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/include/libxml2",
@@ -2510,8 +2510,8 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "B42A3065-E9D6-456B-A6E0-5B908C2DD809";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B42A3065-E9D6-456B-A6E0-5B908C2DD809";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

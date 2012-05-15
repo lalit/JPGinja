@@ -495,8 +495,18 @@
 //Virtual walk move forward increase the current position by increment of 5 and zoom in cameraview by 40 pixel
 -(IBAction)btnMoveForward:(id)sender
 {
-    if (currentDistance>=0) {
-        currentDistance = currentDistance+5;
+    float ds =5;
+    /*if ([arView.visiplePlacesOfInterest count]>0) {
+        CLLocation *c = [arView.visiplePlacesOfInterest objectAtIndex:([arView.visiplePlacesOfInterest count] -1)];
+        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+
+        ds = [pointALocation distanceFromLocation:c] ;
+        NSLog(@"visiplePlacesOfInterest = %f,%f",ds,currentDistance);
+        
+    }*/
+    NSLog(@"currentDistance = %f",currentDistance);
+        if (currentDistance>=0) {
+        currentDistance = currentDistance+ds;
         arView.currentDistance =currentDistance;
         CGRect rect = arView.captureLayer.frame;
         rect.size.width = rect.size.width+40;

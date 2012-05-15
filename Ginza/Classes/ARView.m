@@ -173,7 +173,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 @synthesize captureLayer;
 @synthesize placesOfInterest;
 @synthesize  currentDistance,maxtDistance,interfaceOrientation,parentActionView,radius,poiData,parentViewController;
-@synthesize radar,radarView;
+@synthesize radar,radarView,visiplePlacesOfInterest;
 
 - (void)dealloc1
 {
@@ -269,7 +269,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     
     NSLog(@"ARView");
     isFirstTime =YES;
-    self.currentDistance =0;//250;
+    self.currentDistance =250;
     self.maxtDistance=300;
 	captureView = [[UIView alloc] initWithFrame:self.bounds];
 	captureView.bounds = self.bounds;
@@ -371,6 +371,8 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
    // NSLog(@"to point = %f, %f",final_longitude,final_latitude);
     
     CLLocation *newCurrentLocation=  [[CLLocation alloc] initWithLatitude:final_latitude longitude:final_longitude];
+    newCurrentLocation=  [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
+    //location = newCurrentLocation;
     return newCurrentLocation;
 }
 
@@ -401,13 +403,13 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         }
         //NSLog(@"distanceMeters = %f,%f,%f",distanceMeters,currentDistance,radius);
         //radius=250;
-       // if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
-            NSLog(@"radius = %f,%f",radius,distanceMeters);
+        if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
+            
             if (distanceMeters<radius) {
                 [placesOfInterestTemp insertObject:poi atIndex:i++];
             }
             
-        //}
+        }
         
     }
     radarView.currentDistance = currentDistance;
@@ -635,7 +637,8 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 - (void)updatePlacesOfInterestCoordinates
 {
-	NSLog(@"updatePlacesOfInterestCoordinates start ");
+	
+    visiplePlacesOfInterest = [[NSMutableArray alloc]init ];
 	if (placesOfInterestCoordinates != NULL) {
 		free(placesOfInterestCoordinates);
 	}
@@ -696,19 +699,20 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	for (NSData *d in [orderedDistances reverseObjectEnumerator]) {
 		const DistanceAndIndex *distanceAndIndex = (const DistanceAndIndex *)d.bytes;
         int p = [[NSString stringWithFormat:@"%f",distanceAndIndex->distance] intValue];
-        NSLog(@"poi distance = %d,%d",p,distanceAndIndex->index);
+        
 		PlaceOfInterest *poi = (PlaceOfInterest *)[placesOfInterest objectAtIndex:distanceAndIndex->index];	
+        
      poi.view.hidden = YES;
        [poi.view.layer setZPosition:1000-p];
        
        [self addSubview:poi.view];
-        NSLog(@"Sub View added");
+        
         //[self bringSubviewToFront:self.parentActionView];
         //[poi.view sendSubviewToBack:self.parentActionView];
 	}	
     [radar setNeedsDisplay];
     [radarView setNeedsDisplay];
-    NSLog(@"updatePlacesOfInterestCoordinates end ");
+    
 }
 
 - (void)onDisplayLink:(id)sender
@@ -757,6 +761,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	
 	int i = 0;
     int zPos = 350;
+    self.visiplePlacesOfInterest =[[NSMutableArray alloc]init ];
 	for (PlaceOfInterest *poi in [placesOfInterest objectEnumerator]) {
 		vec4f_t v;
 		multiplyMatrixAndVector(v, projectionCameraTransform, placesOfInterestCoordinates[i]);
@@ -831,6 +836,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
             
             
 			poi.view.hidden = NO;
+            [visiplePlacesOfInterest addObject:poi.location];
             
                        
 		} else {

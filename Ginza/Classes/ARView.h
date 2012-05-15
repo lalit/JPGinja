@@ -59,6 +59,7 @@
 //@property(nonatomic)float               currentDistance;
 @property(nonatomic,retain)AVCaptureVideoPreviewLayer *captureLayer;
 @property (nonatomic, retain) NSMutableArray *placesOfInterest;
+@property (nonatomic, retain) NSMutableArray *visiplePlacesOfInterest;
 @property(nonatomic)float currentDistance;
 @property(nonatomic)float maxtDistance;
 @property(nonatomic)int interfaceOrientation;

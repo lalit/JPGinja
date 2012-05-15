@@ -191,11 +191,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358753352.551593"
+         timestampString = "358775061.350971"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "638"
-         endingLineNumber = "638"
+         startingLineNumber = "640"
+         endingLineNumber = "640"
          landmarkName = "-updatePlacesOfInterestCoordinates"
          landmarkType = "5">
       </FileBreakpoint>
@@ -205,11 +205,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358753352.551593"
+         timestampString = "358775061.350971"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "660"
-         endingLineNumber = "660"
+         startingLineNumber = "663"
+         endingLineNumber = "663"
          landmarkName = "-updatePlacesOfInterestCoordinates"
          landmarkType = "5">
       </FileBreakpoint>
@@ -261,11 +261,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358753352.551593"
+         timestampString = "358775061.350971"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "681"
-         endingLineNumber = "681"
+         startingLineNumber = "684"
+         endingLineNumber = "684"
          landmarkName = "-updatePlacesOfInterestCoordinates"
          landmarkType = "5">
          <Locations>
@@ -301,11 +301,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358753352.551593"
+         timestampString = "358775061.350971"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "695"
-         endingLineNumber = "695"
+         startingLineNumber = "698"
+         endingLineNumber = "698"
          landmarkName = "-updatePlacesOfInterestCoordinates"
          landmarkType = "5">
       </FileBreakpoint>
@@ -315,11 +315,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358753352.551593"
+         timestampString = "358775061.350971"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "694"
-         endingLineNumber = "694"
+         startingLineNumber = "697"
+         endingLineNumber = "697"
          landmarkName = "-updatePlacesOfInterestCoordinates"
          landmarkType = "5">
       </FileBreakpoint>
@@ -651,11 +651,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358753315.780361"
+         timestampString = "358775061.350971"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "379"
-         endingLineNumber = "379"
+         startingLineNumber = "381"
+         endingLineNumber = "381"
          landmarkName = "-updateView"
          landmarkType = "5">
       </FileBreakpoint>

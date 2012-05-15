@@ -49,7 +49,7 @@
         float x1 = (x0 + radius * sin(angle));   
         float y1 = (y0 + radius * cos(angle)); 
         
-        NSLog(@"distance = %f,%f,%f",x1,y1,self.RADIUS);
+       
         
         CGContextMoveToPoint(contextRef, self.RADIUS, self.RADIUS);
          CGContextSetFillColorWithColor(contextRef, [UIColor whiteColor].CGColor);
@@ -88,7 +88,7 @@
         float x1 = (x0 + radius * sin(angle));   
         float y1 = (y0 + radius * cos(angle)); 
         
-        NSLog(@"distance = %f,%f",x1,y1);
+        
         
         
         CGContextFillEllipseInRect(contextRef, CGRectMake(x1,y1, 2, 2));
@@ -129,7 +129,7 @@
     float x1 = (x0 + radius * sin(angle));   
     float y1 = (y0 + radius * cos(angle)); 
     
-    //NSLog(@"distance = %f,%f",x1,y1);
+   
     
     
 }
