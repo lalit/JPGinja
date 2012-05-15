@@ -505,15 +505,12 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 }
 
 -(void) animateArrowImage {
-    
-    
     double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
-    //double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/360;
     CABasicAnimation *theAnimation;
     theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
     theAnimation.duration = 0.5f;    
     [self.compassImageView.layer addAnimation:theAnimation forKey:@"animateMyRotation"];
-    self.compassImageView.transform = CGAffineTransformMakeRotation(self.radians);
+    self.compassImageView.transform = CGAffineTransformMakeRotation(radians);
     [self.view setNeedsDisplay];
 }
 
@@ -576,8 +573,6 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     [appDeligate updateBookMarkCount:self.offer];
-    
-    
     if ([self.offer.isbookmark isEqualToString:@"0"]) {
         
         [btnBookMark setImage:[UIImage imageNamed:@"Bookmarkplus.png"] forState:UIControlStateNormal];
@@ -660,6 +655,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     NSString *phoneNumber = [@"tel://" stringByAppendingString:merchant.phone];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
 }
+
 -(void)willRotateToInterfaceOrientation: (UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration {
     
         // Change the mapview frmae

@@ -110,7 +110,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     currentPage=1;
     self.navigationController.navigationBar.hidden = YES;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    self.detailsView =[[OfferDetailsViewController alloc]init];
     self.dataArray = appDeligate.offerDataArray ;
     self.lblEventCount.hidden =NO;
     self.lblEventCount.text =[NSString stringWithFormat:@"%d",[appDeligate.ginzaEvents count]];
@@ -278,7 +277,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
            
             
             NSString *sOff=[NSString stringWithFormat:@"★ %@",offer.lead_text];
-             cell.lblFreeText.text = sOff;
+            cell.lblFreeText.text = sOff;
             UIColor *mycolor= [UIColor colorWithRed:192/255.0 green:150.0/255.0 blue:49.0/255.0 alpha:5.0];
             cell.lblFreeText.textColor = mycolor;
         }
@@ -307,7 +306,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         }
 // Animate Arrow
         double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
-        self.detailsView.radians=radians;
         CABasicAnimation *theAnimation;
         theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
         theAnimation.duration = 0.5f;    
@@ -346,7 +344,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         
         // Animate Arrow
         double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
-        self.detailsView.radians=radians;
+       // self.detailsView.radians=radians;
         CABasicAnimation *theAnimation;
         theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
         theAnimation.duration = 0.5f;    
@@ -371,6 +369,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     
     else
     {
+        self.detailsView =[[OfferDetailsViewController alloc]init];
         Offer *offer =[dataArray objectAtIndex:indexPath.row-1];
         detailsView.offerId = offer.id;
         [self presentModalViewController:detailsView animated:YES];
@@ -394,11 +393,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     [self.navigationController pushViewController:infoViewController animated:NO];
     
 }
-
-
-
-
-
 
 
 -(IBAction)GinzafilterViewDown:(id)sender
@@ -427,7 +421,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 {
     currentLocation =  [newLocation retain];   
     //currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
-    
     
     //NSLog(@"didUpdateToLocation");
      [tblListView reloadData];

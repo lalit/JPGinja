@@ -114,7 +114,7 @@ double RadiansToDegrees2(double radians) {return radians * 180.0/M_PI;};
     for (int index=0; index<[appDeligate.arraySelectedCategories count]; index++) {
         
         Categories *c =(Categories *)[appDeligate getCategoryDataById:[appDeligate.arraySelectedCategories objectAtIndex:index]];
-        //filterCatString =[filterCatString stringByAppendingFormat:@"%@,",c.category_name];
+        filterCatString =[filterCatString stringByAppendingFormat:@"%@,",c.category_name];
     }
     self.lblFilterText.text = filterCatString;    
     
