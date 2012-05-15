@@ -269,7 +269,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     
     NSLog(@"ARView");
     isFirstTime =YES;
-    self.currentDistance =250;
+    self.currentDistance =0;//250;
     self.maxtDistance=300;
 	captureView = [[UIView alloc] initWithFrame:self.bounds];
 	captureView.bounds = self.bounds;
@@ -346,7 +346,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         
         CustomCallOutView *popup =[[CustomCallOutView alloc]init];
         popup.currentLocation = [[Location sharedInstance]currentLocation];
-        popup.currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        popup.currentLocation = [self getCurrentLocation];
         float distance = [popup.currentLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude]];
         
         popup.parentViewController = deligate.arviewController;
@@ -357,7 +357,22 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     }
     self.placesOfInterest = [[self.poiData copy]retain];
 }
-
+-(CLLocation *)getCurrentLocation
+{
+    double latitude =35.67163555;
+    double longitude = 139.76395295;
+    
+    float dx = currentDistance*cos(currentHeading);
+    float dy = currentDistance*sin(currentHeading);
+    float delta_longitude = dx/(111320*cos(latitude));
+    float delta_latitude = dy/1110540;
+    float final_longitude = longitude+delta_longitude;
+    float final_latitude = latitude+delta_latitude;
+   // NSLog(@"to point = %f, %f",final_longitude,final_latitude);
+    
+    CLLocation *newCurrentLocation=  [[CLLocation alloc] initWithLatitude:final_latitude longitude:final_longitude];
+    return newCurrentLocation;
+}
 
 -(void)updateView
 {
@@ -386,13 +401,13 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         }
         //NSLog(@"distanceMeters = %f,%f,%f",distanceMeters,currentDistance,radius);
         //radius=250;
-        if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
-            NSLog(@"radius = %f",radius);
+       // if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
+            NSLog(@"radius = %f,%f",radius,distanceMeters);
             if (distanceMeters<radius) {
                 [placesOfInterestTemp insertObject:poi atIndex:i++];
             }
             
-        }
+        //}
         
     }
     radarView.currentDistance = currentDistance;
@@ -747,7 +762,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 		multiplyMatrixAndVector(v, projectionCameraTransform, placesOfInterestCoordinates[i]);
 		createProjectionMatrix(projectionTransform, 60.0f*DEGREES_TO_RADIANS, self.bounds.size.width*1.0f / self.bounds.size.height, 0.25f, 1000.0f);
         
-        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        CLLocation *pointALocation = [self getCurrentLocation];//[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
         //NSLog(@"%f",currentLocation.coordinate.latitude);
         
         CLLocation *pointBLocation = poi.location;  

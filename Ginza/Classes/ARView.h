@@ -82,5 +82,6 @@
 -(void)radarSpecificSettings;
 -(void)createRadar;
 - (void)updater:(NSTimer *)timer ;
+-(CLLocation *)getCurrentLocation;
 
 @end
