@@ -59,6 +59,14 @@
     float mHeading;
     CustomTopNavigationBar *cbar;
     
+    UIImage *bookMarkMinusImage;
+    UIImage *bookMarkPlusImage;
+    UIImage *ginzaBackgroundImageNormal;
+    UIImage *ginzaBackgroundImageSpecial;
+    UIImage *ginzaBackgroundImageFirstRow;
+    UIImage *thumbImage;
+    UIImage *arrowImageBlue;
+    UIImage *arrowImageGray;
 }
 
 @property(nonatomic) int currentPage;
@@ -104,4 +112,5 @@
 - (NSString *)calculateDistance : (double) aDistance;
 - (NSString *)calculateTime : (int) aTime;
 - (void) updateTopNavigation;
+-(void) createConstantImages ;
 @end
