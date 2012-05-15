@@ -92,13 +92,25 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     return self;
 }
 
+-(void) createConstantImages {
+     bookMarkMinusImage=[UIImage imageNamed:@"Bookmarkminus.png"];
+     bookMarkPlusImage=[UIImage imageNamed:@"Bookmarkplus.png"];
+     ginzaBackgroundImageNormal= [UIImage imageNamed:@"Normaloffercell.png"];;
+     ginzaBackgroundImageSpecial=[UIImage imageNamed:@"Specialoffercellbg.png"];
+     arrowImageBlue=[UIImage imageNamed:@"Arrow.png"];
+     arrowImageGray= [UIImage imageNamed:@"Arrowgray.png"];
+     ginzaBackgroundImageFirstRow=[UIImage imageNamed:@"Ginzacelllist.png"];
+     thumbImage=[UIImage imageNamed:@"thumb.png"];
+}
+
 #import "CustomTopNavigationBar.h"
 - (void)viewDidLoad
 {
+    [self createConstantImages];
     currentPage=1;
     self.navigationController.navigationBar.hidden = YES;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
+    self.detailsView =[[OfferDetailsViewController alloc]init];
     self.dataArray = appDeligate.offerDataArray ;
     self.lblEventCount.hidden =NO;
     self.lblEventCount.text =[NSString stringWithFormat:@"%d",[appDeligate.ginzaEvents count]];
@@ -160,7 +172,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    [tblListView reloadData];
     return YES;
 }
 
@@ -241,6 +252,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         
         
         [cell.imgDeatils setImage:image];
+        
         cell.lblTitle.text = categoryData.category_name;
         cell.lblTitle.textColor =[UIColor grayColor];
         
@@ -253,16 +265,16 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         if ([offer.isbookmark isEqualToString:@"1"]) 
             
         {
-            [cell.btnBookMark setImage:[UIImage imageNamed:@"Bookmarkminus.png"] forState:UIControlStateNormal];
+            [cell.btnBookMark setImage:bookMarkMinusImage forState:UIControlStateNormal];
         }else
         {
-            [cell.btnBookMark setImage:[UIImage imageNamed:@"Bookmarkplus.png"] forState:UIControlStateNormal];
+            [cell.btnBookMark setImage:bookMarkPlusImage forState:UIControlStateNormal];
             
         }
         
         if([offer.offer_type isEqualToString:@"special"])
         {
-            cell.imgGinzaBackground.image = [UIImage imageNamed:@"Specialoffercellbg.png"];
+            cell.imgGinzaBackground.image = ginzaBackgroundImageSpecial;
            
             
             NSString *sOff=[NSString stringWithFormat:@"★ %@",offer.lead_text];
@@ -272,12 +284,12 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         }
         else
         {
-            cell.imgGinzaBackground.image = [UIImage imageNamed:@"Normaloffercell.png"];
+            cell.imgGinzaBackground.image = ginzaBackgroundImageNormal;
         }
         
         cell.strLatitude = shopData.latitude;
         cell.strLongitude = shopData.longitude;
-        cell.imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
+        cell.imgDirection.image= arrowImageBlue;
         double Latitude = [shopData.latitude doubleValue];
         double Longitude = [shopData.longitude doubleValue];
         CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
@@ -304,12 +316,12 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     }
     
     if (indexPath.row==0) {
-        cell.imgGinzaBackground.image = [UIImage imageNamed:@"Ginzacelllist.png"];
+       cell.imgGinzaBackground.image = ginzaBackgroundImageFirstRow;
         cell.largeGIconImageView.hidden=NO;
-        cell.imgDirection.image= [UIImage imageNamed:@"Arrowgray.png"];
+         cell.imgDirection.image= arrowImageGray;
         cell.lblTitle.text = @"ダイナースクラフ";
         cell.lblTitle.textColor =[UIColor whiteColor];
-        cell.imgDeatils.image = [UIImage imageNamed:@"thumb.png"];
+        cell.imgDeatils.image = thumbImage;
         cell.lblDescription.text = @"銀座ラウンシ";
         cell.lblDescription.textColor =[UIColor whiteColor];
         cell.lblDistance.textColor=[UIColor darkGrayColor];
@@ -350,29 +362,18 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    [locationManager stopUpdatingLocation];
-    [locationManager stopUpdatingHeading];
-    
+        
     if(indexPath.row == 0)
     {
-        [locationManager stopUpdatingLocation];
-        [locationManager stopUpdatingHeading];
         self.ginzaDetailsView =[[GinzaDetailsViewController alloc]init];
         [self presentModalViewController:ginzaDetailsView animated:YES];
-        
     }
     
     else
     {
-        [locationManager stopUpdatingLocation];
-        [locationManager stopUpdatingHeading];
-        self.detailsView =[[OfferDetailsViewController alloc]init];
         Offer *offer =[dataArray objectAtIndex:indexPath.row-1];
         detailsView.offerId = offer.id;
         [self presentModalViewController:detailsView animated:YES];
-        
-        
     }
     
 }
@@ -389,11 +390,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 -(IBAction)GinzaswipeDown:(id)sender
 {
     
-    
     GinzaSubViewController  *infoViewController = [[GinzaSubViewController alloc]init];
-    
-    
-    
     [self.navigationController pushViewController:infoViewController animated:NO];
     
 }
@@ -485,7 +482,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         
     }
     else {
-        NSLog(@"Table Reload Called");
        [tblListView reloadData];
         previousDirection = currenDirection;
     }
