@@ -89,6 +89,12 @@
         [arView start];
         lblDistance.text=@"50";
         lblDistance.hidden=YES;
+        
+        NSError *error;
+        if (![[GANTracker sharedTracker] trackPageview:@"/app_ar"
+                                             withError:&error]) {
+            // Handle error here
+        }
     }
     return self;
 }
@@ -136,13 +142,12 @@
     [deligate getPointOfInterestItems];
     NSMutableDictionary *mapDataDict = deligate.poiDataDictionary;
     placesOfInterest = [[NSMutableArray alloc]init];
-    NSLog(@"UPdate view loop start1 %@",[NSDate date]);
+   
     int i=0;
     for (id key in mapDataDict)
     {
         NSMutableArray *offerdataArray  = [mapDataDict objectForKey:key];
         Offer *offer =[offerdataArray objectAtIndex:0];
-        NSLog(@"Callout construction %d",i);
         ShopList *merchant = [deligate getStoreDataById:offer.store_id];
         double latitude =[merchant.latitude doubleValue];
         double longitude = [merchant.longitude doubleValue];
@@ -152,27 +157,15 @@
         CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
         CLLocation *pointBLocation = [[CLLocation alloc] initWithLatitude:[merchant.latitude doubleValue] longitude:[merchant.longitude doubleValue]];  
         
-         float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
-        //radius=250;
-        //if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
-        
-        //if (distanceMeters<radius) {
-        
+        float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
         CustomCallOutView *popup =[[CustomCallOutView alloc]init];
-        //popup.currentLocation = _currentAction;
-        //NSLog(@"PARENT = %@",deligate.arviewController);
         popup.parentViewController = deligate.arviewController;
-        //NSLog(@"custom = %@,%@",offer,offerdataArray);
         [popup prepareCallOutView:offer offerArray:offerdataArray];
         
         PlaceOfInterest *poi1 =[[PlaceOfInterest placeOfInterestWithView:popup at:[[CLLocation alloc] initWithLatitude:latitude longitude:longitude] offerdata:offer distance:distanceMeters]autorelease];
         [self.placesOfInterest insertObject:poi1 atIndex:i++];
-        
-        //}
-        
-        //}
     }
-    NSLog(@"UPdate view loop end %@",[NSDate date]);   
+      
     
 }
 
@@ -502,26 +495,31 @@
 //Virtual walk move forward increase the current position by increment of 5 and zoom in cameraview by 40 pixel
 -(IBAction)btnMoveForward:(id)sender
 {
-    
-    currentDistance = currentDistance+5;
-    arView.currentDistance =currentDistance;
-    CGRect rect = arView.captureLayer.frame;
-    rect.size.width = rect.size.width+40;
-    rect.size.height = rect.size.height+40;
-    arView.captureLayer.frame = rect;
-    [arView updateView];
+    if (currentDistance>=0) {
+        currentDistance = currentDistance+5;
+        arView.currentDistance =currentDistance;
+        CGRect rect = arView.captureLayer.frame;
+        rect.size.width = rect.size.width+40;
+        rect.size.height = rect.size.height+40;
+        arView.captureLayer.frame = rect;
+        [arView updateView];
+    }
+   
 }
 
 //Virtual walk move reverse decrease the current position by decrement of 5 and zoom out cameraview by 40 pixel
 -(IBAction)btnMoveReverse:(id)sender
 {
-    currentDistance = currentDistance-5;
-    arView.currentDistance =currentDistance;
-    CGRect rect = arView.captureLayer.frame;
-    rect.size.width = rect.size.width-40;
-    rect.size.height = rect.size.height-40;
-    arView.captureLayer.frame = rect;    
-    [arView updateView];
+    if (currentDistance>=0) {
+        currentDistance = currentDistance-5;
+        arView.currentDistance =currentDistance;
+        CGRect rect = arView.captureLayer.frame;
+        rect.size.width = rect.size.width-40;
+        rect.size.height = rect.size.height-40;
+        arView.captureLayer.frame = rect;    
+        [arView updateView];
+
+    }
 }
 #pragma radius Setting view
 //Rotate radius setting slider to vertical

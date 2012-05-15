@@ -53,6 +53,7 @@
 #import "AppDelegate.h"
 #import "RadarViewPortView.h"
 #import "pARkViewController.h"
+#import "GANTracker.h"
 #pragma mark -
 #pragma mark Math utilities declaration
 
@@ -376,6 +377,13 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         
         float distanceMeters = poi.distance;//[pointALocation distanceFromLocation:pointBLocation];
         distanceMeters = distanceMeters -currentDistance;
+        if (distanceMeters==0) {
+            NSError *error;
+            NSString *poiString =[NSString stringWithFormat:@"/%d"];
+            if (![[GANTracker sharedTracker] trackPageview:poiString
+                                                 withError:&error]) {
+            }
+        }
         //NSLog(@"distanceMeters = %f,%f,%f",distanceMeters,currentDistance,radius);
         //radius=250;
         if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {

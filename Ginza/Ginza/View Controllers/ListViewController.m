@@ -98,7 +98,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     currentPage=1;
     self.navigationController.navigationBar.hidden = YES;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    self.detailsView =[[OfferDetailsViewController alloc]init];
+    
     self.dataArray = appDeligate.offerDataArray ;
     self.lblEventCount.hidden =NO;
     self.lblEventCount.text =[NSString stringWithFormat:@"%d",[appDeligate.ginzaEvents count]];
@@ -367,6 +367,7 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     {
         [locationManager stopUpdatingLocation];
         [locationManager stopUpdatingHeading];
+        self.detailsView =[[OfferDetailsViewController alloc]init];
         Offer *offer =[dataArray objectAtIndex:indexPath.row-1];
         detailsView.offerId = offer.id;
         [self presentModalViewController:detailsView animated:YES];

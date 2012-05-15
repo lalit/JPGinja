@@ -19,6 +19,7 @@
 #import "Constants .h"
 #import <QuartzCore/QuartzCore.h>
 
+
 @implementation AppDelegate
 
 
@@ -30,8 +31,27 @@
 //test
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+     NSError *error;
+    
+    [[GANTracker sharedTracker] startTrackerWithAccountID:@"UA-31661485-1"
+                                           dispatchPeriod:kGANDispatchPeriodSec
+                                                 delegate:nil];
+    
+   
+    if (![[GANTracker sharedTracker] setCustomVariableAtIndex:1
+                                                         name:@"iPhone1"
+                                                        value:@"iv1"
+                                                    withError:&error]) {
+        // Handle error here
+    }
+    
+    if (![[GANTracker sharedTracker] trackPageview:@"/app_start"
+                                         withError:&error]) {
+        // Handle error here
+    }
+    
     isSyncON = NO;
-    NSError *error;
+    //NSError *error;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); //1
     NSString *documentsDirectory = [paths objectAtIndex:0]; //2
     NSString *path = [documentsDirectory stringByAppendingPathComponent:@"filtersetting.plist"]; //3
@@ -69,7 +89,7 @@
     [self getListViewData];
     [self getGinzaEvents];
     
-        
+    
     
     NSString *URLString = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"http://www.google.com"]];
     BOOL val =  ( URLString != NULL ) ? YES : NO;
@@ -80,50 +100,50 @@
     
     else
     {
-            dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"Data Fetch started %@",[NSDate date]);
-        @try {
-            [self fetchOfferData:lastSyncedDate];
-            NSLog(@"fetch offers");
+        [self preloadImages];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [self fetchOfferData:lastSyncedDate];
+            }
+            @catch (NSException *exception) {
+            }
+            @finally {
+            }
             
-        }
-        @catch (NSException *exception) {
-                   }
-        @finally {
-        }
-        
-        
-        @try {
-            [self fetchCategoryData];
-            NSLog(@"fetch categories");
-        }
-        @catch (NSException *exception) {
-            NSLog(@"fecth Category data %@",exception);
-        }
-        @finally {
-           
-        }
+            
+            @try {
+                [self fetchCategoryData];
+            }
+            @catch (NSException *exception) {
+            }
+            @finally {
+                
+            }
             if (isSyncON) {
-
+                NSError *error;
+                if (![[GANTracker sharedTracker] trackPageview:@"/app_Sync"
+                                                     withError:&error]) {
+                }
+                
                 [self performSelectorInBackground:@selector(refreshData) withObject:nil];
             }
-              
             
-      });
-         NSLog(@"Data Fetch ended %@",[NSDate date]);
+            
+        });
+        NSLog(@"Data Fetch ended %@",[NSDate date]);
     }
     
-   
+    
     NSLog(@"End");
     self.arviewController = [[pARkViewController alloc] initWithNibName:@"pARkViewController_iPhone" bundle:nil];
-
+    
     
     UINavigationController *navigation1 = [[UINavigationController alloc]initWithRootViewController:self.arviewController];
-
+    
     
     UIViewController* listviewController = [[ListViewController alloc] 
-                                      initWithNibName:@"ListViewController" bundle:nil];
-
+                                            initWithNibName:@"ListViewController" bundle:nil];
+    
     
     UINavigationController *navigation2 = [[UINavigationController alloc]initWithRootViewController:listviewController];
     
@@ -139,9 +159,9 @@
     UINavigationController *navigation4 = [[UINavigationController alloc]initWithRootViewController:self.bookmarkviewController];
     if([[self getBookmarkOfferData]count]>0)
     {
-         self. bookmarkviewController.tabBarItem.badgeValue = [NSString stringWithFormat:@"%i", [[self getBookmarkOfferData]  count]];    
+        self. bookmarkviewController.tabBarItem.badgeValue = [NSString stringWithFormat:@"%i", [[self getBookmarkOfferData]  count]];    
     }
-                                  
+    
     self.tabBarController = [[UITabBarController alloc] init];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:navigation1, navigation2,navigation3,navigation4, nil];
     
@@ -163,9 +183,33 @@
     [self getListViewData];
     NSLog(@"assign events");
     [self getGinzaEvents];
-
+    NSLog(@"assign events completed");
+    
 }
 
+-(void)preloadImages
+{
+   
+    for (int index=4; index<17; index++) {
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error;
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSString *imageName = [NSString stringWithFormat:@"%d.png",index];
+        NSString *txtPath = [documentsDirectory stringByAppendingPathComponent:imageName];
+        
+        NSLog(@"txtPath = %@ , %d",txtPath,[fileManager fileExistsAtPath:txtPath]);
+        if ([fileManager fileExistsAtPath:txtPath] == NO) {
+            NSString *resourcePath = [[NSBundle mainBundle] pathForResource:imageName ofType:nil];
+            [fileManager copyItemAtPath:resourcePath toPath:txtPath error:&error];
+            NSString *Image80x60 = [NSString stringWithFormat:@"80x60_%@",imageName];
+            NSString *rresourcePath = [[NSBundle mainBundle] pathForResource:Image80x60 ofType:nil];
+            NSString *imgPath = [documentsDirectory stringByAppendingPathComponent:Image80x60];
+            [fileManager copyItemAtPath:rresourcePath toPath:imgPath error:&error];
+
+        }
+    }
+}
 -(NSMutableArray *)getSubCategories:(NSString *)parent
 {
     NSError* error;
@@ -175,7 +219,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Categories" inManagedObjectContext:context];
     [request setEntity:entity];
-  
+    
     NSLog(@"Parent = %@",parent);
     NSPredicate *predicate =
     [NSPredicate predicateWithFormat:@"parent == %@",parent];
@@ -196,14 +240,14 @@
 -(NSMutableArray *)getSubCategories
 {
     NSError* error;
-   
+    
     NSManagedObjectContext *context =managedObjectContext;
     
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Categories" inManagedObjectContext:context];
     [request setEntity:entity];
     
-   
+    
     NSPredicate *predicate =
     [NSPredicate predicateWithFormat:@"parent >0"];
     
@@ -224,7 +268,7 @@
 
 -(NSMutableArray *)getCategories
 {
-     NSLog(@"fetch categories data");
+    NSLog(@"fetch categories data");
     NSError* error;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context =[appDeligate managedObjectContext];
@@ -242,7 +286,7 @@
     NSMutableArray *array = (NSMutableArray *)[managedObjectContext executeFetchRequest:request error:&error];
     
     
-   
+    
     
     for (int index=0; index<[array count]; index++) {
         Categories *cat =[array objectAtIndex:index];
@@ -263,6 +307,8 @@
 -(ShopList *)getStoreDataById:(NSString *)storeid
 {
     NSError* error;
+    NSLock *lock1 = [[NSLock alloc] init];
+    [lock1 lock];
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context =[appDeligate managedObjectContext];
     
@@ -274,15 +320,17 @@
     [NSPredicate predicateWithFormat:@"store_id == %@ ", storeid];
     
     [request setPredicate:predicate];
-    
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
     ShopList *shopDetail;
-    if ([array count]>0) {
-        
-        shopDetail = [array objectAtIndex:0];
-        //NSLog(@"array = %@, %@",shopDetail.store_id, shopDetail.store_name);
-    }
-    return shopDetail;
+        NSArray *array = [context executeFetchRequest:request error:&error];
+        if ([array count]>0) {
+            
+            shopDetail = [array objectAtIndex:0];
+        }
+    [lock1 unlock];
+    
+    [request release];
+   
+        return shopDetail;
 }
 
 -(Offer *)getOfferDataById:(NSString *)offer_id
@@ -294,7 +342,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Offer" inManagedObjectContext:context];
     [request setEntity:entity];
-   
+    
     
     NSPredicate *predicate =
     [NSPredicate predicateWithFormat:@"id == %@  && store_id >0", offer_id];
@@ -307,7 +355,7 @@
         offer = [array objectAtIndex:0];
     }
     return offer;
-
+    
 }
 
 
@@ -348,7 +396,7 @@
     [request setPredicate:predicate];
     
     self.ginzaEvents = (NSMutableArray *)[managedObjectContext executeFetchRequest:request error:&error];
-
+    
     return self.ginzaEvents;
 }
 
@@ -373,8 +421,6 @@
 
 -(NSMutableArray *)getOfferData
 {
-    
-    NSLog(@"Assign offer data start %@",[NSDate date]);
     NSError *error;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context =[appDeligate managedObjectContext];
@@ -382,34 +428,33 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Offer" inManagedObjectContext:context];
     [request setEntity:entity];
-     NSString *predicateString = @"store_id > 0";
+    NSString *predicateString = @"store_id > 0";
     /*if ([isFilterOn intValue]==1) {
-        filterString = [self getFilterString];
-         
-        if ([filterString length]>0) {
-            filterString = [filterString substringToIndex:[filterString length] - 2];
-            NSLog(@"isFilter = %@,%@",isFilterOn,filterString);
-           //predicateString = [NSString stringWithFormat:@"Offer.store_id > 0 && Offer.store_id == ShopList.store_id" ];
-        }
-        
-    }*/
+     filterString = [self getFilterString];
+     
+     if ([filterString length]>0) {
+     filterString = [filterString substringToIndex:[filterString length] - 2];
+     NSLog(@"isFilter = %@,%@",isFilterOn,filterString);
+     //predicateString = [NSString stringWithFormat:@"Offer.store_id > 0 && Offer.store_id == ShopList.store_id" ];
+     }
+     
+     }*/
     
     
-       NSPredicate *predicate =
+    NSPredicate *predicate =
     [NSPredicate predicateWithFormat:predicateString];
     
     [request setPredicate:predicate];
     
     NSMutableArray *array = (NSMutableArray *)[managedObjectContext executeFetchRequest:request error:&error];
     self.offerDataArray = array;
-     NSLog(@"Assign offer data end %d",[array count]);
     return array;
     
 }
 
 -(NSString *)getFilterString
 {
-  NSString *filterString1= [[[NSString alloc]init]retain];
+    NSString *filterString1= [[[NSString alloc]init]retain];
     
     NSMutableArray *catArray =  [self getCategories];
     for (Categories *cat in catArray) {
@@ -426,7 +471,7 @@
         else {
             filterString1 = [filterString1 stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"|| category =%@ ",cat.category_id ] withString: @""];
         }
-
+        
     }
     catArray = [self getSubCategories];
     for (Categories *cat in catArray) {
@@ -440,13 +485,13 @@
         }
         
     }
-
     
-        
+    
+    
     //[appDeligate getCategories];
     NSLog(@"filterString = %@",filterString1);
     return filterString1;
-
+    
 }
 -(NSMutableArray *)getBookmarkOfferData
 {
@@ -473,13 +518,13 @@
 -(void)fetchMerchantData:(NSData *)responseData{
     
     NSLog(@"fetch merchant data");
-       
+    
     NSError *error;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context =[appDeligate managedObjectContext];
     
     //NSFetchRequest *request = [[NSFetchRequest alloc] init];
-
+    
     NSArray* json = [NSJSONSerialization 
                      JSONObjectWithData:responseData //1
                      
@@ -522,7 +567,7 @@
                 [datas setValue:[data objectForKey:@"phone"] forKey:@"phone"];
                 [datas setValue:[data objectForKey:@"store_id"] forKey:@"store_id"];
                 [datas setValue:[data objectForKey:@"sub_category"] forKey:@"sub_category"];
-
+                
                 if (![managedObjectContext save:&error]) {
                     NSLog(@"%@", [error userInfo]);
                 }
@@ -581,7 +626,7 @@
                      options:kNilOptions 
                      error:&error];
     
-        
+    
     
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context =[appDeligate managedObjectContext];
@@ -589,12 +634,11 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Offer" inManagedObjectContext:context];
     [request setEntity:entity];
-
+    
     
     NSArray *dataArray = json;
     
-     UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer fetched" message:[NSString stringWithFormat:@"%d",[dataArray count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    [alert1 show];
+   
     NSLog(@" offer data count = %d",[dataArray count]);
     
     int g=0;
@@ -612,7 +656,7 @@
         
         [fileManager copyItemAtPath:bundle toPath: path error:&error]; //6
     }
-
+    
     
     //for (int j=0; j<2; j++)
     {
@@ -631,7 +675,7 @@
                 
                 datas = [NSEntityDescription insertNewObjectForEntityForName:@"Offer" inManagedObjectContext:context];
                 
-               
+                
                 [datas setValue:[data objectForKey:@"id"] forKey:@"id"];
                 [datas setValue:[data objectForKey:@"category"] forKey:@"category"];
                 [datas setValue:[data objectForKey:@"copy_text"] forKey:@"copy_text"];
@@ -647,14 +691,14 @@
                 [datas setValue:[data objectForKey:@"offer_type"] forKey:@"offer_type"];
                 [datas setValue:[data objectForKey:@"store_id"] forKey:@"store_id"];
                 [datas setValue:[data objectForKey:@"start_date"] forKey:@"start_date"];
-                 [datas setValue:[data objectForKey:@"free_text"] forKey:@"free_text"];
-                               
+                [datas setValue:[data objectForKey:@"free_text"] forKey:@"free_text"];
+                
                 [self.arrayStoreIds addObject:[data objectForKey:@"store_id"] ];
                 [self storeMerchantData:[data objectForKey:@"store_id"]];
                 if (![managedObjectContext save:&error]) {
                     NSLog(@"%@", [error userInfo]);
                 }
-               
+                
             }   
             
             NSMutableDictionary *data1 = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
@@ -664,7 +708,7 @@
             
         }
     }
-   
+    
 }
 
 -(void)storeMerchantData:(NSString *)store_id
@@ -756,7 +800,6 @@
     
     
 }
-
 
 
 -(void)storeMerchantDatatemp:(NSString *)store_id
@@ -851,9 +894,9 @@
 
 -(void)storeMerchantData1:(NSString *)store_id
 {
-   
+    
     NSString *url =[NSString stringWithFormat:@"%@/shop-list/?store_id=%@",dataURL,store_id];
-     NSLog(@"Store data %@",url);
+    NSLog(@"Store data %@",url);
     NSData* responseData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
     NSLog(@"res %@",responseData);
     if (responseData !=nil) {
@@ -896,7 +939,7 @@
             
             
             if (count==0) {
-
+                
                 NSManagedObject *datas;
                 
                 AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -933,7 +976,7 @@
             }    
             
         }
-
+        
     }
     
     
@@ -947,7 +990,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"ShopList" inManagedObjectContext:context];
     [request setEntity:entity];
-       
+    
     NSArray* json = [NSJSONSerialization 
                      JSONObjectWithData:responseData //1
                      
@@ -1031,7 +1074,7 @@
 
 
 - (void)fetchedData1:(NSData *)responseData{
-     NSLog(@"fetch shop data");
+    NSLog(@"fetch shop data");
     NSError* error;
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context =[appDeligate managedObjectContext];
@@ -1039,18 +1082,18 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"ShopList" inManagedObjectContext:context];
     [request setEntity:entity];
-     
+    
     //NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://staging.citiworldprivileges.com/mobile/ginza-promotions/shop-list/?created_on=2012-03-02"]];
-
+    
     //
     //parse out the json data
-   
-        
+    
+    
     NSArray* json = [NSJSONSerialization 
-                          JSONObjectWithData:responseData //1
-                          
-                          options:kNilOptions 
-                          error:&error];
+                     JSONObjectWithData:responseData //1
+                     
+                     options:kNilOptions 
+                     error:&error];
     
     NSArray *dataArray = json;
     
@@ -1059,16 +1102,16 @@
     //for (int j=0; j<2; j++)
     {
         for (int i=0; i<[dataArray count]; i++) {
-        NSDictionary *data =[dataArray objectAtIndex:i];
-        
+            NSDictionary *data =[dataArray objectAtIndex:i];
+            
             
             NSString *storeName = [data objectForKey:@"store_id"];
-           
-             
-           
+            
+            
+            
             NSPredicate *predicate =
             [NSPredicate predicateWithFormat:@"store_id == %@ ", storeName];
-           
+            
             [request setPredicate:predicate];
             
             NSError *error = nil;
@@ -1082,7 +1125,7 @@
                 // Deal with error.
             }
             
-             
+            
             if (count==0) {
                 g++;
                 NSManagedObject *datas;
@@ -1109,20 +1152,20 @@
                 [datas setValue:[data objectForKey:@"url"] forKey:@"url"];
                 [datas setValue:[data objectForKey:@"phone"] forKey:@"phone"];
                 [datas setValue:[data objectForKey:@"store_id"] forKey:@"store_id"];
-                 [datas setValue:[data objectForKey:@"sub_category"] forKey:@"sub_category"];
+                [datas setValue:[data objectForKey:@"sub_category"] forKey:@"sub_category"];
                 
                 //
-              
+                
                 
                 if (![managedObjectContext save:&error]) {
                     NSLog(@"%@",error);
                 }    
-
+                
             }    
-                  
-           }
+            
+        }
     }
-     
+    
     
 }
 
@@ -1248,7 +1291,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Categories" inManagedObjectContext:context];
     [request setEntity:entity];
-       //parse out the json data
+    //parse out the json data
     
     
     NSArray* json = [NSJSONSerialization 
@@ -1263,87 +1306,87 @@
     
     int g=0;
     
-          for (int i=0; i<[dataArray count]; i++) {
-            NSDictionary *data =[dataArray objectAtIndex:i];
+    for (int i=0; i<[dataArray count]; i++) {
+        NSDictionary *data =[dataArray objectAtIndex:i];
+        
+        
+        NSString *category_id = [data objectForKey:@"category_id"];
+        //NSString *category_name = [data objectForKey:@"category_name"];
+        //    NSString *category_parent = [data objectForKey:@"parent"];
+        
+        
+        
+        
+        NSPredicate *predicate =
+        [NSPredicate predicateWithFormat:@"category_id == %@ ", category_id];
+        
+        [request setPredicate:predicate];
+        
+        NSError *error = nil;
+        NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+        NSUInteger count =0;
+        if (array != nil) {
+            count = [array count]; 
+            
+        }
+        else {
+            // Deal with error.
+        }
+        
+        
+        if (count==0) {
+            g++;
+            
+            NSManagedObject *datas;
+            
+            AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            NSManagedObjectContext *context =[appDeligate managedObjectContext];
             
             
-            NSString *category_id = [data objectForKey:@"category_id"];
-            //NSString *category_name = [data objectForKey:@"category_name"];
-            //    NSString *category_parent = [data objectForKey:@"parent"];
+            
+            datas = [NSEntityDescription insertNewObjectForEntityForName:@"Categories" inManagedObjectContext:context];
+            
+            
+            [datas setValue:[data objectForKey:@"category_id"] forKey:@"category_id"];
+            [datas setValue:[data objectForKey:@"category_name"] forKey:@"category_name"];
+            [datas setValue:[data objectForKey:@"parent" ] forKey:@"parent"]; 
+            [datas setValue:[data objectForKey:@"image_name" ] forKey:@"image_name"]; 
+            [datas setValue:@"1" forKey:@"selected"]; 
+            
+            NSString *imgurl =[NSString stringWithFormat:@"%@/%@",categoryImageURL,[data objectForKey:@"image_name" ]];
+            
+            NSURL *url = [NSURL URLWithString:imgurl];
+            NSData *data1 = [NSData dataWithContentsOfURL:url];
+            
+            
+            
+            NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+            path = [path stringByAppendingString:@"/"];
+            path = [path stringByAppendingString:[data objectForKey:@"image_name" ]];
             
             
             
             
-            NSPredicate *predicate =
-            [NSPredicate predicateWithFormat:@"category_id == %@ ", category_id];
+            NSFileManager *fileManager = [NSFileManager defaultManager];
             
-            [request setPredicate:predicate];
-            
-            NSError *error = nil;
-            NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
-            NSUInteger count =0;
-            if (array != nil) {
-                count = [array count]; 
-                
+            BOOL exists = [fileManager fileExistsAtPath:path];
+            if (exists) {
+                [data1 writeToFile:path atomically:NO];
+            }else
+            {
+                [data1 writeToFile:path atomically:NO];
             }
-            else {
-                // Deal with error.
-            }
+            //[self resizeTableViewImages:[data objectForKey:@"image_name" ]];
+            [self performSelectorInBackground:@selector(resizeTableViewImages:) withObject:[data objectForKey:@"image_name" ]];
             
-            
-            if (count==0) {
-                g++;
-                
-                NSManagedObject *datas;
-                
-                AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                NSManagedObjectContext *context =[appDeligate managedObjectContext];
-                
-                
-                
-                datas = [NSEntityDescription insertNewObjectForEntityForName:@"Categories" inManagedObjectContext:context];
-                
-                
-                [datas setValue:[data objectForKey:@"category_id"] forKey:@"category_id"];
-                [datas setValue:[data objectForKey:@"category_name"] forKey:@"category_name"];
-                [datas setValue:[data objectForKey:@"parent" ] forKey:@"parent"]; 
-                [datas setValue:[data objectForKey:@"image_name" ] forKey:@"image_name"]; 
-                [datas setValue:@"1" forKey:@"selected"]; 
-                
-                NSString *imgurl =[NSString stringWithFormat:@"%@/%@",categoryImageURL,[data objectForKey:@"image_name" ]];
-                
-                NSURL *url = [NSURL URLWithString:imgurl];
-                NSData *data1 = [NSData dataWithContentsOfURL:url];
-                
-              
-                
-                NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                path = [path stringByAppendingString:@"/"];
-                path = [path stringByAppendingString:[data objectForKey:@"image_name" ]];
-                
-                
-                
-                                
-                NSFileManager *fileManager = [NSFileManager defaultManager];
-               
-                BOOL exists = [fileManager fileExistsAtPath:path];
-                if (exists) {
-                    [data1 writeToFile:path atomically:NO];
-                }else
-                {
-                    [data1 writeToFile:path atomically:NO];
-                }
-                //[self resizeTableViewImages:[data objectForKey:@"image_name" ]];
-                [self performSelectorInBackground:@selector(resizeTableViewImages:) withObject:[data objectForKey:@"image_name" ]];
-                
-                if (![managedObjectContext save:&error]) {
-                    NSLog(@"%@",error);
-                }    
-                
-                NSLog(@"category==%@",[data objectForKey:@"category_name"]);
+            if (![managedObjectContext save:&error]) {
+                NSLog(@"%@",error);
             }    
             
-           }
+            NSLog(@"category==%@",[data objectForKey:@"category_name"]);
+        }    
+        
+    }
     
     
     
@@ -1355,8 +1398,8 @@
     path = [path stringByAppendingString:@"/"];
     path = [path stringByAppendingString:category_image_name];
     
-
-  //  dataPath = [path stringByAppendingString:category_image_name];
+    
+    //  dataPath = [path stringByAppendingString:category_image_name];
     
     NSString *writePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     writePath = [writePath stringByAppendingString:@"/80x60_"];
@@ -1365,7 +1408,7 @@
     
     NSData*imageData =  UIImagePNGRepresentation([self imageWithImage:[UIImage imageWithContentsOfFile:path] scaledToSize:CGSizeMake(80, 60)]);
     
-        [imageData writeToFile:writePath atomically:YES];
+    [imageData writeToFile:writePath atomically:YES];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -1378,7 +1421,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-     NSLog(@"applicationDidEnterBackground");
+    NSLog(@"applicationDidEnterBackground");
     exit(0);
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
@@ -1392,7 +1435,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-     NSLog(@"applicationDidBecomeActive");
+    NSLog(@"applicationDidBecomeActive");
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
@@ -1403,18 +1446,18 @@
 }
 
 /*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-}
-*/
+ // Optional UITabBarControllerDelegate method.
+ - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+ {
+ }
+ */
 
 /*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
-{
-}
-*/
+ // Optional UITabBarControllerDelegate method.
+ - (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
+ {
+ }
+ */
 
 
 //Explicitly write Core Data accessors
@@ -1441,11 +1484,48 @@
 }
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
+	
     if (persistentStoreCoordinator != nil) {
         return persistentStoreCoordinator;
     }
+    
+	NSString *storePath = [[self applicationDocumentsDirectory] stringByAppendingPathComponent:@"Ginza.sqlite"];
+	/*
+	 Set up the store.
+	 For the sake of illustration, provide a pre-populated default store.
+	 */
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	// If the expected store doesn't exist, copy the default store.
+	if (![fileManager fileExistsAtPath:storePath]) {
+		NSString *defaultStorePath = [[NSBundle mainBundle] pathForResource:@"Ginza" ofType:@"sqlite"];
+		if (defaultStorePath) {
+			[fileManager copyItemAtPath:defaultStorePath toPath:storePath error:NULL];
+		}
+	}
+	
+	NSURL *storeUrl = [NSURL fileURLWithPath:storePath];
+	
+	NSError *error;
+    persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
+    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:nil error:&error]) {
+		// Handle error
+		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+		exit(-1);  // Fail
+    }    
+    
+    return persistentStoreCoordinator;
+}
+
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator1 {
+    if (persistentStoreCoordinator != nil) {
+        return persistentStoreCoordinator;
+    }
+    /*NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory]
+                                               stringByAppendingPathComponent: @"Ginza.sqlite"]];*/
+    
     NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory]
                                                stringByAppendingPathComponent: @"Ginza.sqlite"]];
+    
     NSError *error = nil;
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc]
                                   initWithManagedObjectModel:[self managedObjectModel]];
@@ -1476,16 +1556,16 @@
         ShopList *merchant = [self getStoreDataById:offer.store_id];
         Categories *cat =[self getCategoryDataById:merchant.sub_category];
         /*if ([mapDataDict valueForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]]==nil) {
-            NSMutableArray *offerdataArray =[[NSMutableArray alloc]init ];
-            [offerdataArray addObject:offer];
-            [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
-        }else
-        {
-            NSMutableArray *offerdataArray =[mapDataDict objectForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
-            [offerdataArray addObject:offer];
-            [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
-        }*/
-
+         NSMutableArray *offerdataArray =[[NSMutableArray alloc]init ];
+         [offerdataArray addObject:offer];
+         [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+         }else
+         {
+         NSMutableArray *offerdataArray =[mapDataDict objectForKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+         [offerdataArray addObject:offer];
+         [mapDataDict setValue:offerdataArray forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
+         }*/
+        
         if ([isFilterOn intValue]==1) {
             NSString *cretiria= [NSString stringWithFormat:@"%@-%@",cat.parent, cat.category_id ];
             if ([filterString rangeOfString:cretiria].location == NSNotFound) {
@@ -1502,7 +1582,7 @@
                     [offerdataArrayLocal addObject:offer];
                     [mapDataDict setValue:offerdataArrayLocal forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
                 }
-
+                
             }
         }
         else
@@ -1518,13 +1598,13 @@
                 [offerdataArrayLocal addObject:offer];
                 [mapDataDict setValue:offerdataArrayLocal forKey:[NSString stringWithFormat:@"%.6f-%.6f", [merchant.latitude floatValue],[merchant.longitude floatValue]]];
             }
-
+            
         }
     }
     self.poiDataDictionary = mapDataDict;
     NSLog(@"offer data count %d",[mapDataDict count]);
-   // NSLog(@"%@",[mapDataDict valueForKey:[NSString stringWithFormat:@"%@-%@", merchant.latitude,merchant.longitude]]);
-NSLog(@"POI end %@",[NSDate date]);
+    // NSLog(@"%@",[mapDataDict valueForKey:[NSString stringWithFormat:@"%@-%@", merchant.latitude,merchant.longitude]]);
+    NSLog(@"POI end %@",[NSDate date]);
     return mapDataDict;
 }
 
@@ -1533,41 +1613,41 @@ NSLog(@"POI end %@",[NSDate date]);
     NSLog(@"bmark app deligate");
     
     
-   
-        NSError *error;
-        AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    NSError *error;
+    AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    NSManagedObjectContext *context =[appDeligate managedObjectContext];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Offer" inManagedObjectContext:context];
+    [request setEntity:entity];
+    NSPredicate *predicate =
+    [NSPredicate predicateWithFormat:@"store_id > 1"];
+    
+    [request setPredicate:predicate];
+    
+    NSLog(@"%@",offer);
+    if ([offer.isbookmark isEqualToString:@"1"]) {
+        offer.isbookmark =@"0";
+    }
+    else {
+        offer.isbookmark =@"1";
         
-        NSManagedObjectContext *context =[appDeligate managedObjectContext];
-        
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Offer" inManagedObjectContext:context];
-        [request setEntity:entity];
-        NSPredicate *predicate =
-        [NSPredicate predicateWithFormat:@"store_id > 1"];
-        
-        [request setPredicate:predicate];
-        
-        NSLog(@"%@",offer);
-        if ([offer.isbookmark isEqualToString:@"1"]) {
-            offer.isbookmark =@"0";
-        }
-        else {
-            offer.isbookmark =@"1";
-
-        }
-        
-        if (![managedObjectContext save:&error]) {
-            NSLog(@"%@",error);
-        }    
-  
-
+    }
+    
+    if (![managedObjectContext save:&error]) {
+        NSLog(@"%@",error);
+    }    
+    
+    
     
     int bookmarkDataCount = [[self getBookmarkOfferData ]count];
     if (bookmarkDataCount >0) {
         appDeligate.bookmarkviewController.tabBarItem.badgeValue = [NSString stringWithFormat:@"%i", bookmarkDataCount];
     }else
     {
-         appDeligate.bookmarkviewController.tabBarItem.badgeValue = nil;
+        appDeligate.bookmarkviewController.tabBarItem.badgeValue = nil;
     }
     
     
@@ -1585,7 +1665,7 @@ NSLog(@"POI end %@",[NSDate date]);
         Offer *offer =[dataArray objectAtIndex:index];
         ShopList *shopData = [self getStoreDataById:offer.store_id];
         Categories *categoryData = (Categories *)[self getCategoryDataById:shopData.sub_category];
-
+        
         if ([isFilterOn intValue]==1) {
             NSString *cretiria= [NSString stringWithFormat:@"%@-%@",categoryData.parent, categoryData.category_id ];
             if ([filterString rangeOfString:cretiria].location == NSNotFound) {
@@ -1616,17 +1696,17 @@ NSLog(@"POI end %@",[NSDate date]);
             [dataDict setValue:tmpDict forKey:[NSString stringWithFormat:@"%d", rowIndex++]];   
             [tmpDict release];
         }
-
+        
         
         /*NSMutableDictionary  *tmpDict =[[NSMutableDictionary alloc]init ];
-        Offer *offer =[dataArray objectAtIndex:index];
-        ShopList *shopData = [self getStoreDataById:offer.store_id];
-        Categories *categoryData = (Categories *)[self getCategoryDataById:shopData.sub_category];
-        
-        [tmpDict setValue:offer forKey:@"offer"];
-        [tmpDict setValue:shopData forKey:@"shop"];
-        [tmpDict setValue:categoryData forKey:@"cat"];
-        [dataDict setValue:tmpDict forKey:[NSString stringWithFormat:@"%d", index]];*/
+         Offer *offer =[dataArray objectAtIndex:index];
+         ShopList *shopData = [self getStoreDataById:offer.store_id];
+         Categories *categoryData = (Categories *)[self getCategoryDataById:shopData.sub_category];
+         
+         [tmpDict setValue:offer forKey:@"offer"];
+         [tmpDict setValue:shopData forKey:@"shop"];
+         [tmpDict setValue:categoryData forKey:@"cat"];
+         [dataDict setValue:tmpDict forKey:[NSString stringWithFormat:@"%d", index]];*/
         
     }
     listViewDataArray = dataDict;

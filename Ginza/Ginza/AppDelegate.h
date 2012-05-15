@@ -14,6 +14,7 @@
 #import "pARkViewController.h"
 
 
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
 {
     NSManagedObjectModel *managedObjectModel;
@@ -72,4 +73,6 @@
 -(void)fetchMerchantData:(NSData *)data;
 -(NSMutableArray *)getBookmarkOfferData;
 -(NSMutableDictionary *) getPointOfInterestItems;
+-(void)getMerchantData:(NSString *)lastsyncedDate;
+-(void)preloadImages;
 @end

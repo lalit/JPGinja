@@ -23,11 +23,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358668679.228551"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "471"
-         endingLineNumber = "471"
+         startingLineNumber = "516"
+         endingLineNumber = "516"
          landmarkName = "-getBookmarkOfferData"
          landmarkType = "5">
       </FileBreakpoint>
@@ -37,11 +37,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358668679.228551"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "479"
-         endingLineNumber = "479"
+         startingLineNumber = "524"
+         endingLineNumber = "524"
          landmarkName = "-fetchMerchantData:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -93,11 +93,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/pARkViewController.m"
-         timestampString = "358226778.354149"
+         timestampString = "358668508.551897"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "223"
-         endingLineNumber = "223"
+         startingLineNumber = "216"
+         endingLineNumber = "216"
          landmarkName = "-viewWillAppear:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -163,11 +163,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358668679.228551"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "642"
-         endingLineNumber = "642"
+         startingLineNumber = "686"
+         endingLineNumber = "686"
          landmarkName = "-fetchOfferData:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -177,11 +177,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358668679.228551"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1310"
-         endingLineNumber = "1310"
+         startingLineNumber = "1353"
+         endingLineNumber = "1353"
          landmarkName = "-fetchCategoryData"
          landmarkType = "5">
       </FileBreakpoint>
@@ -191,11 +191,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358334736.596682"
+         timestampString = "358668301.504028"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "615"
-         endingLineNumber = "615"
+         startingLineNumber = "623"
+         endingLineNumber = "623"
          landmarkName = "-updatePlacesOfInterestCoordinates"
          landmarkType = "5">
       </FileBreakpoint>
@@ -205,11 +205,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358334736.596682"
+         timestampString = "358668301.504028"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "637"
-         endingLineNumber = "637"
+         startingLineNumber = "645"
+         endingLineNumber = "645"
          landmarkName = "-updatePlacesOfInterestCoordinates"
          landmarkType = "5">
       </FileBreakpoint>
@@ -247,11 +247,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/pARkViewController.m"
-         timestampString = "358226778.354149"
+         timestampString = "358668508.551897"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "331"
-         endingLineNumber = "331"
+         startingLineNumber = "324"
+         endingLineNumber = "324"
          landmarkName = "-shouldAutorotateToInterfaceOrientation:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -261,11 +261,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358334736.596682"
+         timestampString = "358668301.504028"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "658"
-         endingLineNumber = "658"
+         startingLineNumber = "666"
+         endingLineNumber = "666"
          landmarkName = "-updatePlacesOfInterestCoordinates"
          landmarkType = "5">
          <Locations>
@@ -301,11 +301,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358334736.596682"
+         timestampString = "358668301.504028"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "672"
-         endingLineNumber = "672"
+         startingLineNumber = "680"
+         endingLineNumber = "680"
          landmarkName = "-updatePlacesOfInterestCoordinates"
          landmarkType = "5">
       </FileBreakpoint>
@@ -315,11 +315,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358334736.596682"
+         timestampString = "358668301.504028"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "671"
-         endingLineNumber = "671"
+         startingLineNumber = "679"
+         endingLineNumber = "679"
          landmarkName = "-updatePlacesOfInterestCoordinates"
          landmarkType = "5">
       </FileBreakpoint>
@@ -343,11 +343,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/pARkViewController.m"
-         timestampString = "358226778.354149"
+         timestampString = "358668508.551897"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "272"
-         endingLineNumber = "272"
+         startingLineNumber = "265"
+         endingLineNumber = "265"
          landmarkName = "-viewWillDisappear:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -357,11 +357,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/pARkViewController.m"
-         timestampString = "358226778.354149"
+         timestampString = "358668508.551897"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "281"
-         endingLineNumber = "281"
+         startingLineNumber = "274"
+         endingLineNumber = "274"
          landmarkName = "-viewDidDisappear:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -539,11 +539,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358668679.228551"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "386"
-         endingLineNumber = "386"
+         startingLineNumber = "432"
+         endingLineNumber = "432"
          landmarkName = "-getOfferData"
          landmarkType = "5">
       </FileBreakpoint>
@@ -553,11 +553,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358667001.443509"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "228"
-         endingLineNumber = "228"
+         startingLineNumber = "272"
+         endingLineNumber = "272"
          landmarkName = "-getCategories"
          landmarkType = "5">
       </FileBreakpoint>
@@ -567,11 +567,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358668679.228551"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "446"
-         endingLineNumber = "446"
+         startingLineNumber = "491"
+         endingLineNumber = "491"
          landmarkName = "-getFilterString"
          landmarkType = "5">
       </FileBreakpoint>
@@ -581,11 +581,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358668679.228551"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "376"
-         endingLineNumber = "376"
+         startingLineNumber = "433"
+         endingLineNumber = "433"
          landmarkName = "-getOfferData"
          landmarkType = "5">
       </FileBreakpoint>
@@ -595,25 +595,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358668679.228551"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "387"
-         endingLineNumber = "387"
-         landmarkName = "-getOfferData"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "424"
-         endingLineNumber = "424"
+         startingLineNumber = "469"
+         endingLineNumber = "469"
          landmarkName = "-getFilterString"
          landmarkType = "5">
       </FileBreakpoint>
@@ -623,11 +609,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358668679.228551"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1625"
-         endingLineNumber = "1625"
+         startingLineNumber = "1705"
+         endingLineNumber = "1705"
          landmarkName = "-getListViewData"
          landmarkType = "5">
       </FileBreakpoint>
@@ -637,11 +623,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358668679.228551"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1489"
-         endingLineNumber = "1489"
+         startingLineNumber = "1569"
+         endingLineNumber = "1569"
          landmarkName = "-getPointOfInterestItems"
          landmarkType = "5">
       </FileBreakpoint>
@@ -651,11 +637,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/pARkViewController.m"
-         timestampString = "358226778.354149"
+         timestampString = "358668508.551897"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "241"
-         endingLineNumber = "241"
+         startingLineNumber = "234"
+         endingLineNumber = "234"
          landmarkName = "-viewDidAppear:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -665,11 +651,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/ARView.m"
-         timestampString = "358247459.58097"
+         timestampString = "358668301.504028"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "363"
-         endingLineNumber = "363"
+         startingLineNumber = "364"
+         endingLineNumber = "364"
          landmarkName = "-updateView"
          landmarkType = "5">
       </FileBreakpoint>
@@ -679,11 +665,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/View Controllers/OfferDetailsViewController.m"
-         timestampString = "357989740.176101"
+         timestampString = "358740182.240896"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "76"
-         endingLineNumber = "76"
+         startingLineNumber = "77"
+         endingLineNumber = "77"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -707,11 +693,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/View Controllers/OfferDetailsViewController.m"
-         timestampString = "357989740.176101"
+         timestampString = "358740182.240896"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "84"
-         endingLineNumber = "84"
+         startingLineNumber = "85"
+         endingLineNumber = "85"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -749,11 +735,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358667001.443509"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "198"
-         endingLineNumber = "198"
+         startingLineNumber = "242"
+         endingLineNumber = "242"
          landmarkName = "-getSubCategories"
          landmarkType = "5">
       </FileBreakpoint>
@@ -763,11 +749,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Ginza/AppDelegate.m"
-         timestampString = "358216309.831165"
+         timestampString = "358668679.228551"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1468"
-         endingLineNumber = "1468"
+         startingLineNumber = "1548"
+         endingLineNumber = "1548"
          landmarkName = "-getPointOfInterestItems"
          landmarkType = "5">
       </FileBreakpoint>

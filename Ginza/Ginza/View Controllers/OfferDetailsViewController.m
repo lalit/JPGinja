@@ -17,6 +17,7 @@
 #import "ListViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Categories.h"
+#import "GANTracker.h"
 
 @implementation OfferDetailsViewController
 @synthesize lblIsChild,lblIsLunch,lblIsPrivate,lblOfferTitle,lblCategoryName,lblDistanceLabel,imgIsChild,imgIsLunch,imgCategory,imgIsPrivate,imgOfferImage,offerId,scroll,webFreeText,storeLocation,offer;
@@ -87,6 +88,12 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
    
     NSLog(@"%@", self.offerId);
+    NSError *error;
+    NSString *gaURL =[NSString stringWithFormat:@"/%@_details",self.offerId];
+    if (![[GANTracker sharedTracker] trackPageview:gaURL
+                                         withError:&error]) {
+    }
+
     self.offer =  [appDeligate getOfferDataById:self.offerId];
     ShopList *shopData = [appDeligate getStoreDataById:offer.store_id];
     Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:shopData.sub_category];

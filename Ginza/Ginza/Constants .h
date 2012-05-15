@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#import "GANTracker.h"
+
 #ifndef Ginza_Constants__h
 #define Ginza_Constants__h
 
@@ -17,5 +19,6 @@
 
 #define DEGREES_TO_RADIANS (M_PI/180.0)
 #define degreesToRadianX(x) (M_PI * (x) / 180.0)
+static const NSInteger kGANDispatchPeriodSec = 10;
 #endif
 //changes
