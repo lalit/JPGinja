@@ -32,12 +32,12 @@
     for (PlaceOfInterest *poi in self.placesOfInterest) {
         CGContextRef contextRef = UIGraphicsGetCurrentContext();
         CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
-        currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;        
+        //currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;        
         float heading = [self getHeadingFromCoordinate:currentLocation toCoordinate:poi.location];
         float distance = [currentLocation distanceFromLocation:poi.location];
         //NSLog(@"heading = %f",heading);
         
-        float radius = (self.RADIUS/1000)*distance;
+        float radius = (self.RADIUS/1000)*distance/10;
         float x0 = 0.0; 
         float y0 = 0.0;
         
@@ -50,7 +50,7 @@
         float y1 = (y0 + radius * cos(angle)); 
         
        
-        
+        NSLog(@"%f,%f,%f,%f",x1,y1,radius,distance);
         CGContextMoveToPoint(contextRef, self.RADIUS, self.RADIUS);
          CGContextSetFillColorWithColor(contextRef, [UIColor whiteColor].CGColor);
         CGContextFillEllipseInRect(contextRef, CGRectMake(x1+30,y1+30, 2, 2));
@@ -72,7 +72,7 @@
         double latitude =[merchant.latitude doubleValue];
         double longitude = [merchant.longitude doubleValue];
         CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
-        currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;
+        //currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;
         CLLocation *storelocation =[[CLLocation alloc] initWithLatitude: latitude longitude:longitude];;
         
         float heading = [self getHeadingFromCoordinate:currentLocation toCoordinate:storelocation];

@@ -153,8 +153,8 @@
         double longitude = [merchant.longitude doubleValue];
         
         //For testing
-        //CLLocation *pointALocation = currentLocation;
-        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        CLLocation *pointALocation = [Location sharedInstance].currentLocation;
+        //CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
         CLLocation *pointBLocation = [[CLLocation alloc] initWithLatitude:[merchant.latitude doubleValue] longitude:[merchant.longitude doubleValue]];  
         
         float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
@@ -590,10 +590,11 @@
     int i=0;
     NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
     for (PlaceOfInterest *poi in self.placesOfInterest) {
-        CLLocation *pointALocation = [[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295]autorelease];
+        CLLocation *pointALocation = [Location sharedInstance].currentLocation;//[[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295]autorelease];
         CLLocation *pointBLocation = poi.location;  
         
         float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
+        //distanceMeters = distanceMeters/10;
         if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
             
             if (distanceMeters<radius) {
