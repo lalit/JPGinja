@@ -11,9 +11,7 @@
 #import "ListViewController.h"
 #import "MapViewController.h"
 #import "ListViewCell.h"
-//#import "BookMarkImageView.h"
 #import "GinaViewController.h"
-//#import "AppDelegate.h"
 #import "OfferDetailsViewController.h"
 #import "SubMenuSearchViewController.h"
 #import "GinzaFilterViewController.h"
@@ -23,13 +21,11 @@
 #import "Offer.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AppDelegate.h"
-
-
-
 #import "GinzaDetailsViewController.h"
-#define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
-double DegreesToRadians(double degrees) {return degrees * M_PI / 180.0;};
-double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
+#import "ListViewCell.h"
+#import "CustomTopNavigationBar.h"
+#import "Location.h"
+
 @implementation ListViewController
 @synthesize tblListView;
 @synthesize cbar;
@@ -37,7 +33,6 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 @synthesize arrayOfDistance;
 @synthesize arrayOfLatitude;
 @synthesize arrayOfLongitude;
-
 @synthesize arrayOflocation2Latitude;
 @synthesize arrayOflocation2Longitude;
 @synthesize arrayOfTitles;
@@ -51,61 +46,23 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
 @synthesize arrayOfImages,listDataArray,dataDict,lblFilterText,lblEventCount,currentPage;
 @synthesize ginzaDetailsView;
 @synthesize detailsView;
+@synthesize mStrImageDirectoryPath;
 
-//- (id)initWithStyle:(UITableViewStyle)style
-//{
-//    self = [super initWithStyle:style];
-//    if (self) {
-//        // Custom initialization
-//        NSLog(@"initWithStyle");
-//    }
-//    return self;
-//}
--(double) bearingToLocation:(CLLocation *) destinationLocation {
-    
-    double lat1 = DegreesToRadians(currentLocation.coordinate.latitude);
-    double lon1 = DegreesToRadians(currentLocation.coordinate.longitude);
-    
-    double lat2 = DegreesToRadians(destinationLocation.coordinate.latitude);
-    double lon2 = DegreesToRadians(destinationLocation.coordinate.longitude);
-    
-    double dLon = lon2 - lon1;
-    
-    double y = sin(dLon) * cos(lat2);
-    double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
-    double radiansBearing = atan2(y, x);
-    if(radiansBearing < 0.0)
-        radiansBearing += 2*M_PI;
-    
-    
-    return DegreesToRadians(radiansBearing);
-}
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+static NSString *CellClassName = @"ListViewCell";
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        
         self.title = NSLocalizedString(@"一覧", @"一覧");
         self.tabBarItem.image = [UIImage imageNamed:@"Listicon"];
+        cellLoader = [[UINib nibWithNibName:CellClassName bundle:[NSBundle mainBundle]] retain];
     }
     return self;
 }
-
--(void) createConstantImages {
-     bookMarkMinusImage=[UIImage imageNamed:@"Bookmarkminus.png"];
-     bookMarkPlusImage=[UIImage imageNamed:@"Bookmarkplus.png"];
-     ginzaBackgroundImageNormal= [UIImage imageNamed:@"Normaloffercell.png"];;
-     ginzaBackgroundImageSpecial=[UIImage imageNamed:@"Specialoffercellbg.png"];
-     arrowImageBlue=[UIImage imageNamed:@"Arrow.png"];
-     arrowImageGray= [UIImage imageNamed:@"Arrowgray.png"];
-     ginzaBackgroundImageFirstRow=[UIImage imageNamed:@"Ginzacelllist.png"];
-     thumbImage=[UIImage imageNamed:@"thumb.png"];
-}
-
-#import "CustomTopNavigationBar.h"
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
+    self.mStrImageDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    self.mStrImageDirectoryPath  = [mStrImageDirectoryPath stringByAppendingString:@"/"];
     [self createConstantImages];
     currentPage=1;
     self.navigationController.navigationBar.hidden = YES;
@@ -117,24 +74,19 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
         self.lblEventCount.hidden =YES;
     }
     dataDict =appDeligate.listViewDataArray;
-    tblListView.delegate = self;
-    tblListView.dataSource = self;
-    tblListView.sectionIndexMinimumDisplayRowCount = 5;
-    
-    /*UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer record in list view" message:[NSString stringWithFormat:@"%d",[self.dataArray count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-     [alert1 show];*/
-    // tblListView = [[UITableView alloc] initWithFrame:CGRectMake(0 ,55, 320, 480)];
-    
-    
-    
-    
-    //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self updateTopNavigation];
     [super viewDidLoad];
-   
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(locationChanged:) 
+                                                 name:kLocationChangedNotification
+                                               object:nil];
     
 }
+
+- (void)locationChanged: (NSNotification*)aNotification {
+    [listViewTable reloadData];
+}
+
 - (void)updateTopNavigation {
     UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
     cbar = [[CustomTopNavigationBar alloc]initWithFrame:CGRectMake(0, 0,transView.frame.size.width, 40)];
@@ -143,455 +95,191 @@ double RadiansToDegrees(double radians) {return radians * 180.0/M_PI;};
     [self.view addSubview:cbar];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-
+-(void)viewWillAppear:(BOOL)animated {
     AppDelegate *appDeligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
-     dataDict =appDeligate.listViewDataArray;
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter =1; // whenever we move
-    locationManager.headingFilter = 5;
-    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters; // 100 m
-    [locationManager startUpdatingLocation];
-    [locationManager startUpdatingHeading];
+    dataDict =appDeligate.listViewDataArray;
     self.navigationController.navigationBarHidden = YES;
     self.cbar.hidden=NO;
-    [tblListView reloadData]; 
 }
 
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
+- (void)viewDidappear:(BOOL)animated {
+	[super viewDidDisappear:animated];
 }
 
-
-
-
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-{
-    return 95;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 90;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+#pragma mark - Table view data source
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    //NSLog(@"count %d",[self.dataDict count]);
-    return  [self.dataDict count]+1;//currentPage+10+2;//[self.dataDict count]+1;
-    
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.dataDict count]+1;
 }
 
-+ (UIImage*)imageWithImage:(UIImage*)image 
-              scaledToSize:(CGSize)newSize;
-{
-    UIGraphicsBeginImageContext( newSize );
-    [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
-    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return newImage;
-}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    ListViewCell *cell = (ListViewCell *)[tableView dequeueReusableCellWithIdentifier:CellClassName];
 
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-    
-    static NSString *CellIdentifier = @"Cell";
-    
-    ListViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        
-        NSArray* views = [[NSBundle mainBundle] loadNibNamed:@"ListViewCell" owner:nil options:nil];
-        
-        for (UIView *view in views) {
-            if([view isKindOfClass:[UITableViewCell class]])
-            {
-                cell = (ListViewCell*)view;
-            }
-        }
+    if (!cell) {
+        NSArray *topLevelItems = [cellLoader instantiateWithOwner:self options:nil];
+        cell = [topLevelItems objectAtIndex:0];
+        arrowX=cell.arrowImageView.frame.origin.x;
     }
-    
-    //        return cell;
-    
-    cell.largeGIconImageView.hidden=YES;
-    cell.btnBookMark.tag =indexPath.row-1;
-    cell.imgDirection.hidden=NO;
-    cell.lblDistance.hidden=NO;
-     UIColor *greenCo=[UIColor colorWithRed:0/255.0 green:105/255.0 blue:170/255.0 alpha:1.0];
-    cell.lblDistance.textColor=greenCo;
-    if (indexPath.row>=1) {
+    cell.lblCategoryName.text=@"";
+    cell.lblStoreName.text=@"";
+    cell.thumbnailImageView.image=nil;
+    cell.lblDirection.text=@"";
+    cell.lblTime.text=@"";
+    cell.arrowImageView.image=nil;
+    [cell.GIconImageView setHidden:YES];
+    cell.lblSpecialOffer.text =@"";
+    cell.contentView.backgroundColor=[UIColor clearColor];
+    storeLatitude=0.0;
+    storeLongitude=0.0;
+    if (indexPath.row==0) {
+        cell.contentView.backgroundColor=[UIColor colorWithRed:179.0/255.0 
+                                                         green:179.0/255.0 
+                                                          blue:179.0/255.0 
+                                                         alpha:1.0];
+        categoryName=@"ダイナ;ースクラフ";
+        storeName=@"銀座ラウンシ";
+        storeLatitude=35.665756;
+        storeLongitude=139.7117;
+        [cell.GIconImageView setHidden:NO];
+        cell.GIconImageView.image=ginzaGIcon;
+     
+        thumbnailPath=[[NSBundle mainBundle] pathForResource:@"thumb" ofType:@"png"];
+        cell.arrowImageView.image=arrowImageGray;
+        cell.lblCategoryName.textColor=[UIColor whiteColor];
+        cell.lblStoreName.textColor=[UIColor whiteColor];
+    }
+    else {
+        cell.lblCategoryName.textColor=[UIColor colorWithRed:102.0/255.0 
+                                                       green:102.0/255.0 
+                                                        blue:102.0/255.0
+                                                       alpha:1.0];
         
+        cell.lblStoreName.textColor=[UIColor blackColor];
+        [cell.GIconImageView setHidden:YES];
         NSDictionary *tmpDict = [self.dataDict objectForKey:[NSString stringWithFormat:@"%d",indexPath.row-1]];
         Offer *offer = [tmpDict objectForKey:@"offer"];    
         Categories *categoryData = [tmpDict objectForKey:@"cat"];
         ShopList *shopData = [tmpDict objectForKey:@"shop"];
-        
-        
-        NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        path = [path stringByAppendingString:@"/"];
-        path = [path stringByAppendingString:[NSString stringWithFormat:@"80x60_%@",categoryData.image_name]];
-        
-        UIImage *image = [UIImage imageWithContentsOfFile:path];
-        
-        
-        [cell.imgDeatils setImage:image];
-        
-        cell.lblTitle.text = categoryData.category_name;
-        cell.lblTitle.textColor =[UIColor grayColor];
-        
-        
-        cell.lblDescription.text = shopData.store_name;
+        categoryName=categoryData.category_name;
+        storeName=shopData.store_name;
         cell.offer = offer;
+        thumbnailPath = [self.mStrImageDirectoryPath  stringByAppendingString:[NSString stringWithFormat:@"80x60_%@",categoryData.image_name]];
         
-        
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;   
-        if ([offer.isbookmark isEqualToString:@"1"]) 
-            
-        {
-            [cell.btnBookMark setImage:bookMarkMinusImage forState:UIControlStateNormal];
-        }else
-        {
-            [cell.btnBookMark setImage:bookMarkPlusImage forState:UIControlStateNormal];
-            
+        if ([offer.isbookmark isEqualToString:@"1"]) {
+            [cell.bookMarkImageView setImage:bookMarkMinusImage forState:UIControlStateNormal];
+        }
+        else {
+            [cell.bookMarkImageView setImage:bookMarkPlusImage forState:UIControlStateNormal];
         }
         
-        if([offer.offer_type isEqualToString:@"special"])
-        {
-            cell.imgGinzaBackground.image = ginzaBackgroundImageSpecial;
-           
+        if([offer.offer_type isEqualToString:@"special"]) {
+            cell.contentView.backgroundColor=[UIColor colorWithRed:242.0/255.0 
+                                                             green:234.0/255.0 
+                                                              blue:203.0/255.0 
+                                                             alpha:1.0];
             
             NSString *sOff=[NSString stringWithFormat:@"★ %@",offer.lead_text];
-            cell.lblFreeText.text = sOff;
-            UIColor *mycolor= [UIColor colorWithRed:192/255.0 green:150.0/255.0 blue:49.0/255.0 alpha:5.0];
-            cell.lblFreeText.textColor = mycolor;
+            cell.lblSpecialOffer.text = sOff;
+            cell.lblSpecialOffer.textColor = [UIColor colorWithRed:192/255.0 
+                                                             green:150.0/255.0 
+                                                              blue:49.0/255.0 
+                                                             alpha:5.0];
         }
-        else
-        {
-            cell.imgGinzaBackground.image = ginzaBackgroundImageNormal;
-        }
-        
-        cell.strLatitude = shopData.latitude;
-        cell.strLongitude = shopData.longitude;
-        cell.imgDirection.image= arrowImageBlue;
-        double Latitude = [shopData.latitude doubleValue];
-        double Longitude = [shopData.longitude doubleValue];
-        CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
-        CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
-        double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
-        int time = (me/4000)*15;
-        double dkm=me/1000;
-        if (dkm>MIN_DISTANCE) {
-            cell.lblDistance.text=@"この場所までの距離が分かりま せんでした";
+        storeLatitude=[shopData.latitude doubleValue];
+        storeLongitude=[shopData.longitude doubleValue];
+        cell.arrowImageView.image=arrowImageBlue;
+    }
+  
+   //Distance Calculation
+    double distance=[[Location sharedInstance] getDistanceFromLatitude:storeLatitude
+                                                          andLongitude:storeLongitude];
+    cell.lblDirection.text=[[Location sharedInstance] formatDistance:distance];
+   // distance=0.0;
+    //cell.lblDirection.text=@"7m";
+    //cell.lblTime.text=@"(1)";
+    cell.selectionStyle=UITableViewCellSelectionStyleNone;
+    if (distance<MIN_DISTANCE) {
+        if ([cell.lblDirection.text length]<=3) {
+             cell.arrowImageView.frame=CGRectMake(cell.arrowImageView.frame.origin.x, cell.arrowImageView.frame.origin.y,cell.arrowImageView.frame.size.width, cell.arrowImageView.frame.size.height);
         }
         else {
-            NSString *formattedTime=[self calculateTime:time];
-            NSString *distance=[self calculateDistance:me];
-            cell.lblDistance.text =[NSString stringWithFormat:@"%@ %@",distance,formattedTime];
+            cell.arrowImageView.frame=CGRectMake(cell.arrowImageView.frame.origin.x, cell.arrowImageView.frame.origin.y,cell.arrowImageView.frame.size.width, cell.arrowImageView.frame.size.height);
         }
-// Animate Arrow
-        double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
-        CABasicAnimation *theAnimation;
-        theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
-        theAnimation.duration = 0.5f;    
-        [cell.imgDirection.layer addAnimation:theAnimation forKey:@"animateMyRotation"];
-        cell.imgDirection.transform = CGAffineTransformMakeRotation(radians);
+            
+          cell.lblDirection.frame=CGRectMake(cell.lblDirection.frame.origin.x, cell.lblDirection.frame.origin.y,48, cell.lblDirection.frame.size.height);
+          int time=[[Location sharedInstance] getTimeFromLatitude:storeLongitude  
+                                               andLongitude:storeLongitude];
+      
+          cell.lblTime.text=[[Location sharedInstance] formatTime:time];
     }
-    
-    if (indexPath.row==0) {
-       cell.imgGinzaBackground.image = ginzaBackgroundImageFirstRow;
-        cell.largeGIconImageView.hidden=NO;
-         cell.imgDirection.image= arrowImageGray;
-        cell.lblTitle.text = @"ダイナースクラフ";
-        cell.lblTitle.textColor =[UIColor whiteColor];
-        cell.imgDeatils.image = thumbImage;
-        cell.lblDescription.text = @"銀座ラウンシ";
-        cell.lblDescription.textColor =[UIColor whiteColor];
-        cell.lblDistance.textColor=[UIColor darkGrayColor];
-        cell.strLatitude = @"35.665756";
-        cell.strLongitude = @"139.71179";
-        cell.btnBookMark.hidden=YES;//as per bala request
-        double Latitude = 35.665756;
-        double Longitude = 139.7117;
-        CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
-        CLLocationDistance meters =[currentLocation distanceFromLocation:storeLocation];
-        double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
-        int time = (me/4000)*15;
-        double dkm=me/1000;
-        if (dkm>MIN_DISTANCE) {
-             cell.lblDistance.text=@"この場所までの距離が分かりま せんでした";
-        }
-        else {
-            NSString *formattedTime=[self calculateTime:time];
-            NSString *distance=[self calculateDistance:me];
-            cell.lblDistance.text =[NSString stringWithFormat:@"%@ %@",distance,formattedTime];
-        }
-        
-        // Animate Arrow
-        double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
-       // self.detailsView.radians=radians;
-        CABasicAnimation *theAnimation;
-        theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
-        theAnimation.duration = 0.5f;    
-        [cell.imgDirection.layer addAnimation:theAnimation forKey:@"animateMyRotation"];
-        cell.imgDirection.transform = CGAffineTransformMakeRotation(radians);
-        
+    else {
+         cell.lblDirection.frame=CGRectMake(cell.lblDirection.frame.origin.x, cell.lblDirection.frame.origin.y,90, cell.lblDirection.frame.size.height);
     }
-    
-    cell.offerType = @"list";
+    cell.lblCategoryName.text=categoryName;
+    cell.lblStoreName.text=storeName;
+    double angle=[[Location sharedInstance] getAngleFromLatitude:storeLongitude 
+                                              andLongitude:storeLongitude];
+    cell.thumbnailImageView.image=[UIImage imageWithContentsOfFile:thumbnailPath];
+    cell.arrowImageView.transform = CGAffineTransformMakeRotation(angle);
     return cell;
-    
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-        
-    if(indexPath.row == 0)
-    {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row == 0) {
         self.ginzaDetailsView =[[GinzaDetailsViewController alloc]init];
         [self presentModalViewController:ginzaDetailsView animated:YES];
     }
-    
-    else
-    {
-        self.detailsView =[[OfferDetailsViewController alloc]init];
-        Offer *offer =[dataArray objectAtIndex:indexPath.row-1];
-        detailsView.offerId = offer.id;
+    else {
+        self.detailsView =[[OfferDetailsViewController alloc]initWithNibName:@"OfferDetailsViewController" bundle:nil];
+         Offer *offer =[dataArray objectAtIndex:indexPath.row-1];
+         detailsView.offerId = offer.id;
         [self presentModalViewController:detailsView animated:YES];
     }
-    
 }
 
-//Please delete this function after our conversation stops this to show just show you 
-
--(IBAction)getUserDetails:(id)sender
-{
-    
-    NSLog(@"helllow ");
-    
+- (void) createConstantImages {
+    bookMarkMinusImage=[UIImage imageNamed:@"Bookmarkminus.png"];
+    bookMarkPlusImage=[UIImage imageNamed:@"Bookmarkplus.png"];
+    ginzaGIcon= [UIImage imageNamed:@"Giconlarge.png"];;
+    ginzaBackgroundImageSpecial=[UIImage imageNamed:@"Specialoffercellbg.png"];
+    arrowImageBlue=[UIImage imageNamed:@"Arrow.png"];
+    arrowImageGray= [UIImage imageNamed:@"Arrowgray.png"];
+    ginzaBackgroundImageFirstRow=[UIImage imageNamed:@"Ginzacelllist.png"];
+    thumbImage=[UIImage imageNamed:@"thumb.png"];
 }
 
--(IBAction)GinzaswipeDown:(id)sender
-{
-    
+
+-(IBAction)GinzaswipeDown:(id)sender {
     GinzaSubViewController  *infoViewController = [[GinzaSubViewController alloc]init];
     [self.navigationController pushViewController:infoViewController animated:NO];
-    
 }
 
-
--(IBAction)GinzafilterViewDown:(id)sender
-{
-    
-    
-}
-
--(IBAction)GinzaSearchView:(id)sender
-{
-    NSLog(@"testing ginza menu view");
-    
+-(IBAction)GinzaSearchView:(id)sender {
     SubMenuSearchViewController  *searchViewController = [[SubMenuSearchViewController alloc]init];
-    
     [self presentModalViewController:searchViewController animated:YES];
-    
-    
 }
 
--(IBAction)btnGinzaMenu:(id)sender
-{
-    }
+-(IBAction)getUserDetails:(id)sender {}
+-(IBAction)btnGinzaMenu:(id)sender { }
+-(IBAction)GinzafilterViewDown:(id)sender {}
 
-#pragma mark CLLocation Delegates methods
--(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
-{
-    currentLocation =  [newLocation retain];   
-    //currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
-    
-    //NSLog(@"didUpdateToLocation");
-     [tblListView reloadData];
-    
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+- (void)viewDidUnload {
+    [super viewDidUnload];
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading 
-{
-    // UITableViewCell *cell =  (UITableViewCell *)[tblListView cellForRowAtIndexPath:[NSIndexPath indexPathWithIndex:2]];
-    
-    
-    //  NSLog(@"update heading....");
-    
-    //  newHeadingObject = [[CLHeading alloc]init];
-    newHeadingObject = newHeading;
-    mHeading = newHeadingObject.magneticHeading;
-    
-    //imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
-    
-   
-    
-    if ((mHeading >= 339) || (mHeading <= 22)) {
-      //  NSLog(@"User Headingaa ......->N");
-        currenDirection = @"N";
-       
-    }else if ((mHeading > 23) && (mHeading <= 68)) {
-        currenDirection = @"NE";
-        // NSLog(@"User Heading ......->NE");
-    }else if ((mHeading > 69) && (mHeading <= 113)) {
-         currenDirection = @"E";
-        // NSLog(@"User Heading ......->E");
-    }else if ((mHeading > 114) && (mHeading <= 158)) {
-          currenDirection = @"SE";
-        // NSLog(@"User Heading ......->SE");
-    }else if ((mHeading > 159) && (mHeading <= 203)) {
-          currenDirection = @"S";
-       //  NSLog(@"User Heading ......->S");
-    }else if ((mHeading > 204) && (mHeading <= 248)) {
-       currenDirection = @"SW";
-       //  NSLog(@"User Heading ......->SW");
-    }else if ((mHeading > 249) && (mHeading <= 293)) {
-        currenDirection = @"W";
-       ///  NSLog(@"User Heading ......->W");
-    }else if ((mHeading > 294) && (mHeading <= 338)) {
-       
-         //NSLog(@"User Heading ......->NW");
-     currenDirection = @"NW";
-    }
-    
-    
-    if ([currenDirection isEqualToString:previousDirection ]){
-        
-    }
-    else {
-       [tblListView reloadData];
-        previousDirection = currenDirection;
-    }
-    
-}
-
-
-
--(float) calculateUserAngle:(CLLocationCoordinate2D)user lat:(float)lat lon:(float)lang {
-    float   locLat = lat;
-    float  locLon = lang;
-    
-    NSLog(@"%f ; %f", locLat, locLon);
-    
-    float pLat;
-    float pLon;
-    
-    if(locLat > user.latitude && locLon > user.longitude) {
-        // north east
-        
-        pLat = user.latitude;
-        pLon = locLon;
-        
-        degrees = 0;
-    }
-    else if(locLat > user.latitude && locLon < user.longitude) {
-        // south east
-        
-        pLat = locLat;
-        pLon = user.longitude;
-        
-        degrees = 45;
-    }
-    else if(locLat < user.latitude && locLon < user.longitude) {
-        // south west
-        
-        pLat = locLat;
-        pLon = user.latitude;
-        
-        degrees = 180;
-    }
-    else if(locLat < user.latitude && locLon > user.longitude) {
-        // north west
-        
-        pLat = locLat;
-        pLon = user.longitude;
-        
-        degrees = 225;
-    }
-    
-    // Vector QP (from user to point)
-    float vQPlat = pLat - user.latitude;
-    float vQPlon = pLon - user.longitude;
-    
-    // Vector QL (from user to location)
-    float vQLlat = locLat - user.latitude;
-    float vQLlon = locLon - user.longitude;
-    
-    // degrees between QP and QL
-    float cosDegrees = (vQPlat * vQLlat + vQPlon * vQLlon) / sqrt((vQPlat*vQPlat + vQPlon*vQPlon) * (vQLlat*vQLlat + vQLlon*vQLlon));
-    // NSLog(@"Rotate:%f",degrees);
-    
-    
-    return degrees = degrees + acos(cosDegrees);
-    
-}
-
-
--(float) bearingBetweenStartLocation:(CLLocation *)startLocation andEndLocation:(CLLocation *)endLocation{
-    
-    CLLocation *northPoint = [[CLLocation alloc] initWithLatitude:(startLocation.coordinate.latitude)+.01 longitude:endLocation.coordinate.longitude] ;
-    float magA = [northPoint distanceFromLocation:startLocation];
-    float magB = [endLocation distanceFromLocation:startLocation];
-    CLLocation *startLat = [[CLLocation alloc] initWithLatitude:startLocation.coordinate.latitude longitude:0] ;
-    CLLocation *endLat = [[CLLocation alloc] initWithLatitude:endLocation.coordinate.latitude longitude:0] ;
-    float aDotB = magA*[endLat distanceFromLocation:startLat];
-    return RADIANS_TO_DEGREES(acosf(aDotB/(magA*magB)));
-}
-
-//Calculate Distance and Time
-- (NSString *)calculateDistance : (double) aDistance {
-    NSString *strDist;
-    double d=aDistance/1000;
-    if (d>1.0) {
-            strDist=[NSString stringWithFormat:@"%.1fkm",d];
-    }
-    else {
-            strDist=[NSString stringWithFormat:@"%.fm",aDistance];
-        }
-    return strDist;
-}
-
-- (NSString *) calculateTime: (int) aTime {
-    NSString *strTime;
-    if (aTime>60) {
-        int hours=aTime/60;
-        int minutes=aTime%60;
-        strTime=[NSString stringWithFormat:@"(徒歩%d時間%d分)",hours,minutes];
-    }
-    else {
-        strTime=[NSString stringWithFormat:@"(徒歩%d分)",aTime];
-    }
-    return  strTime;
-}
-
-- (void)viewDidappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
-   
+    self.cbar.hidden=YES;    
 }
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-    [locationManager stopUpdatingHeading];
-    [locationManager stopUpdatingLocation];
-     self.cbar.hidden=YES;    
-}
-
 
 @end

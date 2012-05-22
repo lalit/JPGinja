@@ -54,7 +54,25 @@
     NSString *previousDirection;
     
     //ListViewCell *cell;
+    UINib *cellLoader;
+    NSString *mStrImageDirectoryPath;
+    NSString *categoryName;
+    NSString *storeName;
+    NSString *specialOffer;
+    NSString *direction;
+    NSString *thumbnailPath;
+    double storeLatitude;
+    double storeLongitude;
     
+    UIImage *bookMarkMinusImage;
+    UIImage *bookMarkPlusImage;
+    UIImage *ginzaGIcon;
+    UIImage *ginzaBackgroundImageSpecial;
+    UIImage *ginzaBackgroundImageFirstRow;
+    UIImage *thumbImage;
+    UIImage *arrowImageBlue;
+    UIImage *arrowImageGray;
+
     
 }
 @property(nonatomic,retain)CustomTopNavigationBar *cbar;
@@ -65,7 +83,7 @@
 @property(nonatomic,retain) OffersDetailsViewController *detailsViewController; 
 @property(nonatomic,retain) NSMutableArray *arryListDetails;
 @property(nonatomic,retain) NSMutableArray *arrayOfTitles;
-
+@property(nonatomic,retain)   NSString *mStrImageDirectoryPath;
 @property(nonatomic,retain) NSMutableArray *arrayOfImages;
 
 
@@ -97,7 +115,6 @@
 -(IBAction)GinzafilterViewDown:(id)sender;
 -(IBAction)GinzaSearchView:(id)sender;
 - (void)updateTopNavigation ;
-- (NSString *)calculateDistance : (double) aDistance;
-- (NSString *)calculateTime : (int) aTime;
+- (void) createConstantImages;
 
 @end

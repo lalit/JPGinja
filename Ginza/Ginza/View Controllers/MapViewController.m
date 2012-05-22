@@ -57,7 +57,6 @@
     if ([self.deligate.ginzaEvents count]<=0) {
         self.lblEventCount.hidden =YES;
     }
-
     self.navigationController.navigationBarHidden = YES;
     MKUserTrackingBarButtonItem *buttonItem = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapView];
     [self.mapToolbar setItems:[NSArray arrayWithObject:buttonItem] animated:YES];
@@ -93,14 +92,26 @@
     // 4
     [mapView setRegion:adjustedRegion animated:YES];      
     
-    
+  
     CLLocationCoordinate2D originalCenter = CLLocationCoordinate2DMake(zoomLocation.latitude, zoomLocation.longitude);
     // ... adjust region
     [mapView setCenterCoordinate:originalCenter animated:YES];
     
-    //=======
-       
+    UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] 
+                                   initWithTarget:self action:@selector(handleGesture:)];
+    tgr.numberOfTouchesRequired = 1;
+    [self.mapView addGestureRecognizer:tgr];
+    [tgr release];
+    [self plotOfferPositions:@"all"];
     
+}
+- (void)handleGesture:(UIGestureRecognizer *)gestureRecognizer {
+    if (popup) {
+        [self.popup removeFromSuperview];
+        [self.popup  release];
+        popup=nil;
+        [self.mapView deselectAnnotation:[mapView.selectedAnnotations objectAtIndex:0] animated:YES];    
+    }
 }
 
 - (void)updateTopNavigation {
@@ -112,7 +123,7 @@
 }
 
 - (void) initializeLocationManager {
-    self.locationManager = [[CLLocationManager alloc] init ];
+    self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
 }
@@ -125,30 +136,29 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-
-
-}
-- (void)viewWillAppear:(BOOL)animated 
-{  
- [self plotOfferPositions:@"all"];
-    
-  self.cbar.hidden=NO;
+   // self.mapView.frame=CGRectMake(0, cbar.frame.size.height, self.mapView.frame.size.width, self.view.frame.size.height-(cbar.frame.size.height+self.tabBarController.tabBar.frame.size.height));
 }
 
-- (void)viewDidUnload
-{
+- (void)viewWillAppear:(BOOL)animated {  
+   [self.popup setHidden:YES];
+   self.cbar.hidden=NO;
+}
+
+- (void)viewDidUnload {
     [super viewDidUnload];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
 }
+
 -(MKAnnotationView *)mapView:(MKMapView *)mV viewForAnnotation:
 (id <MKAnnotation>)annotation {
+
+    [self.popup  setHidden:YES];
+    [self.mapView deselectAnnotation:[mapView.selectedAnnotations objectAtIndex:0] animated:YES]; 
 	MKPinAnnotationView *pinView = nil; 
-	if(annotation != mapView.userLocation) 
-	{
+	if(annotation != mapView.userLocation)  {
 		static NSString *defaultPinID = @"com.code.pin";
 		pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:defaultPinID];
         pinView=nil;
@@ -174,10 +184,7 @@
             imageView.image=[UIImage imageNamed:@"mapG.png"];
             [pinView addSubview:imageView];
         }
-
         else if (cor.latitude!=  self.currentLocation.coordinate.latitude && cor.longitude!=   self.currentLocation.coordinate.longitude) {
-            
-        
         lbl.text = [NSString stringWithFormat:@"%d",[[self.mapDataDict objectForKey:key] count]];
         [pinView addSubview:lbl];
         }
@@ -198,8 +205,6 @@
     }
    
     self.mapDataDict = self.deligate.poiDataDictionary;
-   // UIAlertView *alert1 = [[UIAlertView alloc]initWithTitle:@"Total No of offer record in list view" message:[NSString stringWithFormat:@"%d",[self.mapDataDict count]] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    //[alert1 show];
     //=========Changed the logic by mobiquest . Checking offer having 1 km distance=======================
     NSArray *nearestGinzaLocation=[self nearestGinzhaLocationsWithinOneKilometers];
     
@@ -223,41 +228,9 @@
     // the user clicked one of the OK/Cancel buttons
     if (buttonIndex == 0)
     {
-        for (id key in mapDataDict)
-        {
-            
-            NSArray *latlong = [key componentsSeparatedByString:@"-"];
-            double latitude =[[latlong objectAtIndex:0] doubleValue];
-            double longitude = [[latlong objectAtIndex:1] doubleValue];
-            CLLocationCoordinate2D coordinate;
-            coordinate.latitude = latitude;
-            coordinate.longitude = longitude; 
-            AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
-            annotation.coordinate =coordinate;
-            [mapView addAnnotation:annotation];
-        }
-        if ([mapDataDict count]) {
-            CLLocation *ginzaLounge = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.763953];
-            AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
-            annotation.coordinate =ginzaLounge.coordinate;
-            [mapView addAnnotation:annotation];
-        }
-
+        [self performSelector:@selector(plotCoordinates) withObject:nil afterDelay:0.1];
     }
-    else
-    {
-        
-        
-       /* CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
-        MKCoordinateRegion region;
-        region.center = currentLocation.coordinate;  
-        
-        MKCoordinateSpan span; 
-        span.latitudeDelta  = 0.2; // Change these values to change the zoom
-        span.longitudeDelta = 0.2; 
-        
-        
-        [self.mapView setRegion:region animated:YES];*/
+    else {
         [self btnModeChanged:nil];
     }
 }
@@ -266,8 +239,7 @@
     CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
     int k=0;
     NSMutableArray *nearestLocations=[[NSMutableArray alloc]init];
-    for (id key in mapDataDict)
-    {
+    for (id key in mapDataDict) {
         NSArray *latlong = [key componentsSeparatedByString:@"-"];
         double latitude =[[latlong objectAtIndex:0] doubleValue];
         double longitude = [[latlong objectAtIndex:1] doubleValue];
@@ -289,20 +261,16 @@
     return nearestLocations;
 }
 
-
--(IBAction)btnFindUserLocation:(id)sender
-{
+-(IBAction)btnFindUserLocation:(id)sender {
     CLLocationCoordinate2D zoomLocation;
     zoomLocation.latitude = 35.67163555;
     zoomLocation.longitude= 139.76395295;
     // 2
-    
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.2*METERS_PER_MILE, 0.2*METERS_PER_MILE);
     // 3
     MKCoordinateRegion adjustedRegion = [mapView regionThatFits:viewRegion];                
     // 4
     [mapView setRegion:adjustedRegion animated:YES];      
-    
     
     CLLocationCoordinate2D originalCenter = CLLocationCoordinate2DMake(zoomLocation.latitude, zoomLocation.longitude);
     // ... adjust region
@@ -331,9 +299,28 @@
     
 }
 
--(IBAction)btnModeChanged:(id)sender
-{
-       [mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
+- (void) plotCoordinates{
+    
+    for (id key in mapDataDict){
+        NSArray *latlong = [key componentsSeparatedByString:@"-"];
+        double latitude =[[latlong objectAtIndex:0] doubleValue];
+        double longitude = [[latlong objectAtIndex:1] doubleValue];
+        CLLocationCoordinate2D coordinate;
+        coordinate.latitude = latitude;
+        coordinate.longitude = longitude; 
+        AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
+        annotation.coordinate =coordinate;
+        [mapView addAnnotation:annotation];
+    }
+    if ([mapDataDict count]) {
+        CLLocation *ginzaLounge = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.763953];
+        AddressAnnotation *annotation =[[AddressAnnotation alloc]init];
+        annotation.coordinate =ginzaLounge.coordinate;
+        [mapView addAnnotation:annotation];
+    }
+}
+-(IBAction)btnModeChanged:(id)sender {
+        [mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
         self.currentLocation=[[Location sharedInstance] currentLocation];
         MKCoordinateRegion region;
         NSArray *existingpoints = mapView.annotations;
@@ -352,37 +339,32 @@
 }
 
 
-- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
-{
-    //[self.mapView co];
-    CGPoint newPoint = [self.mapView convertCoordinate:selectedCoordinate toPointToView:self.view];
-    [self.popup  setCenter:CGPointMake(newPoint.x+5,newPoint.y-((self.popup.frame.size.height/2)-17))];
-    [self.popup setHidden:YES];
+- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
+   CGPoint newPoint = [self.mapView convertCoordinate:selectedCoordinate toPointToView:self.view];
+   [self.popup  setCenter:CGPointMake(newPoint.x+5,newPoint.y-((self.popup.frame.size.height/2)-17))];
+   [self.popup setHidden:YES];
+    
 }
 
-- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
-{
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
     CGPoint newPoint = [self.mapView convertCoordinate:selectedCoordinate toPointToView:self.view];
-
     [self.popup  setCenter:CGPointMake(newPoint.x,newPoint.y-((self.popup.frame.size.height/2)+(self.popup.frame.size.height/2)-17))];
     [self.popup setHidden:NO];
 }
 
-- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view 
-{  
-   
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {  
     showCallout = YES;
     for (UIView *view1 in self.mapView.subviews) {
         if ([view1 isKindOfClass:CustomCallOutView.class]) {
             [view1 removeFromSuperview];
         }
     }
-     selectedCoordinate = view.annotation.coordinate;
+    selectedCoordinate = view.annotation.coordinate;
     NSString *key =[NSString stringWithFormat:@"%f-%f",selectedCoordinate.latitude,selectedCoordinate.longitude];
     NSMutableArray *offerArray =  [mapDataDict objectForKey:key];
-   
     if ([offerArray count]>0) {
         Offer *offer =[offerArray objectAtIndex:0];
+        //offer.offer_type=@"special";
         popup =[[CustomCallOutView alloc]init];
         CLLocationCoordinate2D location = [[[self.mapView userLocation] location] coordinate];
         CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:location.latitude longitude:location.longitude];
@@ -390,27 +372,21 @@
         popup.currentLocation = storeLocation;
         [popup prepareCallOutView:offer offerArray:offerArray];
         popup.parentViewController = self;
-        CGPoint point = [self.mapView convertPoint:view.frame.origin fromView:view.superview];
-        [popup  setCenter:CGPointMake(point.x+7,point.y-(self.popup.frame.size.height/2)+12)];
         [self.mapView addSubview:popup];
-        
         [self.popup setHidden:NO];
         
-
-    }
-       
-    //[self animateIn];
+    }  
+    [self.mapView setCenterCoordinate:selectedCoordinate animated:YES];
 }
+
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view 
 {
-    
+
 }
 
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [self.popup removeFromSuperview];
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event 
 {
@@ -436,7 +412,6 @@
     CGRect rect1 = infoViewController.view.frame;
     rect1.origin.y = 0;
     infoViewController.view.frame =rect1;
-    
     [UIView commitAnimations];
 }
 - (void)viewDidDisappear:(BOOL)animated

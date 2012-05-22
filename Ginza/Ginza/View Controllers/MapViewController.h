@@ -43,7 +43,7 @@
 @property (nonatomic)  CLLocationCoordinate2D zoomLocation;
 
 - (NSArray *)nearestGinzhaLocationsWithinOneKilometers;
-
+- (void) plotCoordinates;
 -(IBAction)btnModeChanged:(id)sender;
 -(IBAction)btnFindUserLocation:(id)sender;
 - (void)plotOfferPositions:(NSString *)responseString;

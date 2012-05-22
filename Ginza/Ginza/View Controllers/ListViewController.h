@@ -48,7 +48,6 @@
     float degrees;
     
     UIImageView *imgcompass;
-    
     BOOL oneCheckboxSelected ; 
     NSString *currenDirection;
     NSString *previousDirection;
@@ -58,18 +57,29 @@
     CLLocationManager *locationManager;
     float mHeading;
     CustomTopNavigationBar *cbar;
-    
     UIImage *bookMarkMinusImage;
     UIImage *bookMarkPlusImage;
-    UIImage *ginzaBackgroundImageNormal;
+    UIImage *ginzaGIcon;
     UIImage *ginzaBackgroundImageSpecial;
     UIImage *ginzaBackgroundImageFirstRow;
     UIImage *thumbImage;
     UIImage *arrowImageBlue;
     UIImage *arrowImageGray;
+    IBOutlet UITableView *listViewTable;
+    UINib *cellLoader;
+    NSString *mStrImageDirectoryPath;
+    NSString *categoryName;
+    NSString *storeName;
+    NSString *specialOffer;
+    NSString *direction;
+    NSString *thumbnailPath;
+    double storeLatitude;
+    double storeLongitude;
+       int arrowX;
 }
 
 @property(nonatomic) int currentPage;
+@property(nonatomic,retain) NSString *mStrImageDirectoryPath;
 @property(nonatomic,retain)   OfferDetailsViewController *detailsView; 
 @property(nonatomic,retain) GinzaDetailsViewController *ginzaDetailsView;
 @property(nonatomic,retain)  CustomTopNavigationBar *cbar;
