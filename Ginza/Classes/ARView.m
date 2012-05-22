@@ -54,6 +54,7 @@
 #import "RadarViewPortView.h"
 #import "pARkViewController.h"
 #import "GANTracker.h"
+#import "Constants .h"
 #pragma mark -
 #pragma mark Math utilities declaration
 
@@ -96,7 +97,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	CADisplayLink *displayLink;
 	CMMotionManager *motionManager;
 	CLLocationManager *locationManager;
-	CLLocation *location;
+	
 	//NSArray *placesOfInterest;
 	mat4f_t projectionTransform;
 	mat4f_t cameraTransform;	
@@ -173,7 +174,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 @synthesize captureLayer;
 @synthesize placesOfInterest;
 @synthesize  currentDistance,maxtDistance,interfaceOrientation,parentActionView,radius,poiData,parentViewController;
-@synthesize radar,radarView,visiplePlacesOfInterest;
+@synthesize radar,radarView,visiplePlacesOfInterest,location;
 
 - (void)dealloc1
 {
@@ -371,8 +372,12 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
    // NSLog(@"to point = %f, %f",final_longitude,final_latitude);
     
     CLLocation *newCurrentLocation=  [[CLLocation alloc] initWithLatitude:final_latitude longitude:final_longitude];
-    newCurrentLocation=  location;//[[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-    //location = newCurrentLocation;
+    newCurrentLocation=  location;
+    if (debug==YES) {
+        newCurrentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        location = newCurrentLocation;
+    }
+    
     return newCurrentLocation;
 }
 
@@ -389,15 +394,21 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
     for (PlaceOfInterest *poi in self.placesOfInterest) {
         //NSLog(@"UPdate view POI %@",[NSDate date]);
-        //CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
-        //CLLocation *pointBLocation = poi.location;  
+       
         
-        float distanceMeters = poi.distance;//[pointALocation distanceFromLocation:pointBLocation];
+        float distanceMeters = poi.distance;
+        
+        if (debug==YES) {
+            CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+            CLLocation *pointBLocation = poi.location;  
+            distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
+        }
+        
         if (poi.distance==0) {
             distanceMeters=[location distanceFromLocation:poi.location];
         }
         
-        distanceMeters = distanceMeters -currentDistance;
+        //distanceMeters = distanceMeters -currentDistance;
         //distanceMeters = distanceMeters/10;
         //NSLog(@"distanceMeters = %f",distanceMeters);
         if (distanceMeters==0) {
@@ -407,12 +418,14 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
                                                  withError:&error]) {
             }
         }
-       // NSLog(@"distanceMeters = %f,%f,%f",distanceMeters,currentDistance,radius);
-        //radius=250;
-        if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/) {
+       NSLog(@"distanceMeters = %f,%f,%f",distanceMeters,currentDistance,radius);
+        //radius=9250;
+        if (distanceMeters >= currentDistance /*&& distanceAndIndex->distance<=self.maxtDistance*/)
+        {
             
             if (distanceMeters<radius) {
                  NSLog(@"poi added = %f",distanceMeters);
+                poi.distance =distanceMeters;
                 [placesOfInterestTemp insertObject:poi atIndex:i++];
             }
             
@@ -769,12 +782,18 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	int i = 0;
     int zPos = 350;
     self.visiplePlacesOfInterest =[[NSMutableArray alloc]init ];
+   
 	for (PlaceOfInterest *poi in [placesOfInterest objectEnumerator]) {
 		vec4f_t v;
 		multiplyMatrixAndVector(v, projectionCameraTransform, placesOfInterestCoordinates[i]);
 		createProjectionMatrix(projectionTransform, 60.0f*DEGREES_TO_RADIANS, self.bounds.size.width*1.0f / self.bounds.size.height, 0.25f, 1000.0f);
         
-        CLLocation *pointALocation = location;//[self getCurrentLocation];//[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        CLLocation *pointALocation = [self getCurrentLocation];location;
+        if (debug==YES) {
+            pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        }
+
+        ////[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
         //NSLog(@"%f",currentLocation.coordinate.latitude);
         
         CLLocation *pointBLocation = poi.location;  
@@ -785,8 +804,8 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 		float y = (v[1] / v[3] + 1.0f) * 0.5f;
 		if (v[2] < 0.0f) {
 			poi.view.center = CGPointMake(x*self.bounds.size.width, self.bounds.size.height-y*self.bounds.size.height);
-            float scaleFactor = 1.0 - 1.0 * (distanceMeters / 250);
-           
+            float scaleFactor =  1.0-1.0 * (distanceMeters / 250);// scaleFactor =  1.0 * (distanceMeters / 1000);
+            //NSLog(@"Scale factor = %f",scaleFactor);
             CGRect rec = poi.view.frame;
             rec.size.width = (172*scaleFactor)+172;
             rec.size.height = (163*scaleFactor)+163;
@@ -843,6 +862,9 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
             
             
 			poi.view.hidden = NO;
+            CustomCallOutView *cView =poi.view;
+            [cView updateDistance];
+            // NSLog(@"ARview placesOfInterest count = %d",[placesOfInterest count]);
             [visiplePlacesOfInterest addObject:poi.location];
             
                        
@@ -880,7 +902,10 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 	location = newLocation;
     
     //for testing
-    //location = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+    
+    if (debug==YES) {
+        location = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+    }
     if (isFirstTime) {
         
         if ([self.poiData count]==0) {

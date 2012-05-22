@@ -40,7 +40,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    self.arrayOflist = [NSMutableArray arrayWithObjects:@"イベントのご案内",@"カード適用",@"このアプリについて ",@"銀座ラウンジのサービスについて", nil];//,@"お問い合わせ"
+    self.arrayOflist = [NSMutableArray arrayWithObjects:@"イベントのご案内",@"カードのお申し込み",@"このアプリについて ",@"銀座ラウンジのサービスについて", nil];//,@"お問い合わせ"
     
     [self.view addSubview:viewGinza];
     

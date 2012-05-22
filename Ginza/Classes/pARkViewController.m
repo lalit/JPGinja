@@ -64,6 +64,7 @@
 @synthesize rotateImg,compassImg,trueNorth;
 @synthesize compassDif,compassFault,calibrateBtn,lblFilterText,slider,settingView,btnClose,lblDistance,btnSettings,orientation,lblEventCount,placesOfInterest,btnVMMode,btnBack,btnHelp,helpView,btnForward,btnReverse,virtualwalkArrow,waitingMessage,arView,lblMessage,cbar,actionsView;
 @synthesize lblRadius,viewSetting,sdrRadius,settingRadar,settingRadarViewPort,viewScale,isFirstTime,actionViewLandScape;
+@synthesize forwardArray;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -154,7 +155,10 @@
         
         //For testing
         CLLocation *pointALocation = [Location sharedInstance].currentLocation;
-        //CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        if (debug==YES) {
+            pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+        }
+        
         CLLocation *pointBLocation = [[CLLocation alloc] initWithLatitude:[merchant.latitude doubleValue] longitude:[merchant.longitude doubleValue]];  
         
         float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];
@@ -174,6 +178,7 @@
 {
     [self rotateSlider];
     [self drawSettingRadarView];
+    arView.radius=50;
     return;
     
     currentDistance = 150;
@@ -253,11 +258,10 @@
         return;
     }*/
 
-	[super viewDidAppear:animated];
+	//[super viewDidAppear:animated];
     //[locationManager startUpdatingHeading];
     //[locationManager startUpdatingLocation];
     self.lblMessage.hidden = YES;
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -459,6 +463,7 @@
 }
 -(IBAction)btnVMModeOn:(id)sender
 {
+    self.forwardArray = [[[NSMutableArray alloc]init]retain];
     self.btnVMMode.hidden=YES;
     self.btnBack.hidden =NO;
     self.btnForward.hidden =NO;
@@ -468,11 +473,15 @@
 }
 -(IBAction)btnVMModeOff:(id)sender
 {
+    self.forwardArray = nil;
     self.btnVMMode.hidden=NO;
     self.btnBack.hidden =YES;
     self.btnForward.hidden =YES;
     self.btnReverse.hidden=YES;
     self.virtualwalkArrow.hidden=YES;
+    arView.currentDistance =0;
+    // arView.location = movedLoacation;    
+    [arView updateView]; //
     
 }
 
@@ -496,18 +505,41 @@
 -(IBAction)btnMoveForward:(id)sender
 {
     float ds =5;
-    /*if ([arView.visiplePlacesOfInterest count]>0) {
-        CLLocation *c = [arView.visiplePlacesOfInterest objectAtIndex:([arView.visiplePlacesOfInterest count] -1)];
-        CLLocation *pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
-
-        ds = [pointALocation distanceFromLocation:c] ;
-        NSLog(@"visiplePlacesOfInterest = %f,%f",ds,currentDistance);
+    CLLocation *movedLoacation= [Location sharedInstance].currentLocation;
+    if ([arView.visiplePlacesOfInterest count]>0) {
+        float leastDistance =0.0;
         
-    }*/
-    NSLog(@"currentDistance = %f",currentDistance);
+        for (int x=0; x<[arView.visiplePlacesOfInterest count]; x++) 
+        {
+            
+            CLLocation *c = [arView.visiplePlacesOfInterest objectAtIndex:x];
+            CLLocation *pointALocation = [Location sharedInstance].currentLocation;
+            
+            if (debug==YES) {
+                pointALocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
+            }
+            if (x==0) {
+                leastDistance = [pointALocation distanceFromLocation:c] ;
+            }
+            float cDis =[pointALocation distanceFromLocation:c];
+            if (leastDistance>=cDis) {
+                leastDistance = cDis ;
+                NSLog(@"visiplePlacesOfInterest = %f,%d",cDis,x);
+                //[Location sharedInstance].currentLocation= [c copy];
+            }
+            
+            
+
+        }
+        ds= leastDistance+1;      
+    }
+    NSLog(@"least = %d,%f",[arView.visiplePlacesOfInterest count],currentDistance);
+    NSLog(@"currentDistance = %f",ds);
         if (currentDistance>=0) {
-        currentDistance = currentDistance+ds;
+            currentDistance = ds;//currentDistance+ds;
+            [self.forwardArray addObject:[NSString stringWithFormat:@"%f", currentDistance]];
         arView.currentDistance =currentDistance;
+           // arView.location = movedLoacation;
         CGRect rect = arView.captureLayer.frame;
         rect.size.width = rect.size.width+40;
         rect.size.height = rect.size.height+40;
@@ -520,12 +552,16 @@
 //Virtual walk move reverse decrease the current position by decrement of 5 and zoom out cameraview by 40 pixel
 -(IBAction)btnMoveReverse:(id)sender
 {
-    if (currentDistance>=0) {
+    if ([self.forwardArray count]>0) {
         currentDistance = currentDistance-5;
+        currentDistance = [[self.forwardArray objectAtIndex:[self.forwardArray count]-1]floatValue]-2;
         arView.currentDistance =currentDistance;
         CGRect rect = arView.captureLayer.frame;
-        rect.size.width = rect.size.width-40;
-        rect.size.height = rect.size.height-40;
+        if (rect.size.width >= self.view.frame.size.width) {
+            rect.size.width = rect.size.width-40;
+            rect.size.height = rect.size.height-40;
+        }
+        
         arView.captureLayer.frame = rect;    
         [arView updateView];
 
@@ -554,6 +590,9 @@
     actionsView.hidden=NO; //Hide setting view
     arView.radar.hidden=NO;
     arView.radarView.hidden=NO;
+    
+    arView.currentDistance =0;
+    // arView.location = movedLoacation;    
     [arView updateView]; // refresh POI's
     [self.viewSetting removeFromSuperview];
     
@@ -590,7 +629,12 @@
     int i=0;
     NSMutableArray *placesOfInterestTemp = [[NSMutableArray alloc]init ];
     for (PlaceOfInterest *poi in self.placesOfInterest) {
-        CLLocation *pointALocation = [Location sharedInstance].currentLocation;//[[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295]autorelease];
+        CLLocation *pointALocation = [Location sharedInstance].currentLocation;
+        
+        if (debug==YES) {
+            pointALocation=[[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295]autorelease];
+        }
+        
         CLLocation *pointBLocation = poi.location;  
         
         float distanceMeters = [pointALocation distanceFromLocation:pointBLocation];

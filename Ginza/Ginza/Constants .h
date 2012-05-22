@@ -16,6 +16,7 @@
 #define eventImageURL @"http://staging.citiworldprivileges.com/data/images/jp_ginza_promotions/iPhone"
 
 #define settingRadarRadius 75
+#define debug YES
 
 #define DEGREES_TO_RADIANS (M_PI/180.0)
 #define degreesToRadianX(x) (M_PI * (x) / 180.0)

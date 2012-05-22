@@ -15,6 +15,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "pARkViewController.h"
 #import "Location.h"
+#import "Constants .h"
 @implementation CustomCallOutView
 @synthesize locationManager,currentLocation,offerDataArray,offerTitleLabel;
 @synthesize popupThumb,distanceLabel,timeLabel,btnBookmark,popupbg,currentOffer;
@@ -45,6 +46,47 @@
     currentOffer =offer;
     [self performSelectorInBackground:@selector(constructUI) withObject:nil];
     return nil;
+}
+-(void)updateDistance
+{
+    //NSLog(@"Update distance");
+    AppDelegate *deligate =(AppDelegate *)[[UIApplication sharedApplication]delegate];
+    ShopList *merchant = [deligate getStoreDataById:currentOffer.store_id];
+    
+    double Latitude = [merchant.latitude doubleValue];
+    double Longitude = [merchant.longitude doubleValue];
+    
+    CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
+    currentLocation =[Location sharedInstance].currentLocation;
+    if (debug==YES) {
+        currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];;
+
+    }
+       // NSLog(@"current =%@,%@",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude);
+    CLLocationDistance meters = [storeLocation distanceFromLocation:currentLocation];
+    double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
+    int time = (me/4000)*15;
+
+    
+    double dkm=me/1000;
+    if (dkm>MIN_DISTANCE) {
+        distanceLabel.numberOfLines=3;
+        distanceLabel.text=@"この場所までの距離が分かりま せんでした";
+        NSString *formattedTime=[self calculateTime:time];
+        NSString *distance=[self calculateDistance:me];
+        //distanceLabel.numberOfLines=1;
+        //distanceLabel.text=distance;
+        //timeLabel.text =formattedTime;
+    }
+    else {
+        distanceLabel.numberOfLines=1;
+        NSString *formattedTime=[self calculateTime:time];
+        NSString *distance=[self calculateDistance:me];
+        distanceLabel.text=distance;
+        timeLabel.text =formattedTime;
+    }
+
+
 }
 -(void)constructUI
 {
@@ -111,7 +153,10 @@
     double Longitude = [merchant.longitude doubleValue];
     
     CLLocation *storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
-    currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];;
+    if (debug==YES) {
+        currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];;
+    }
+    
    // NSLog(@"current =%@,%@",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude);
     CLLocationDistance meters = [currentLocation distanceFromLocation:storeLocation];
     double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
@@ -238,8 +283,7 @@
     self.frame= popup.frame;
     popup.contentMode = UIViewContentModeScaleToFill;
     [self addSubview:popup];
-    
-    return popup;
+    //return popup;
 }
 
 
