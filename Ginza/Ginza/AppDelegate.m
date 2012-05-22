@@ -82,8 +82,9 @@
     NSLog(@"lastSyncedDate = %@",self.lastmerchantsynceddate);
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.arraySelectedCategories =[[NSMutableArray alloc]init ];
-    filterString =@"";
-    filterString = [self getFilterString];
+    self.filterString =[[[NSString alloc]init]retain];
+    self.filterString =@"";
+    self.filterString = [self getFilterString];
     [self getOfferData];
     self.poiDataDictionary = [self getPointOfInterestItems];
     [self getListViewData];
@@ -102,13 +103,13 @@
     {
         [self preloadImages];
         dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
+           // @try {
                 [self fetchOfferData:lastSyncedDate];
-            }
-            @catch (NSException *exception) {
-            }
-            @finally {
-            }
+            //}
+            //@catch (NSException *exception) {
+            //}
+            //@finally {
+            //}
             
             
             @try {
@@ -125,7 +126,8 @@
                                                      withError:&error]) {
                 }
                 
-                [self performSelectorInBackground:@selector(refreshData) withObject:nil];
+                //[self performSelectorInBackground:@selector(refreshData) withObject:nil];
+                [self refreshData];
             }
             
             
@@ -448,6 +450,8 @@
     
     NSMutableArray *array = (NSMutableArray *)[managedObjectContext executeFetchRequest:request error:&error];
     self.offerDataArray = array;
+    NSLog(@"offerDataArray count =%d",[offerDataArray count]);
+    
     return array;
     
 }
@@ -458,8 +462,8 @@
     
     NSMutableArray *catArray =  [self getCategories];
     for (Categories *cat in catArray) {
-        NSLog(@"parent =%@",cat.parent);
-        NSString *value;
+        
+        //NSString *value;
         if ([cat.parent isEqualToString:@"0"]) {
             //value = [NSString stringWithFormat:@"%@-%@",cat.parent];
         }
@@ -607,11 +611,21 @@
         urlString = [NSString stringWithFormat:@"%@/offers/",dataURL];
     }else
     {
-        urlString = [NSString stringWithFormat:@"%@/offers/?created_on=%@",dataURL,lastSyncedDate];
+        urlString = [NSString stringWithFormat:@"%@/offers/?created_on=%@",dataURL,[lastSyncedDate stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    }
+    NSURL *url = [[NSURL URLWithString: urlString]retain];
+    //NSData* responseData = [NSData dataWithContentsOfURL:url];
+    
+    NSError* error = nil;
+    NSData* responseData = [NSData dataWithContentsOfURL:url options:NSDataReadingUncached error:&error];
+    if (error) {
+        NSLog(@"%@", [error localizedDescription]);
+        [error release];
+    } else {
+        NSLog(@"Data has loaded successfully.");
     }
     
-    NSData* responseData = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
-    NSLog(@"fetch offer data1");
+    NSLog(@"fetch offer data1 %@",urlString);
     // Check if the data length is zero return. This means their is no new offers available in the online database     
     if (responseData.length<=0) {
         NSLog(@"fetch offer data 2");
@@ -619,7 +633,7 @@
     }
     isSyncON = YES;
     NSLog(@"fetch offer data 3");
-    NSError *error;
+   // NSError *error;
     NSArray* json = [NSJSONSerialization 
                      JSONObjectWithData:responseData //1
                      
@@ -1520,11 +1534,11 @@
     if (persistentStoreCoordinator != nil) {
         return persistentStoreCoordinator;
     }
-    /*NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory]
-                                               stringByAppendingPathComponent: @"Ginza.sqlite"]];*/
-    
     NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory]
                                                stringByAppendingPathComponent: @"Ginza.sqlite"]];
+    
+   /* NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory]
+                                               stringByAppendingPathComponent: @"Ginza.sqlite"]];*/
     
     NSError *error = nil;
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc]
@@ -1545,9 +1559,9 @@
 -(NSMutableDictionary *) getPointOfInterestItems
 {
     
-    NSLog(@"POI start %@",[NSDate date]);
+   
     NSMutableArray *dataArray = self.offerDataArray;
-    
+     NSLog(@"POI start %d",[dataArray count]);
     NSMutableDictionary *mapDataDict = [[NSMutableDictionary alloc]init ];
     
     for (int index=0; index<[dataArray count]; index++) {
@@ -1568,7 +1582,8 @@
         
         if ([isFilterOn intValue]==1) {
             NSString *cretiria= [NSString stringWithFormat:@"%@-%@",cat.parent, cat.category_id ];
-            if ([filterString rangeOfString:cretiria].location == NSNotFound) {
+            if(self.filterString != nil && self.filterString.length >0)
+            if ([self.filterString rangeOfString:cretiria].location == NSNotFound) {
                 
             }else
             {
@@ -1668,7 +1683,7 @@
         
         if ([isFilterOn intValue]==1) {
             NSString *cretiria= [NSString stringWithFormat:@"%@-%@",categoryData.parent, categoryData.category_id ];
-            if ([filterString rangeOfString:cretiria].location == NSNotFound) {
+            if ([self.filterString rangeOfString:cretiria].location == NSNotFound) {
                 
             }else
             {

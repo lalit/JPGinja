@@ -46,4 +46,5 @@
 - (NSString *) calculateTime: (int) aTime;
 - (NSString *)calculateDistance : (double) aDistance;
 -(void)constructUI;
+-(void)updateDistance;
 @end

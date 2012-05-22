@@ -126,7 +126,14 @@
 
     Offer *offer = [self.arrayEventsDataArray objectAtIndex:indexPath.row];
     cell.lblOfferTitle.text = offer.offer_title;
-    cell.lblCopyText.text = offer.copy_text;
+    
+    
+    NSRange r;
+    NSString *s = [[offer.copy_text copy] autorelease];
+    while ((r = [s rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
+        s = [s stringByReplacingCharactersInRange:r withString:@""];
+    
+    cell.lblCopyText.text = s;
    // cell.imgShopImage.image = [UIImage imageNamed:offer.image_name];
     
     NSString *url = [NSString stringWithFormat:@"%@/%@png",eventImageURL,[offer.image_name substringToIndex:[offer.image_name length] - 3]];

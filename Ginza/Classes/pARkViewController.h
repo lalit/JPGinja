@@ -128,6 +128,7 @@
 @property (nonatomic, retain)IBOutlet UIView *viewScale;
 @property (nonatomic, retain)UIAlertView *waitingMessage;
 @property (nonatomic, retain)IBOutlet UILabel *lblMessage;
+@property (nonatomic, retain)NSMutableArray *forwardArray;
 -(float) getHeadingFromCoordinate:(CLLocation*)fromLocation toCoordinate:(CLLocation*)toLocation;
 -(void) addTargetIndicatorWithHeading:(float)heading andDistance:(float)distance;
 - (IBAction)calibrate:(id)sender;

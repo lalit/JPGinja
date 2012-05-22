@@ -196,6 +196,7 @@ static NSString *CellClassName = @"ListViewCell";
         storeLongitude=[shopData.longitude doubleValue];
         cell.arrowImageView.image=arrowImageBlue;
     }
+
   
    //Distance Calculation
     double distance=[[Location sharedInstance] getDistanceFromLatitude:storeLatitude

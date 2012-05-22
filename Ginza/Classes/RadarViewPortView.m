@@ -4,6 +4,7 @@
 #import "Location.h"
 #import "PlaceOfInterest.h"
 #import "pARkViewController.h"
+#import "Constants .h"
 #define radians(x) (M_PI * (x) / 180.0)
 
 @implementation RadarViewPortView
@@ -32,12 +33,17 @@
     for (PlaceOfInterest *poi in self.placesOfInterest) {
         CGContextRef contextRef = UIGraphicsGetCurrentContext();
         CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
-        //currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;        
+        
+        if (debug==YES) {
+            currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];; 
+        }
+        
+               
         float heading = [self getHeadingFromCoordinate:currentLocation toCoordinate:poi.location];
         float distance = [currentLocation distanceFromLocation:poi.location];
         //NSLog(@"heading = %f",heading);
         
-        float radius = (self.RADIUS/1000)*distance/10;
+        float radius = (self.RADIUS/1000)*distance;
         float x0 = 0.0; 
         float y0 = 0.0;
         
@@ -72,7 +78,10 @@
         double latitude =[merchant.latitude doubleValue];
         double longitude = [merchant.longitude doubleValue];
         CLLocation *currentLocation=[[Location sharedInstance] currentLocation];
-        //currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];;
+        
+        if (debug==YES) {
+            currentLocation =[[CLLocation alloc] initWithLatitude:35.67163555  longitude:139.76395295];; 
+        }
         CLLocation *storelocation =[[CLLocation alloc] initWithLatitude: latitude longitude:longitude];;
         
         float heading = [self getHeadingFromCoordinate:currentLocation toCoordinate:storelocation];

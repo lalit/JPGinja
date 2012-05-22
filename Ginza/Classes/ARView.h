@@ -68,7 +68,8 @@
 @property(nonatomic, retain)NSMutableArray  *poiData;
 @property(nonatomic, retain)UIViewController *parentViewController;
 @property(nonatomic,retain) RadarViewPortView *radar;
-@property(nonatomic,retain)Radar *radarView;          
+@property(nonatomic,retain)Radar *radarView; 
+@property(nonatomic,retain)CLLocation *location;;
 //@property(nonatomic,retain)NSArray *placesOfInterest;;
 
 
