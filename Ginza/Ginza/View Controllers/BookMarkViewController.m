@@ -34,14 +34,13 @@
 
 @implementation BookMarkViewController
 
-
 @synthesize tblListView;
 @synthesize detailsViewController;
 @synthesize arryListDetails;
 @synthesize arrayOfDistance;
 @synthesize arrayOfLatitude;
 @synthesize arrayOfLongitude;
-
+@synthesize mStrImageDirectoryPath;
 @synthesize arrayOflocation2Latitude;
 @synthesize arrayOflocation2Longitude;
 @synthesize arrayOfTitles;
@@ -54,29 +53,7 @@
 @synthesize panGestureforSearch;
 @synthesize arrayOfImages,lblFilterText,lblEventCount,cbar;
 
-
-double DegreesToRadians2(double degrees) {return degrees * M_PI / 180.0;};
-double RadiansToDegrees2(double radians) {return radians * 180.0/M_PI;};
--(double) bearingToLocation:(CLLocation *) destinationLocation {
-    
-    double lat1 = DegreesToRadians2(currentLocation.coordinate.latitude);
-    double lon1 = DegreesToRadians2(currentLocation.coordinate.longitude);
-    
-    double lat2 = DegreesToRadians2(destinationLocation.coordinate.latitude);
-    double lon2 = DegreesToRadians2(destinationLocation.coordinate.longitude);
-    
-    double dLon = lon2 - lon1;
-    
-    double y = sin(dLon) * cos(lat2);
-    double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
-    double radiansBearing = atan2(y, x);
-    if(radiansBearing < 0.0)
-        radiansBearing += 2*M_PI;
-    
-    
-    return DegreesToRadians2(radiansBearing);
-}
-
+static NSString *CellClassName = @"ListViewCell";
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -84,28 +61,24 @@ double RadiansToDegrees2(double radians) {return radians * 180.0/M_PI;};
     if (self) {
         self.title = NSLocalizedString(@"お気に入り", @"お気に入り");
         self.tabBarItem.image = [UIImage imageNamed:@"Bookmarkicon"];
+        cellLoader = [[UINib nibWithNibName:CellClassName bundle:[NSBundle mainBundle]] retain];
     }
     return self;
 }
 
-- (void)viewDidLoad
-{
-    
-    
+- (void)viewDidLoad {
     [super viewDidLoad];
     [self updateTopNavigation];
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     self.dataArray = [appDeligate getBookmarkOfferData];
-
     self.lblEventCount.text =[NSString stringWithFormat:@"%d",[appDeligate.ginzaEvents count]];
     if ([appDeligate.ginzaEvents count]<=0) {
         self.lblEventCount.hidden =YES;
     }
 
-    self.tblListView.delegate = self;
-
     self.tblListView.sectionIndexMinimumDisplayRowCount = 5;
-    
+    self.mStrImageDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    self.mStrImageDirectoryPath  = [mStrImageDirectoryPath stringByAppendingString:@"/"];
     
     NSString *filterCatString =@"";
     appDeligate.arraySelectedCategories =[[NSMutableArray alloc]init ];
@@ -119,9 +92,6 @@ double RadiansToDegrees2(double radians) {return radians * 180.0/M_PI;};
     self.lblFilterText.text = filterCatString;    
     
     
-    tblListView.dataSource = self;
-    tblListView.delegate   = self;
-    
     int i = [appDeligate.getBookmarkOfferData count];
     if (i>0) {
         self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%i", i];
@@ -130,35 +100,19 @@ double RadiansToDegrees2(double radians) {return radians * 180.0/M_PI;};
     
 }
 
-
-
-
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
+-(void)viewWillAppear:(BOOL)animated {
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     self.dataArray = [appDeligate getBookmarkOfferData];
     [self.tblListView reloadData];
     self.navigationController.navigationBarHidden = YES;
-    
-    
     cbar.hidden=NO;
-
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter =1; // whenever we move
-    locationManager.headingFilter = 5;
-    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters; // 100 m
-    [locationManager startUpdatingLocation];
-    [locationManager startUpdatingHeading];
-
-    
+    [self createConstantImages];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -167,40 +121,119 @@ double RadiansToDegrees2(double radians) {return radians * 180.0/M_PI;};
     [locationManager stopUpdatingHeading];
     [locationManager stopUpdatingLocation];
 }
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     [self.tblListView reloadData];
     return YES;
 }
 
-
-
-
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-{
-    return 100;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 90;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    
-    
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    
-    
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return  [dataArray count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    ListViewCell *cell = (ListViewCell *)[tableView dequeueReusableCellWithIdentifier:CellClassName];
     
+    if (!cell) {
+        NSArray *topLevelItems = [cellLoader instantiateWithOwner:self options:nil];
+        cell = [topLevelItems objectAtIndex:0];
+
+    }
+    cell.lblCategoryName.text=@"";
+    cell.lblStoreName.text=@"";
+    cell.thumbnailImageView.image=nil;
+    cell.lblDirection.text=@"";
+    cell.lblTime.text=@"";
+    cell.arrowImageView.image=nil;
+    [cell.GIconImageView setHidden:YES];
+    cell.lblSpecialOffer.text =@"";
+    cell.contentView.backgroundColor=[UIColor clearColor];
+    storeLatitude=0.0;
+    storeLongitude=0.0;
+    cell.lblCategoryName.textColor=[UIColor colorWithRed:102.0/255.0 
+                                                       green:102.0/255.0 
+                                                        blue:102.0/255.0
+                                                       alpha:1.0];
+        
+    cell.lblStoreName.textColor=[UIColor blackColor];
+    [cell.GIconImageView setHidden:YES];
+    Offer *offer =[dataArray objectAtIndex:indexPath.row];
+    AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    ShopList *shopData = [appDeligate getStoreDataById:offer.store_id];
+    Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:shopData.sub_category];
+    categoryName=categoryData.category_name;
+    storeName=shopData.store_name;
+    cell.offer = offer;
+    thumbnailPath = [self.mStrImageDirectoryPath  stringByAppendingString:[NSString stringWithFormat:@"80x60_%@",categoryData.image_name]];
+        
+    if ([offer.isbookmark isEqualToString:@"1"]) {
+            [cell.bookMarkImageView setImage:bookMarkMinusImage forState:UIControlStateNormal];
+    }
+    else {
+            [cell.bookMarkImageView setImage:bookMarkPlusImage forState:UIControlStateNormal];
+    }
+        
+    if([offer.offer_type isEqualToString:@"special"]) {
+        cell.contentView.backgroundColor=[UIColor colorWithRed:242.0/255.0 
+                                                             green:234.0/255.0 
+                                                              blue:203.0/255.0 
+                                                             alpha:1.0];
+            
+        NSString *sOff=[NSString stringWithFormat:@"★ %@",offer.lead_text];
+        cell.lblSpecialOffer.text = sOff;
+        cell.lblSpecialOffer.textColor = [UIColor colorWithRed:192/255.0 
+                                                             green:150.0/255.0 
+                                                              blue:49.0/255.0 
+                                                             alpha:5.0];
+    }
+        storeLatitude=[shopData.latitude doubleValue];
+        storeLongitude=[shopData.longitude doubleValue];
+        cell.arrowImageView.image=arrowImageBlue;
+    
+    //Distance Calculation
+    double distance=[[Location sharedInstance] getDistanceFromLatitude:storeLatitude
+                                                          andLongitude:storeLongitude];
+    cell.lblDirection.text=[[Location sharedInstance] formatDistance:distance];
+    //cell.lblDirection.text=@"7km";
+    //cell.lblTime.text=@"(1)";
+    if (distance<MIN_DISTANCE) {
+        if ([cell.lblDirection.text length]<=3) {
+            cell.arrowImageView.frame=CGRectMake(cell.arrowImageView.frame.origin.x, cell.arrowImageView.frame.origin.y,cell.arrowImageView.frame.size.width, cell.arrowImageView.frame.size.height);
+        }
+        else {
+            cell.arrowImageView.frame=CGRectMake(cell.arrowImageView.frame.origin.x, cell.arrowImageView.frame.origin.y,cell.arrowImageView.frame.size.width, cell.arrowImageView.frame.size.height);
+        }
+        
+        cell.lblDirection.frame=CGRectMake(cell.lblDirection.frame.origin.x, cell.lblDirection.frame.origin.y,48, cell.lblDirection.frame.size.height);
+        int time=[[Location sharedInstance] getTimeFromLatitude:storeLongitude  
+                                                   andLongitude:storeLongitude];
+        
+        cell.lblTime.text=[[Location sharedInstance] formatTime:time];
+        
+    }
+    else {
+        cell.lblDirection.frame=CGRectMake(cell.lblDirection.frame.origin.x, cell.lblDirection.frame.origin.y,90, cell.lblDirection.frame.size.height);
+    }
+    cell.lblCategoryName.text=categoryName;
+    cell.lblStoreName.text=storeName;
+    double angle=[[Location sharedInstance] getAngleFromLatitude:storeLongitude 
+                                                    andLongitude:storeLongitude];
+    cell.thumbnailImageView.image=[UIImage imageWithContentsOfFile:thumbnailPath];
+    cell.arrowImageView.transform = CGAffineTransformMakeRotation(angle);
+    return cell;
 }
 
 
 
 
-
+/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -331,21 +364,14 @@ double RadiansToDegrees2(double radians) {return radians * 180.0/M_PI;};
     
 }
 
+*/
 
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    [locationManager stopUpdatingLocation];
-    [locationManager stopUpdatingHeading];
-        
         OfferDetailsViewController *detail =[[OfferDetailsViewController alloc]init];
         Offer *offer =[dataArray objectAtIndex:indexPath.row];
-        
         detail.offerId = offer.id;
         [self presentModalViewController:detail animated:YES];
-        
-
     
 }
 
@@ -499,173 +525,20 @@ double RadiansToDegrees2(double radians) {return radians * 180.0/M_PI;};
     [self.view addSubview:cbar];
 }
 
-#pragma mark CLLocation Delegates methods
--(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
-{
-    currentLocation =  [newLocation retain];   
-    //currentLocation = [[CLLocation alloc] initWithLatitude:35.67163555 longitude:139.76395295];
-    
-    
-    //NSLog(@"didUpdateToLocation");
-    [tblListView reloadData];
-    
-}
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading 
-{
-    // UITableViewCell *cell =  (UITableViewCell *)[tblListView cellForRowAtIndexPath:[NSIndexPath indexPathWithIndex:2]];
-    
-    
-    //  NSLog(@"update heading....");
-    
-    //  newHeadingObject = [[CLHeading alloc]init];
-    newHeadingObject = newHeading;
-    mHeading = newHeadingObject.magneticHeading;
-    
-    //imgDirection.image= [UIImage imageNamed:@"Arrow.png"];
-    
-    
-    
-    if ((mHeading >= 339) || (mHeading <= 22)) {
-        //  NSLog(@"User Headingaa ......->N");
-        currenDirection = @"N";
-        
-    }else if ((mHeading > 23) && (mHeading <= 68)) {
-        currenDirection = @"NE";
-        // NSLog(@"User Heading ......->NE");
-    }else if ((mHeading > 69) && (mHeading <= 113)) {
-        currenDirection = @"E";
-        // NSLog(@"User Heading ......->E");
-    }else if ((mHeading > 114) && (mHeading <= 158)) {
-        currenDirection = @"SE";
-        // NSLog(@"User Heading ......->SE");
-    }else if ((mHeading > 159) && (mHeading <= 203)) {
-        currenDirection = @"S";
-        //  NSLog(@"User Heading ......->S");
-    }else if ((mHeading > 204) && (mHeading <= 248)) {
-        currenDirection = @"SW";
-        //  NSLog(@"User Heading ......->SW");
-    }else if ((mHeading > 249) && (mHeading <= 293)) {
-        currenDirection = @"W";
-        ///  NSLog(@"User Heading ......->W");
-    }else if ((mHeading > 294) && (mHeading <= 338)) {
-        
-        //NSLog(@"User Heading ......->NW");
-        currenDirection = @"NW";
-    }
-    
-    
-    if ([currenDirection isEqualToString:previousDirection ]){
-        
-    }
-    else {
-        NSLog(@"Table Reload Called");
-        [tblListView reloadData];
-        previousDirection = currenDirection;
-    }
-    
+- (void) createConstantImages {
+    bookMarkMinusImage=[UIImage imageNamed:@"Bookmarkminus.png"];
+    bookMarkPlusImage=[UIImage imageNamed:@"Bookmarkplus.png"];
+    ginzaGIcon= [UIImage imageNamed:@"Giconlarge.png"];;
+    ginzaBackgroundImageSpecial=[UIImage imageNamed:@"Specialoffercellbg.png"];
+    arrowImageBlue=[UIImage imageNamed:@"Arrow.png"];
+    arrowImageGray= [UIImage imageNamed:@"Arrowgray.png"];
+    ginzaBackgroundImageFirstRow=[UIImage imageNamed:@"Ginzacelllist.png"];
+    thumbImage=[UIImage imageNamed:@"thumb.png"];
 }
 
 
 
--(float) calculateUserAngle:(CLLocationCoordinate2D)user lat:(float)lat lon:(float)lang {
-    float   locLat = lat;
-    float  locLon = lang;
-    
-    NSLog(@"%f ; %f", locLat, locLon);
-    
-    float pLat;
-    float pLon;
-    
-    if(locLat > user.latitude && locLon > user.longitude) {
-        // north east
-        
-        pLat = user.latitude;
-        pLon = locLon;
-        
-        degrees = 0;
-    }
-    else if(locLat > user.latitude && locLon < user.longitude) {
-        // south east
-        
-        pLat = locLat;
-        pLon = user.longitude;
-        
-        degrees = 45;
-    }
-    else if(locLat < user.latitude && locLon < user.longitude) {
-        // south west
-        
-        pLat = locLat;
-        pLon = user.latitude;
-        
-        degrees = 180;
-    }
-    else if(locLat < user.latitude && locLon > user.longitude) {
-        // north west
-        
-        pLat = locLat;
-        pLon = user.longitude;
-        
-        degrees = 225;
-    }
-    
-    // Vector QP (from user to point)
-    float vQPlat = pLat - user.latitude;
-    float vQPlon = pLon - user.longitude;
-    
-    // Vector QL (from user to location)
-    float vQLlat = locLat - user.latitude;
-    float vQLlon = locLon - user.longitude;
-    
-    // degrees between QP and QL
-    float cosDegrees = (vQPlat * vQLlat + vQPlon * vQLlon) / sqrt((vQPlat*vQPlat + vQPlon*vQPlon) * (vQLlat*vQLlat + vQLlon*vQLlon));
-    // NSLog(@"Rotate:%f",degrees);
-    
-    
-    return degrees = degrees + acos(cosDegrees);
-    
-}
-
-
--(float) bearingBetweenStartLocation:(CLLocation *)startLocation andEndLocation:(CLLocation *)endLocation{
-    
-    CLLocation *northPoint = [[CLLocation alloc] initWithLatitude:(startLocation.coordinate.latitude)+.01 longitude:endLocation.coordinate.longitude] ;
-    float magA = [northPoint distanceFromLocation:startLocation];
-    float magB = [endLocation distanceFromLocation:startLocation];
-    CLLocation *startLat = [[CLLocation alloc] initWithLatitude:startLocation.coordinate.latitude longitude:0] ;
-    CLLocation *endLat = [[CLLocation alloc] initWithLatitude:endLocation.coordinate.latitude longitude:0] ;
-    float aDotB = magA*[endLat distanceFromLocation:startLat];
-    
-    //NSLog(@"RADIANS_TO_DEGREES:%f",RADIANS_TO_DEGREES(acosf(aDotB/(magA*magB))));
-    return RADIANS_TO_DEGREES(acosf(aDotB/(magA*magB)));
-}
-
-//Calculate Distance and Time
-- (NSString *)calculateDistance : (double) aDistance {
-    NSString *strDist;
-    double d=aDistance/1000;
-    if (d>1.0) {
-        strDist=[NSString stringWithFormat:@"%.1fkm",d];
-    }
-    else {
-        strDist=[NSString stringWithFormat:@"%.fm",aDistance];
-    }
-    return strDist;
-}
-
-- (NSString *) calculateTime: (int) aTime {
-    NSString *strTime;
-    if (aTime>60) {
-        int hours=aTime/60;
-        int minutes=aTime%60;
-        strTime=[NSString stringWithFormat:@"(徒歩%d時間%d分)",hours,minutes];
-    }
-    else {
-        strTime=[NSString stringWithFormat:@"(徒歩%d分)",aTime];
-    }
-    return  strTime;
-}
 
 
 @end

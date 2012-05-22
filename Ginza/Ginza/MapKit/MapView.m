@@ -176,7 +176,7 @@
 #pragma mark mapView delegate functions
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
 {
-	routeView.hidden = YES;
+	routeView.hidden = NO;
 }
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated

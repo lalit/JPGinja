@@ -21,7 +21,6 @@
 @implementation OfferDetailsViewController
 @synthesize lblIsChild,lblIsLunch,lblIsPrivate,lblOfferTitle,lblCategoryName,lblDistanceLabel,imgIsChild,imgIsLunch,imgCategory,imgIsPrivate,imgOfferImage,offerId,scroll,webFreeText,storeLocation,offer;
 @synthesize viewOfferDetails,tableView,locationManager,imgDirection,arrowImage,shareVC,lblTime;
-@synthesize radians;
 @synthesize btnSepecialOffers;
 @synthesize btnShare;
 @synthesize btnGetDirection;
@@ -73,169 +72,141 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-   // [self.view.window setBackgroundColor:[UIColor clearColor]];
-    // Do any additional setup after loading the view from its nib.
-   // [self.view setAlpha:0.0];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(locationChanged:) 
+                                                 name:kLocationChangedNotification
+                                               object:nil];
+}
+- (void)locationChanged: (NSNotification*)aNotification {
+    [self animateArrowImage];
 }
 
-
-
 - (void) calculateDistanceAndTime {
-    
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     ShopList *merchant = [appDeligate getStoreDataById:offer.store_id];
-    double Latitude = [merchant.latitude doubleValue];
-    double Longitude = [merchant.longitude doubleValue];
-    self.storeLocation = [[CLLocation alloc]initWithLatitude:Latitude longitude:Longitude];
-    CLLocationDistance meters = [self.currentLocation distanceFromLocation:self.storeLocation];
-    double me =[[NSString stringWithFormat:@"%.f",meters] doubleValue];
-    int time = (me/4000)*15;
-    double distanceInKm=meters/1000;
     lblDistanceLabel.text=@"";
     lblTime.text=@"";
-    if (distanceInKm>MIN_DISTANCE) {
-        lblDistanceLabel.text=@"この場所までの距離が分かりま せんでした";
+
+    double distance=[[Location sharedInstance] getDistanceFromLatitude:[merchant.latitude doubleValue] andLongitude:[merchant.longitude doubleValue]];
+    lblDistanceLabel.text=[[Location sharedInstance]formatDistance:distance];
+    if (distance>MIN_DISTANCE) {
         lblDistanceLabel.frame=CGRectMake(lblDistanceLabel.frame.origin.x, lblDistanceLabel.frame.origin.y, lblDistanceLabel.frame.size.width+200, lblDistanceLabel.frame.size.height);
 
     }
     else {
-        if (time>60) {
-            int hours=time/60;
-            int minutes=time%60;
-            self.lblTime.text=[NSString stringWithFormat:@"(徒歩%d時間%d分)",hours,minutes];
-        }
-        else {
-            self.lblTime.text=[NSString stringWithFormat:@"(徒歩%d分)",time];
-        }
-        
-           
-        if (distanceInKm>1.0) {
-            lblDistanceLabel.text=[NSString stringWithFormat:@"%.1fkm",distanceInKm];
-        }
-        else {
-            lblDistanceLabel.text=[NSString stringWithFormat:@"%.fm",meters];
-        }
-         lblTime.frame=CGRectMake(lblDistanceLabel.frame.origin.x+36, lblTime.frame.origin.y, lblTime.frame.size.width, lblTime.frame.size.height);
+      int time=[[Location sharedInstance] getTimeFromLatitude:[merchant.latitude doubleValue] andLongitude:[merchant.longitude doubleValue]];
+      lblTime.text=[[Location sharedInstance]formatTime:time];
+      lblTime.frame=CGRectMake(lblDistanceLabel.frame.origin.x+41, lblTime.frame.origin.y, lblTime.frame.size.width, lblTime.frame.size.height);
     }
-    
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
-    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
-    [locationManager startUpdatingLocation];
-    
-    [locationManager startUpdatingHeading];
-    
-    AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    NSLog(@"%@", self.offerId);
-    self.offer =  [appDeligate getOfferDataById:self.offerId];
-    ShopList *shopData = [appDeligate getStoreDataById:offer.store_id];
-    Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:shopData.sub_category];
-    
-    lblCategoryName.text = categoryData.category_name;
-    if ([self.offer.category length]<=0) {
-        lblOfferTitle.text=shopData.store_name;
-    }else
-    {
-        lblOfferTitle.text=self.offer.offer_title;
-    }
-    scroll.contentSize = CGSizeMake(320, 680);
-    [[self.webFreeText.subviews objectAtIndex:0] setScrollEnabled:NO];
-    self.webFreeText.backgroundColor =[UIColor clearColor];
-    [self.webFreeText setOpaque:NO];
-    [self loadWebView];
-    [self.webFreeText setDelegate:self];
-    [self calculateDistanceAndTime];
-    ShopList *merchant = [appDeligate getStoreDataById:offer.store_id];
-    // Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:merchant.sub_category];
-    
-    //Get Shop Location
-    
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    path = [path stringByAppendingString:@"/"];
-    path = [path stringByAppendingString:categoryData.image_name];
-    
-    UIImage *image = [UIImage imageWithContentsOfFile:path];
-    
-    float actualHeight = 154;//image.size.height;
-    float actualWidth = 206;//image.size.width;
-    float imgRatio = actualWidth/actualHeight;
-    float maxRatio = 320.0/480.0;
-    
-    if(imgRatio!=maxRatio){
-        if(imgRatio < maxRatio){
-            imgRatio = 480.0 / actualHeight;
-            actualWidth = imgRatio * actualWidth;
-            actualHeight = 480.0;
-        }
-        else{
-            imgRatio = 320.0 / actualWidth;
-            actualHeight = imgRatio * actualHeight;
-            actualWidth = 320.0;
-        }
-    }
-    CGRect rect = CGRectMake(0.0, 0.0, actualWidth, actualHeight);
-    UIGraphicsBeginImageContext(rect.size);
-    [image drawInRect:rect];
-    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    
-    [self.imgOfferImage setImage:img]; 
-    
-    if ([offer.isbookmark isEqualToString:@"1"]) {
-        
-        [btnBookMark setImage:[UIImage imageNamed:@"Bookmarkminus.png"] forState:UIControlStateNormal];
-    }
-    else {
-        [btnBookMark setImage:[UIImage imageNamed:@"Bookmarkplus.png"] forState:UIControlStateNormal];
-    }
-    
-    
-    actualHeight = 38;//image.size.height;
-    actualWidth = 47;//image.size.width;
-    imgRatio = actualWidth/actualHeight;
-    maxRatio = 320.0/480.0;
-    
-    if(imgRatio!=maxRatio){
-        if(imgRatio < maxRatio){
-            imgRatio = 480.0 / actualHeight;
-            actualWidth = imgRatio * actualWidth;
-            actualHeight = 480.0;
-        }
-        else{
-            imgRatio = 320.0 / actualWidth;
-            actualHeight = imgRatio * actualHeight;
-            actualWidth = 320.0;
-        }
-    }
-    rect = CGRectMake(0.0, 0.0, actualWidth, actualHeight);
-    UIGraphicsBeginImageContext(rect.size);
-    [image drawInRect:rect];
-    img = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    [self.imgCategory setImage:[self resizeImage:[UIImage imageWithContentsOfFile:path] toSize:CGSizeMake(39,36)]];
-    
-    if (merchant.is_child == 0) {
-        lblIsChild.hidden = YES;
-        imgIsChild.hidden =YES;
-    }
-    if (merchant.is_lunch == 0) {
-        lblIsLunch.hidden = YES;
-        imgIsLunch.hidden = YES;
-    }
-    if (merchant.is_private == 0) {
-        lblIsPrivate.hidden = YES;
-        imgIsPrivate.hidden = YES;
-    }
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:NO];
+    [self performSelector:@selector(loadDetailsView) withObject:nil afterDelay:0.1];
+}
 
-    [self animateArrowImage];   
+- (void)loadDetailsView {
+    AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+     self.offer =  [appDeligate getOfferDataById:self.offerId];
+     ShopList *shopData = [appDeligate getStoreDataById:offer.store_id];
+     Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:shopData.sub_category];
+     lblCategoryName.text = categoryData.category_name;
+     if ([self.offer.category length]<=0) {
+     lblOfferTitle.text=shopData.store_name;
+     }else
+     {
+     lblOfferTitle.text=self.offer.offer_title;
+     }
+     scroll.contentSize = CGSizeMake(320, 680);
+     [[self.webFreeText.subviews objectAtIndex:0] setScrollEnabled:NO];
+     self.webFreeText.backgroundColor =[UIColor clearColor];
+     [self.webFreeText setOpaque:NO];
+     [self loadWebView];
+     [self.webFreeText setDelegate:self];
+     [self calculateDistanceAndTime];
+     ShopList *merchant = [appDeligate getStoreDataById:offer.store_id];
+     // Categories *categoryData = (Categories *)[appDeligate getCategoryDataById:merchant.sub_category];
+     
+     //Get Shop Location
+     
+     NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+     path = [path stringByAppendingString:@"/"];
+     path = [path stringByAppendingString:categoryData.image_name];
+     
+     UIImage *image = [UIImage imageWithContentsOfFile:path];
+     
+     float actualHeight = 154;//image.size.height;
+     float actualWidth = 206;//image.size.width;
+     float imgRatio = actualWidth/actualHeight;
+     float maxRatio = 320.0/480.0;
+     
+     if(imgRatio!=maxRatio){
+     if(imgRatio < maxRatio){
+     imgRatio = 480.0 / actualHeight;
+     actualWidth = imgRatio * actualWidth;
+     actualHeight = 480.0;
+     }
+     else{
+     imgRatio = 320.0 / actualWidth;
+     actualHeight = imgRatio * actualHeight;
+     actualWidth = 320.0;
+     }
+     }
+     CGRect rect = CGRectMake(0.0, 0.0, actualWidth, actualHeight);
+     UIGraphicsBeginImageContext(rect.size);
+     [image drawInRect:rect];
+     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+     UIGraphicsEndImageContext();
+     
+     [self.imgOfferImage setImage:img]; 
+     
+     if ([offer.isbookmark isEqualToString:@"1"]) {
+     
+     [btnBookMark setImage:[UIImage imageNamed:@"Bookmarkminus.png"] forState:UIControlStateNormal];
+     }
+     else {
+     [btnBookMark setImage:[UIImage imageNamed:@"Bookmarkplus.png"] forState:UIControlStateNormal];
+     }
+     
+     
+     actualHeight = 38;//image.size.height;
+     actualWidth = 47;//image.size.width;
+     imgRatio = actualWidth/actualHeight;
+     maxRatio = 320.0/480.0;
+     
+     if(imgRatio!=maxRatio){
+     if(imgRatio < maxRatio){
+     imgRatio = 480.0 / actualHeight;
+     actualWidth = imgRatio * actualWidth;
+     actualHeight = 480.0;
+     }
+     else{
+     imgRatio = 320.0 / actualWidth;
+     actualHeight = imgRatio * actualHeight;
+     actualWidth = 320.0;
+     }
+     }
+     rect = CGRectMake(0.0, 0.0, actualWidth, actualHeight);
+     UIGraphicsBeginImageContext(rect.size);
+     [image drawInRect:rect];
+     img = UIGraphicsGetImageFromCurrentImageContext();
+     UIGraphicsEndImageContext();
+     
+     [self.imgCategory setImage:[self resizeImage:[UIImage imageWithContentsOfFile:path] toSize:CGSizeMake(39,36)]];
+     
+     if (merchant.is_child == 0) {
+     lblIsChild.hidden = YES;
+     imgIsChild.hidden =YES;
+     }
+     if (merchant.is_lunch == 0) {
+     lblIsLunch.hidden = YES;
+     imgIsLunch.hidden = YES;
+     }
+     if (merchant.is_private == 0) {
+     lblIsPrivate.hidden = YES;
+     imgIsPrivate.hidden = YES;
+     }
+     [self animateArrowImage];   
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
@@ -505,7 +476,8 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
 }
 
 -(void) animateArrowImage {
-    double radians=((([self bearingToLocation:storeLocation])- mHeading)*M_PI)/180;
+    double radians=[[Location sharedInstance] getAngleFromLatitude:self.storeLocation.coordinate.latitude andLongitude:self.storeLocation.coordinate.longitude];
+   // self.compassImageView.frame=CGRectMake(lblDistanceLabel.frame.origin.x-4,   self.compassImageView.frame.origin.y, self.compassImageView.frame.size.width,   self.compassImageView.frame.size.height);
     CABasicAnimation *theAnimation;
     theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
     theAnimation.duration = 0.5f;    
@@ -568,9 +540,7 @@ double RadiansToDegrees1(double radians) {return radians * 180.0/M_PI;};
     
 }
 
--(IBAction)btnBookmark:(id)sender
-{
-    
+-(IBAction)btnBookmark:(id)sender {
     AppDelegate  *appDeligate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     [appDeligate updateBookMarkCount:self.offer];
     if ([self.offer.isbookmark isEqualToString:@"0"]) {

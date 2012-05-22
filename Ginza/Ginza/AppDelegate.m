@@ -18,7 +18,7 @@
 #import"Categories.h"
 #import "Constants .h"
 #import <QuartzCore/QuartzCore.h>
-
+#import "Location.h"
 
 @implementation AppDelegate
 
@@ -49,7 +49,7 @@
                                          withError:&error]) {
         // Handle error here
     }
-    
+      [[Location sharedInstance] updateCurrentLocation];
     isSyncON = NO;
     //NSError *error;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); //1

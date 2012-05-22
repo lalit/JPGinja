@@ -11,23 +11,29 @@
 #import "Offer.h"
 @class ShareViewController;
 
-@interface OfferDetailsViewController : UIViewController<UITableViewDelegate,CLLocationManagerDelegate>
+@interface OfferDetailsViewController : UIViewController<UITableViewDelegate,CLLocationManagerDelegate,UIWebViewDelegate>
 {
     
     float degrees;
-
     //Added by MobiQuest team
     float mHeading;
     float mWebViewFlexibleHeight;
     CLHeading  *newHeadingObject;
     NSString *currenDirection;
     NSString *previousDirection;
-    double radians;
     
+    UINib *cellLoader;
+    NSString *mStrImageDirectoryPath;
+    NSString *categoryName;
+    NSString *storeName;
+    NSString *specialOffer;
+    NSString *direction;
+    NSString *thumbnailPath;
+    double storeLatitude;
+    double storeLongitude;
 }
 @property (nonatomic, retain) ShareViewController *shareVC;
 @property(nonatomic)Offer *offer;
-@property (nonatomic) double radians;
 @property(nonatomic, retain)IBOutlet UIButton *btnBookMark;
 @property(nonatomic, retain)IBOutlet UIButton *btnShare;
 @property(nonatomic, retain)IBOutlet UIButton *btnGetDirection;
