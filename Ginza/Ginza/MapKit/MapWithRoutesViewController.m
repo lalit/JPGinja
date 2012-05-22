@@ -52,10 +52,10 @@
 	Place* dest = [[[Place alloc] init] autorelease];
 	dest.name =destinationAddress;
 	//dest.description = @"Destination";
-	dest.latitude = 1.3296047;
-	dest.longitude = 103.8932174;
-	//dest.latitude= self.destination.coordinate.latitude;
-    //dest.longitude=    self.destination.coordinate.longitude;
+	//dest.latitude = 1.3296047;
+	//dest.longitude = 103.8932174;
+	dest.latitude= self.destination.coordinate.latitude;
+    dest.longitude=    self.destination.coordinate.longitude;
 	
 	[mapView showRouteFrom:source to:dest];
     [self createTopBar];
