@@ -56,7 +56,6 @@
 	//dest.longitude = 103.8932174;
 	dest.latitude= self.destination.coordinate.latitude;
     dest.longitude=    self.destination.coordinate.longitude;
-	
 	[mapView showRouteFrom:source to:dest];
     [self createTopBar];
 }
@@ -72,7 +71,7 @@
     navItem.rightBarButtonItem = cancelButton;
     
     [self.view addSubview:navBar];
-    
+
     [cancelButton release];
     [navItem release];
     [navBar release]; 
