@@ -2396,8 +2396,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: ICSP Solutions Pte Ltd";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ICSP Solutions Pte Ltd";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2415,8 +2415,8 @@
 				INCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = /Users/RAGE/Desktop/Ginza;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PROVISIONING_PROFILE = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
+				PROVISIONING_PROFILE = "606D46BB-786C-4B5F-94BD-E0CF1AF0D28B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6FDAA738-03A2-49AF-8D1D-6E178454C4C7";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2428,8 +2428,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: ICSP Solutions Pte Ltd";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ICSP Solutions Pte Ltd";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
@@ -2441,8 +2441,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-ObjC";
-				PROVISIONING_PROFILE = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "32D05637-6FE4-4E70-9307-1F85863BF4D4";
+				PROVISIONING_PROFILE = "606D46BB-786C-4B5F-94BD-E0CF1AF0D28B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "606D46BB-786C-4B5F-94BD-E0CF1AF0D28B";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = NO;
 			};
@@ -2452,8 +2452,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rage  Communications Private Limited";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/include/libxml2",
@@ -2476,8 +2476,8 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B42A3065-E9D6-456B-A6E0-5B908C2DD809";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B42A3065-E9D6-456B-A6E0-5B908C2DD809";
+				PROVISIONING_PROFILE = "6FDAA738-03A2-49AF-8D1D-6E178454C4C7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2486,8 +2486,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rage  Communications Private Limited";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rage  Communications Private Limited";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Milind Ghorpade (LK7ZTLSJ23)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/include/libxml2",
@@ -2510,8 +2510,8 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B42A3065-E9D6-456B-A6E0-5B908C2DD809";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B42A3065-E9D6-456B-A6E0-5B908C2DD809";
+				PROVISIONING_PROFILE = "6FDAA738-03A2-49AF-8D1D-6E178454C4C7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6566493B-45E7-4E7E-8891-91A3C08DCB03";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
