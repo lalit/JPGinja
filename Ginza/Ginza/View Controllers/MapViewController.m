@@ -180,7 +180,7 @@
         CLLocationCoordinate2D cor = [annotation coordinate];
         NSString *key =[NSString stringWithFormat:@"%f-%f",cor.latitude,cor.longitude];
         if (cor.latitude==35.67163555 && cor.longitude== 139.763953) {
-            UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(r.x-10, r.y-31, 23, 23)];
+            UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(r.x-15, r.y-36, 32, 32)];
             imageView.image=[UIImage imageNamed:@"mapG.png"];
             [pinView addSubview:imageView];
         }
